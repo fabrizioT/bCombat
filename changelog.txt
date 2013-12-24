@@ -1,0 +1,119 @@
+v0.15
+-----
+
+Core:
+
+	* Fixed issue with cover blacklisting casuing .sqf script error popup
+	* Units more likely to cover eachother
+	* Targets of opportunity better filtered, stricter visibility checks
+	* AI group leaders are not supposed to flee anymore
+	* AI units are now able to throw smoke grenades
+	* Over 50 configuration variables exposed and briefly documented into "config.sqf"
+
+	
+v0.14
+-----
+
+Core:
+
+	* Machinegunners' behaviour tweaks:
+	
+		* Further Prioritization of shooting over movement.
+		* Allowed to spend more time shooting on target / laying suppressive fire from current position
+		* Stop / overwatch mode
+
+	* Fleeing behaviour tweaks:
+	
+		* Custom fleeing disabled for groups containing player. 
+		  (Done in order to avoid player becoming group leader due to AI units fleeing, potentially breaking missions)
+		  
+	*  "move to cover" behaviour fixes and tweaks:
+	
+		* Units may move to cover more frequently when suppressed
+		* Units more likely to move away from roads when suppressed
+		* Units may keep at current position even if suppressed, if shooter is NOT in line of sight
+		
+	    NOTICE: Move to cover behaviour is optional and always disabled for player led groups, this is to avoid undesired movement of units [same behaviour as v0.13).
+		
+	* "config.sqf" custom configuration is now enabled by default
+	* Over 40 configuration variables exposed and briefly documented into "config.sqf"
+	* Increased bullet suppression penalties (+20%) - experimental settings
+	* Improved tightened formation feature for AI groups
+	* AI leader won't issue ATTACK orders to units if enemy is far (over 500m.)
+	* On enemy contact units will crouch instead of going prone
+	* Units go prone more promptly when hit / wounded
+	* Units under fire may now crouch instead of going prone, when moving fast and/or being far from shooter
+	* Higher chance units alerted by gunfire / explosion events will investigate the event position, unless some enemy is already known
+	* Fixed bug into fast rotation behavour ( it allowed it being triggered multiple time at once )
+	* Increased chance of grenades being thrown
+	* "fast move" tweak: a unit will avoid breaking formation when moving, unless some enemy is around. 
+	* "fast move" fix: units are now slightly less prone to bunch at destination.
+	* Revised grenade throwing distance, to be compatible with recent DEV builds.
+	* Misc tweaks and bugfixes
+	
+Known issues
+	
+	* Sometimes units suddenly rotate towards wrong direction just before throwing grenades
+	* Unit rotation animation sometimes playing abruptly, e.g. instantly swinging to some direction
+	* Grenade throwing distance may be wrong on ArmA3 versions prior v1.08 (due to an ArmA 3 change)
+	* Units accuracy possibly too high for editor placed groups on stock settings, within missions created since ArmA3 v1.08 or recent DEV builds (due to an ArmA 3 change)
+	* Move to cover disabled for buildings, due to units being stuck there (due to an ArmA 3 issue)
+
+		
+v0.13
+-----
+
+Core:
+
+	* Morale hit from seen / heard explosions degrading with distance.
+	* Fixed: unit were able to "hear" grenades being thrown when "bcombat_allow_hearing=true".
+	* Tweaked target prioritization: If an unit has some assigned target (e.g. commanded by leader) and it's in line of sight, it has priority against other targets of opportunity.
+	* Increased morale driven effect on skill. Done in order to restore after avg. morale hit lowering indirectly caused by non-linearity since v0.12.
+	* Group leaders stopping "softened", so they're better allowed to flank (Compromise solution between v0.11 and v0.12 behaviour).
+	* Units more likely to disengage and move away when sustaining much suppression fire.
+	* Custom configuration possible, uncomment lines into "config.sqf" file.
+	* [A lot of] minor tweaks and bugfixes.
+
+New optional features:
+
+	* Grenade throwing [ALPHA]
+	* Movement to cover [ALPHA]
+	
+	
+v0.12
+-----
+
+Core:
+
+	* Morale hits are now applied non-linearly: it should be a bit harder to achieve complete morale break.
+	* Better filtering of BIS danger.fsm events. Distance limit of 500m. from source for events collection. 
+	* AI units may open fire upon on targets of opportunity from distance, if:
+	
+		* Target is near unit's planned destination ( < 50m ).
+		* Target is near group's current waypoint position ( < 50m ).
+		* Units are "hidden" and not moving.
+		
+	* Disabled vanilla fleeing behavior when bcombat_allow_fleeing = false (it was creating mayhem).
+	* "Fast rotate" optional enhancement fixed.
+	* Minor tweaks and bugfixes.
+
+Balancing:
+
+	* morale hits lessened about 15-20% in average, due to new non-linear logic.
+
+Gameplay:
+
+	* AI Group leaders now usually prioritize fire vs. movement. This was done to avoid them rushing. No changes to sub-formation leaders.
+	* AI Units positioned over terrain level (e.g. guard posts, some buildings) should prefer crouching instead of going prone, when fired upon.
+	* "Fast move" enabled by default for subordinates, on Player led groups. It sould make units under player command move faster while in combat mode.
+
+Performance:
+
+	* Code optimization for functions (only)
+	* Simplified, lighter (=faster) line-of-sight checking. Checking accuracy made degrading on distance.
+
+
+v0.11
+-----
+
+	* First testing release.

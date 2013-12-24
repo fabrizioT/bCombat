@@ -1,0 +1,250 @@
+/*%FSM<COMPILE "G:\Program Files (x86)\Steam\steamapps\common\Arma 3\Tools\FSM Editor Personal Edition\scriptedFSM.cfg, bcombat">*/
+/*%FSM<HEAD>*/
+/*
+item0[] = {"INIT",0,250,-863.389832,-289.244141,-773.389832,-239.244370,0.000000,"INIT"};
+item1[] = {"not_alive",4,218,-741.560730,-289.322144,-651.560669,-239.322342,1.000000,"not alive"};
+item2[] = {"END",1,250,-741.118408,-199.405289,-651.118469,-149.405350,0.000000,"END"};
+item3[] = {"true",4,218,-862.919128,-194.638275,-772.919189,-144.638275,0.000000,"true"};
+item4[] = {"MAIN",2,4346,-862.945801,-103.528008,-772.946045,-53.527988,0.000000,"MAIN"};
+item5[] = {"new_event",4,218,-1012.213379,-15.182938,-922.213379,34.817024,10.000000,"new event"};
+item6[] = {"incoming_event",2,250,-1011.458130,87.307632,-921.457703,137.307861,0.000000,"incoming event"};
+item7[] = {"recover",4,218,-735.491638,-10.103081,-645.491638,39.896938,5.000000,"recover"};
+item8[] = {"recover",2,250,-734.816895,86.499344,-644.816833,136.499390,0.000000,"recover"};
+item9[] = {"true",4,218,-862.865540,87.000717,-772.865540,137.000763,0.000000,"true"};
+item10[] = {"suppression_time",4,218,-739.965698,-104.865784,-649.965637,-54.865749,20.000000,"suppression" \n "timeout"};
+link0[] = {0,1};
+link1[] = {0,3};
+link2[] = {1,2};
+link3[] = {3,4};
+link4[] = {4,5};
+link5[] = {4,7};
+link6[] = {4,10};
+link7[] = {5,6};
+link8[] = {6,9};
+link9[] = {7,8};
+link10[] = {8,9};
+link11[] = {9,4};
+link12[] = {10,2};
+globals[] = {0.000000,0,0,0,0,640,480,1,18,6316128,1,-1127.216064,-538.346252,236.694138,-342.595337,922,907,1};
+window[] = {2,-1,-1,-1,-1,808,28,1064,28,3,942};
+*//*%FSM</HEAD>*/
+class FSM
+{
+  fsmName = "bcombat";
+  class States
+  {
+    /*%FSM<STATE "INIT">*/
+    class INIT
+    {
+      name = "INIT";
+      init = /*%FSM<STATEINIT""">*/"_unit = _this;" \n
+       "_timeout_stance_anim = -3;" \n
+       "_timeout_stance_wait = 0;" \n
+       "_level = 0;" \n
+       "" \n
+       "if( bcombat_debug_enable ) then {" \n
+       "	_msg = format[""[%1] suppression.fsm initialized"", _unit];" \n
+       "	[ _msg, 1 ] call bcombat_fnc_debug;" \n
+       "};" \n
+       "" \n
+       "" \n
+       ""/*%FSM</STATEINIT""">*/;
+      precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+      class Links
+      {
+        /*%FSM<LINK "not_alive">*/
+        class not_alive
+        {
+          priority = 1.000000;
+          to="END";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"isNull _unit || !(alive _unit) ||  isNil ""bcombat_init_done"" ||  !(bcombat_enable) || !(_unit isKindOf ""CAManBase"") ||  _unit != vehicle _unit "/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+        /*%FSM<LINK "true">*/
+        class true
+        {
+          priority = 0.000000;
+          to="MAIN";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"_event > 0"/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+      };
+    };
+    /*%FSM</STATE>*/
+    /*%FSM<STATE "END">*/
+    class END
+    {
+      name = "END";
+      init = /*%FSM<STATEINIT""">*/"if( bcombat_debug_enable ) then {" \n
+       "	_msg = format[""[%1] suppression.fsm  end state"", _unit ];" \n
+       "	[ _msg, 1 ] call bcombat_fnc_debug;" \n
+       "};" \n
+       "" \n
+       "_unit setVariable [""bcombat_suppression_level"", 0 ];" \n
+       "_unit setUnitPos ""Auto"";"/*%FSM</STATEINIT""">*/;
+      precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+      class Links
+      {
+      };
+    };
+    /*%FSM</STATE>*/
+    /*%FSM<STATE "MAIN">*/
+    class MAIN
+    {
+      name = "MAIN";
+      init = /*%FSM<STATEINIT""">*/"_penalty = _unit getVariable [""bcombat_suppression_penalty"", 0 ];" \n
+       "_level = _unit getVariable [""bcombat_suppression_level"", 0 ];" \n
+       "_timeout_min = _unit getVariable [""bcombat_suppression_timeout_min"", 0 ];" \n
+       "_timeout_mid = _unit getVariable [""bcombat_suppression_timeout_mid"", 0 ];" \n
+       "_timeout_max = _unit getVariable [""bcombat_suppression_timeout_max"", 0 ];" \n
+       "_enemy = _unit getVariable [""bcombat_suppression_enemy"",objNull ];" \n
+       "" \n
+       "_unit setVariable [""bcombat_suppression_penalty"", 0 ];" \n
+       "_unit setVariable [""bcombat_suppression_event"", 0 ];" \n
+       "_unit setVariable [""bcombat_suppression_enemy"", objNull  ];" \n
+       "" \n
+       "if( _unit isKindOf ""CAManBase"" && _unit == vehicle _unit ) then " \n
+       "{" \n
+       "	_st = [ _unit,  _timeout_min, _timeout_mid, _timeout_max ] call bcombat_fnc_stance_set;   " \n
+       "" \n
+       "	if (_st != """" ) then" \n
+       "	{" \n
+       "" \n
+       "		if(  (_event in  [1,11] || time > _timeout_stance_wait)  ) then  //|| [ _unit ] call bcombat_fnc_stance_get == ""up""" \n
+       "		{" \n
+       "			if( _event in  [1,11] " \n
+       "				&& { _st == ""Down"" }" \n
+       "				&& { stance _unit != ""PRONE"" }" \n
+       "				&& { [_unit, _enemy] call bcombat_fnc_is_visible_head } " \n
+       "				&& { time - _timeout_stance_anim > 5 }" \n
+       "			) then {" \n
+       "				_unit playMoveNow ""AmovPpneMstpSrasWrflDnon"";" \n
+       "				_timeout_stance_anim = time;" \n
+       "			};	" \n
+       "" \n
+       "			_unit setunitpos _st; " \n
+       "			_unit setVariable [""bcombat_stance"", _st]; // debug only" \n
+       "			_timeout_stance_wait = time + 3;" \n
+       "		};" \n
+       "	};" \n
+       "" \n
+       "	if( bcombat_debug_enable ) then {" \n
+       "		_msg = format[""[%1] suppression.fsm  idle state - level=%2, event=%3, stance=%4, timeout=%5, enemy=%6, skill=%7"", _unit, _level, _event, _st, _timeout_max, _enemy,  ( _unit getVariable ""bcombat_skill"" ) ];" \n
+       "		[ _msg, 1 ] call bcombat_fnc_debug;" \n
+       "	};" \n
+       "" \n
+       "	[_unit, _level] call bcombat_fnc_suppression;" \n
+       "" \n
+       "	if (_event > 0) then " \n
+       "	{" \n
+       "		_event=0;" \n
+       "	};" \n
+       "};" \n
+       "" \n
+       "_delay = time + 1;" \n
+       "" \n
+       ""/*%FSM</STATEINIT""">*/;
+      precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+      class Links
+      {
+        /*%FSM<LINK "suppression_time">*/
+        class suppression_time
+        {
+          priority = 20.000000;
+          to="END";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"isNull _unit || !(alive _unit) || ( _level == 0 &&  time > _timeout_max) ||  isNil ""bcombat_init_done"" ||  !(bcombat_enable) || !(_unit isKindOf ""CAManBase"") ||  _unit != vehicle _unit "/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+        /*%FSM<LINK "new_event">*/
+        class new_event
+        {
+          priority = 10.000000;
+          to="incoming_event";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"_event > 0"/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+        /*%FSM<LINK "recover">*/
+        class recover
+        {
+          priority = 5.000000;
+          to="recover";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"_level >= 0 && time > _delay"/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+      };
+    };
+    /*%FSM</STATE>*/
+    /*%FSM<STATE "incoming_event">*/
+    class incoming_event
+    {
+      name = "incoming_event";
+      init = /*%FSM<STATEINIT""">*/"if( bcombat_debug_enable ) then {" \n
+       "	_msg = format[""[%1] suppression.fsm event=%2"", _unit, _event ];" \n
+       "	[ _msg, 1 ] call bcombat_fnc_debug;" \n
+       "};" \n
+       "" \n
+       ""/*%FSM</STATEINIT""">*/;
+      precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+      class Links
+      {
+        /*%FSM<LINK "true">*/
+        class true
+        {
+          priority = 0.000000;
+          to="MAIN";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"true"/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+      };
+    };
+    /*%FSM</STATE>*/
+    /*%FSM<STATE "recover">*/
+    class recover
+    {
+      name = "recover";
+      init = /*%FSM<STATEINIT""">*/"//_l = round(  bcombat_penalty_recovery * ( _unit getVariable ""bcombat_skill"" ) *  ( 1 - damage _unit / 2 ) ) max 1;" \n
+       "_l = round(  bcombat_penalty_recovery * (100 - _level) / 100 * ( _unit getVariable ""bcombat_skill"" ) *  ( 1 - damage _unit / 2 ) ) max 1;" \n
+       "" \n
+       "_unit setVariable [""bcombat_suppression_level"",   ( _level -  _l ) max 0];" \n
+       "" \n
+       "if( bcombat_debug_enable ) then {" \n
+       "	_msg = format[""[%1] FSM recovery state. Recovered %2, was %3, now=%4"", _unit, _l ,  _level, _unit getVariable [""bcombat_suppression_level"", 0 ] ];" \n
+       "	[ _msg, 1 ] call bcombat_fnc_debug;" \n
+       "};" \n
+       ""/*%FSM</STATEINIT""">*/;
+      precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+      class Links
+      {
+        /*%FSM<LINK "true">*/
+        class true
+        {
+          priority = 0.000000;
+          to="MAIN";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"true"/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+      };
+    };
+    /*%FSM</STATE>*/
+  };
+  initState="INIT";
+  finalStates[] =
+  {
+    "END",
+  };
+};
+/*%FSM</COMPILE>*/

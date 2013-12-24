@@ -1,0 +1,267 @@
+FIRE & MOVEMENT
+
+Regarding Fire & Movement, here is bCombat approach:
+
+* As per ArmA3 default behaviour, fire has usually priority over movement.
+* Whenever a MOVE order is issued to a unit being NOT under fire, movementis prioritized over firing (a single notable exception is CQB).
+* Whenever under fire, shooting MAY take priority on movement, given all these criteria:
+
+	* Target is known
+	* Target is in line of sight
+	* Distance is compatible with weapon range
+	* Unit skill and morale are high enough
+	* Unit is not moving, or moving slowly, or movement direction is not much divergent with line of fire
+
+
+FIRE & MOVEMENT vs. MORALE & SKILL 
+
+Morale and base unit Skill do intersecate Fire & Movement behaviour:
+
+* Low base skill or low morale limit unit probability to return fire, so they end up prioritizing movement (escape) against fire
+
+
+FIRE HANDLING
+
+After one of these events is triggered:
+
+* CORE AI "Can Fire" event
+* SCRIPTED AI "Suppression" event
+
+A unit will evaluate whether opening fire, depending on the concepts explained above.
+Whenever shooting is cosidered the best viable solution, a fire task is issued to the unit.
+So let's talk about tasks.
+
+
+TASKS
+
+Tasks are scripts spawned at runtime, taking care of making custom actions.
+They normally live just a handful of seconds.
+
+Here is the task logic:
+
+* A Task gets a type and a priority level.
+* A a single unit can run just ONE task at once.
+* A higher priority task will override and terminate a currently active lower priority task.
+* A Lower priority task activation is refused whenever a higher priority task is active.
+
+The only task type currently implemented in bCombat is the "Fire" task.
+More task types may be declared and plugged in.
+
+
+FIRE TASK
+
+Whenever a unit is required to shoot on a target, a fire task is issued:
+
+* Unit is ordered to stop
+* Unit is ordered to open fire
+
+if unit does shoot, as expected, task remains active till either:
+
+	* unit dead
+	* target dead
+	* up to 2 seconds after last bullet fired or max timeout (about 10 seconds)
+	* higher priority task overriding
+
+if unit fails opening fire within an opportunity window of about 2 seconds, task is dropped and unit is un-stopped.
+
+It's important to notice that a fire task may be issued with different priorities:
+
+	* shooting a target of opportunity is a medium priority
+	* returning fire is a higher priority
+
+This ensures the unit will be able instantly to stop firing at a target of opportunity whenever threatened.
+
+
+STANCE HANDLING
+
+By default, stance handling in ArmA 3 uses quite a bit of randomization.
+This is clunky, as well as ineffective in pitched combat.
+
+How is bCombat making it better?
+
+You know the drill: basically any unit is made aware of being under fire, so it goes prone as needed.
+However that's not enough. There's plenty of other situations to be handled, if you think a moment about it.
+
+For instance, you may consider there should be a relation between speed of movement and stance:
+
+* a unit should be always allowed to stand up in order to be briefly able to sprint, as needed. Good for assaulting, or evading enemy.
+* a unit should prefer staying low when not moving and in danger, for example when returning fire
+
+Then, you may consider there should also be a relation between stance and distance from enemy:
+
+* a unit should prefer crouching to going prone, in CQB
+* when being fired upon from distance while moving, it may be useless going prone as well, since that would slow down movement
+
+By default bCombat implements the above basic concepts.
+It closely cohoperates with vanilla stance handling, taking control in fighting situations.
+
+
+bCombat stance handling kicks in due to triggered events and acts this way:
+
+* Depending on triggered event type, it binds stance handling to 3 different progressive timeouts (e.g. 5 seconds, 30 seconds, 60 seconds):
+
+	* 1st timeout = Critical danger (usually a few seconds from last event)
+	  
+		* Unit is ordered to keep down till timeout expire.
+		* Unit may switch to crouch when crawling fast enough, in order to allow for faster evading.
+		* Unit should go prone when idle (=not moving), preferring to crouch in CQB 
+	  	* This timeout is non-zero just for some special event types, for instance the "suppression" event, meaning unit is just under fire
+
+	* 2nd timeout = High danger:  (usually up to tenths of seconds from last event)
+
+	  	* Unit is ordered to keep low (crouch), till timeout expire.
+		* Unit may stand up briefly to sprint, in order to allow for faster evading.
+		* Unit should go prone when idle (=not moving), preferring to crouch in CQB 
+
+	* 3rd timeout = Moderate danger:  (usually up to tenths of seconds from last event)
+
+	  	* Default ArmA3 stance handling kicks in again
+
+
+* Newly triggered events manipulate existing timeouts, stance handling is updated accordingly
+
+
+EVENTS
+
+bCombat is mostly event driven. 
+It deals with two kind of events:
+
+
+SCRIPTED AI events
+
+These events are generated by bCombat itself.
+At the moment the only event of this type is the "suppression" event, raised whenever a unit gets under enemy fire.
+
+
+CORE AI events
+
+While many core infantry AI mechanics are buried deep into engine, some events are exposed into a special .fsm file, named danger.fsm, which kicks in in danger mode.
+It exposes events for:
+
+	* enemy contact
+	* firing visible
+	* unit being hit
+	* close enemy detected
+	* close explosion
+	* dead body detected (friendly or enemy)
+	* unit screaming in pain
+	* unit "can fire" on enemy
+
+Each event comes with its own priority level. 
+However, when i originally dealt with default danger.fsm, i spotted these sensible problems:
+ 
+	* Some event priorities look messed up (e.g. "can fire" priority too low)
+	* It's taking care of the topmost priority event only, discarding others
+	* The topmost priority event is discarded too, except for the "can fire" event
+
+Speaking of the "can fire" event (which basically means enemy unit detected and in line of sight), the triggering unit is scripted to stop (forcespeed=0) from 4 to 8 seconds (random). 
+That stopping is sometimes undesirable to me, since:
+
+	* it may cause drag into group movement, penalizing overall movement speed
+	* it is not a good all-around solution, failing in many situations (e.g. it slows units which are flanking)
+
+So i decided to tweak the original default danger.fsm this way:
+
+* reworking event priorities
+* taking always care of ALL raised events, not only topmost priority, then cumulating them in form of effects on "morale"
+* reworking "can fire" event handling
+
+EVENTS HANDLING
+
+Within bCombat all the collected  events, whatever their type or origin, are pipelined into a custom scripted .fsm file (suppression.fsm).
+This .fsm file takes care of applying morale effects, in term of applying penalization or recovery.
+I will tell about morale later, since it diffusely affects AI units behaviour.
+
+
+AWARENESS
+
+bCombat is not supposed to "cheat" in order to make AI more effective.
+It enhances AI awareness by making units:
+
+* automatically switch to danger mode, upon enemy events
+
+* acquire targets faster: line of sight, "knowsabout", perceived position and simulated peripheral vision in order to disclose threats, upon enemy events
+
+* detect being under fire
+
+* react to situation by changing stance
+
+* dynamically prioritize fire or movement
+
+* open fire aggressively, as soon as possible, on both threats and targets of opportunity
+
+* switch targets more efficiently, due to task prioritization
+
+* hear light weapons shots from distance [ALPHA feature]
+
+	* Silenced weapons excluded
+	* Units get alerted within a given radius (up to 400m.) from the shooting unit
+	* [Simplification] Maximum hearing radius is calculated as a fraction of bullet speed
+	* alerted unit automatically switch to combat mode
+	* alerted unit may look towards general direction of the gunshot
+
+All these AI enhancements are applied in a "fuzzy" way, due some light randomization based off unit skill and morale level.
+This should help making AI units less predicable, meaning more human-alike.
+
+
+MORALE
+
+"Events" are senses, morale is "nerves".
+Morale is the residual combat efficiency of the soldier, afters some penalty is applied.
+This penalty is a weighted effect of events.
+
+
+MORALE PENALTIES
+
+Each and every event type may convey morale penalty. 
+Some examples:
+
+* enemy contact, being hit or a dead squaddie all cause, to varying degree, a sensible morale hit.
+* Being under fire or enemy in sight both convey a mild morale hit, which further varies depending on:
+
+	* knowledge of the shooter: fire from an unknown source (e.g. sniper fire) will add to the morale penalty
+	* angle of fire: being fired from flank or back (e.g. ambush) adds to morale penalty
+
+Morale penalties are not evenly applied, they're mitigated by skill: the higher the skill, the lower is the penalty (and viceversa).
+
+
+MORALE RECOVERY
+
+Units whose morale was penalized progressively recover it, as long as no further events hit them.
+Morale recovery rate is proportional to skill: so it's faster for highly skilled units (and viceversa).
+However all wounded units suffer a relented morale recovery rate.
+
+
+MORALE EFFECTS ON AI BEHAVIOUR
+
+As long as morale is full, any unit takes advantage from bCombat enhancements, roughly in proportion to its skill.
+The more an unit is exposed to enemy event, the less it's able to use abilities:
+
+	* light morale penalty (STRESS), 0% up to 25% penalty
+
+		* unit moves slower, trying to stay low
+		* unit engages targets of opportunity
+		* unit spends time to return fire
+		* unit suffers light penalty in firing accuracy, courage and spotting distance
+
+	* medium morale penalty (FEAR), 25% up to 50% penalty
+
+		* unit moves slower, trying to stay low
+		* unit still engages targets of opportunity
+		* unit spends less time to return fire, trying getting into cover instead
+		* unit suffers medium penalty in firing accuracy, courage and spotting distance
+
+	* high morale penalty (PANIC), 50% up to 75% penalty
+
+		* unit moves slower, trying to stay low
+		* unit still engages some targets of opportunity
+		* unit seldomly returns fire, trying getting into cover instead
+		* unit suffers medium penalty in firing accuracy and spotting distance
+
+	* critical morale penalty (SHOCKED / BROKEN), 75% up to 100% penalty
+
+		* unit may stick (pinned) or move around blindly
+		* unit ignores most targets and usually avoids returning fire
+		* unit suffers high penalty in firing accuracy, courage and spotting distance
+		* unit may flee
+		* unit may surrender if fired upon from close distance [ALPHA feature]
