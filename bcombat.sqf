@@ -50,7 +50,7 @@ if(isNil "bcombat_allowed_groups") then { bcombat_allowed_groups = []; };							
 if(isNil "bcombat_allowed_units") then { bcombat_allowed_units = []; };										// Alpha feature please don't change 
 
 // Units internal clock (for optional features)
-if(isNil "bcombat_unit_clock") then { bcombat_unit_clock = [3,6]; }; 										// 
+if(isNil "bcombat_features_clock") then { bcombat_features_clock = [3,6]; }; 										// 
 
 // Switch to danger distance
 if(isNil "bcombat_danger_distance") then { bcombat_danger_distance = 250; };								// Minimum distance from shooter for groups switching to "combat" behaviour

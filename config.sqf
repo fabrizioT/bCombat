@@ -13,7 +13,7 @@ bcombat_enable = true;								// (Boolean) Toggle feature on / off
 
 bcombat_incoming_bullet_timeout = 0.2;				// (Seconds) minimum timeout between bullets
 bcombat_danger_distance = 300; 						// (Meters) Minimum distance from shooter, for groups to automatically switch to "combat" behaviour
-bcombat_unit_clock = [3,5];							// (Seconds) [minimum timeout, maximum timeout]
+bcombat_features_clock = [3,5];						// (Seconds) Additional features clocking [minimum timeout, maximum timeout]
 		
 // -----------------------
 // CORE bDetect FEATURES
@@ -98,6 +98,7 @@ bcombat_allow_fast_rotate = false;					// (Boolean) Toggle feature on / off
 // Description: custom fleeing behaviour
 // Triggered: when morale is broken
 // Effect: unit leaves formation and moves away. As long as group is not destroyed it will join it back after some morale recovery.
+// NOTE: Deprecated as of v0.15 - please keep it set to false
 
 bcombat_allow_fleeing = true; 						// (Boolean) Toggle feature on / off
 
@@ -186,7 +187,7 @@ bcombat_allow_fatigue = false;						// (Boolean) Toggle feature on / off
 
 bcombat_allow_cover = true;							// (Boolean) Toggle feature on / off
 bcombat_cover_mode = 1;								// (0,1) 0 = apply only to leader, 1 = apply to all units
-bcombat_cover_radius = [20,30]; 						// (Array) [ maximum distance from object, maximum distance from building] 
+bcombat_cover_radius = [20,30]; 					// (Array) [ maximum distance from object, maximum distance from building] 
 
 // Description: "target and chase" behaviour
 // Triggered: whenever unit has no target and it's close to a enemy
@@ -226,12 +227,12 @@ bcombat_cqb_radar_clock = [0.5, 2.5];    		// (Seconds)
 bcombat_cqb_radar_max_distance = 100;    		// (Meters) 
 bcombat_cqb_radar_params = [75, 5, 0, 5];		// (Array) [max. angle, min. precision, min. knowsabout, max enemy .speed]
 
-// 
-// 
-// 
+// Description: misc animations, tribute to "tonyRanger"
+// Triggered: some particular events
+// Effect: some animations, such as rolling, are played
 
-bcombat_fancy_moves = true;   
-bcombat_fancy_moves_frequency = .2;   
+bcombat_fancy_moves = true;     				// (Boolean) Toggle feature on / off
+bcombat_fancy_moves_frequency = 0.2;    		// (0-1) Probability of occurring. 0=never (0%), 1=all the time (100%). 
 
 // -----------------------------------------------------------------------------------------------------
 // bCombat MISC CALLS

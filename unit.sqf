@@ -158,6 +158,6 @@ _nul = [ _this select 0] spawn
 			};
 		};
 		
-		sleep ( (bcombat_unit_clock select 0) + random ( (bcombat_unit_clock select 1) - (bcombat_unit_clock select 0) ) );
+		sleep ( (bcombat_features_clock select 0) + random ( (bcombat_features_clock select 1) - (bcombat_features_clock select 0) ) );
 	};
 };

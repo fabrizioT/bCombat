@@ -69,3 +69,41 @@ VIDEOS
 +   http://www.youtube.com/watch?v=vGKy2fEPwD8
 +   http://www.youtube.com/watch?v=GZ3PC-mrGE4
 +   http://www.youtube.com/watch?v=8u8bUqCppG4
+
+CREDITS
+----------------------------------------
+
+bCombat was created by Fabrizio_T.
+It's dedicated to BIS and to the whole OFP/ARMA community.
+
+This mod wouldn't have seen the light without the support of the testers:
+
++   Mustangdelta
++   Lordprimate
++   ebarstad 
++   TheCapulet 
++   Mr_Centipede 
++   Katipo66
++   gammadust
++   RAINF
++   gagi
++   Kremator
++   SavageCDN 
++   stun
++   froggyluv
++   The Hebrew Hammer
++   bravo409
++   GDSN
++   willywonka
+
+A final thanks to the talented and dedicated people who over time inspired this work:
+
++   TonyRanger
++	Kronzky
++	Monsada
++	Solus
++	SNKMAN
++	Rg7621
++	Protegimus 
++	Sickboy
+
