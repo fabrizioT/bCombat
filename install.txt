@@ -1,8 +1,10 @@
+-------------
 REQUISITES
 -------------
 
 * Download and install CBA A3 Beta 4 distribution, get it from here: http://dev-heaven.net/projects/cca/files
 
+------------
 INSTALLATION
 ------------
 
@@ -11,8 +13,9 @@ INSTALLATION
 * Copy "userconfig" folder to your ArmA 3 main folder (you probably have an existing "userconfig" folder, just overwrite it)
 * Launch ArmA 3 and activate bCombat into "Configure / Expansions" menu
 
+------------
 NOTES
------
+------------
 
 * Once any mission is launched, bCombat is automatically activated
 
