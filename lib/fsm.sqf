@@ -68,7 +68,6 @@ bcombat_fnc_fsm_trigger =
 		
 		_fsm setFSMVariable [ "_event", _event ]; // instantly trigger fsm event
 
-
 		if( bcombat_debug_enable ) then {
 			_msg = format["FSM event=%2, unit=%1, penalty=%3, timeout=%4", _unit, _event, _penalty, _timeout_max];
 			[ _msg, 5 ] call bcombat_fnc_debug;

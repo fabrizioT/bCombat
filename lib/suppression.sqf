@@ -41,43 +41,44 @@ bcombat_fnc_bullet_incoming =
 						if( [_unit, _shooter] call bcombat_fnc_knprec > 10 ) then { // isNull ( _unit findNearestEnemy _unit ) || 
 							_penalty = _penalty + bcombat_penalty_enemy_unknown; 
 						};
-						
-
-						// Smoke grenade
-						if(
-							bcombat_allow_smoke_grenades 
-							&& { random 1 <= (_unit skill "general" ) ^ 0.5}
-							//&& { _unit getVariable ["bcombat_suppression_level", 0] > 10 }
-							&& { random 100 > (_unit getVariable ["bcombat_suppression_level", 0]) }
+					};
+					
+					// Smoke grenade
+					if(
+						bcombat_allow_smoke_grenades 
+						&& { random 1 <= (_unit skill "general" ) ^ 0.5}
+						//&& { _unit getVariable ["bcombat_suppression_level", 0] > 10 }
+						&& { random 100 > (_unit getVariable ["bcombat_suppression_level", 0]) }
+						&& { _dist > 50 }
+						&& { "SmokeShell" in (magazines _unit) }
+						&& { _unit == leader _unit || _unit == formLeader _unit ||  [ _unit ] call bcombat_fnc_speed < 3}
+						&& { !( [_unit] call bcombat_fnc_has_task ) }
+						&& { [_unit, _shooter] call bcombat_fnc_knprec < 25 }
+						&& { [ _shooter ] call bcombat_fnc_speed < 3 }
+					) then {
+						//hintc format["has=%1 dist=%2 prec=%3 spd=%4 tsk=%5", "SmokeShell" in (magazines _unit), _dist, [_unit, _shooter] call bcombat_fnc_knprec < 25, [ _shooter ] call bcombat_fnc_speed, [_unit] call bcombat_fnc_has_task];
+					
+						[_unit, _shooter] call bcombat_fnc_handle_smoke_grenade;
+					}
+					else
+					{
+						// move to cover
+						if( 
+							bcombat_allow_cover
 							&& { _dist > 50 }
-							&& { "SmokeShell" in (magazines _unit) }
-							&& { _unit == leader _unit || _unit == formLeader _unit ||  [ _unit ] call bcombat_fnc_speed < 3}
-							&& { !( [_unit] call bcombat_fnc_has_task ) }
-							&& { [_unit, _shooter] call bcombat_fnc_knprec < 25 }
-							&& { [ _shooter ] call bcombat_fnc_speed < 3 }
-						) then {
-							//hintc format["has=%1 dist=%2 prec=%3 spd=%4 tsk=%5", "SmokeShell" in (magazines _unit), _dist, [_unit, _shooter] call bcombat_fnc_knprec < 25, [ _shooter ] call bcombat_fnc_speed, [_unit] call bcombat_fnc_has_task];
+							&& { _visible }
+							&& { _unit getVariable ["bcombat_suppression_level", 0] > 10 }
+							&& { !(isPlayer (leader _unit)) }
+							&& { ( _speed < 3 || count(_unit nearroads 6) > 0 ) }
+							&& { (_unit == leader _unit || bcombat_cover_mode == 1) }
+							&& { !([_unit] call bcombat_fnc_has_task) }
+							&& { [_unit, _shooter] call bcombat_fnc_is_visible_head }
+							//&& ( count(_unit nearroads 10) > 0 ) 
+						) then { //&& [_unit] call bcombat_fnc_speed == 0 // !(isHidden _unit) ||
 						
-							[_unit, _shooter] call bcombat_fnc_handle_smoke_grenade;
-						}
-						else
-						{
-							// move to cover
-							if( 
-								bcombat_allow_cover
-								&& { _dist > 50 }
-								&& { _unit getVariable ["bcombat_suppression_level", 0] > 10 }
-								&& { !(isPlayer (leader _unit)) }
-								&& { ( _speed < 3 || count(_unit nearroads 6) > 0 ) }
-								&& { (_unit == leader _unit || bcombat_cover_mode == 1) }
-								&& { !([_unit] call bcombat_fnc_has_task) }
-								&& { [_unit, _shooter] call bcombat_fnc_is_visible_head }
-								//&& ( count(_unit nearroads 10) > 0 ) 
-							) then { //&& [_unit] call bcombat_fnc_speed == 0 // !(isHidden _unit) ||
-							
-								[_unit, "bcombat_fnc_task_move_to_cover", 100, [bcombat_cover_radius, objNull]] call bcombat_fnc_task_set;  
-							}
+							[_unit, "bcombat_fnc_task_move_to_cover", 100, [bcombat_cover_radius, objNull]] call bcombat_fnc_task_set;  
 						};
+						
 					};
 					
 					_penalty  = (round( _penalty * ( 1 - ( _unit getVariable "bcombat_skill" ) ) ) min 100) max 1;
@@ -106,7 +107,7 @@ bcombat_fnc_bullet_incoming =
 							&& 
 							{ ( 
 								( random 100 > _unit getVariable ["bcombat_suppression_level", 0] )  // && ( _unit getVariable ["bcombat_suppression_level", 0] <= 65 )
-								|| _dist < 30
+								|| _dist < 25
 								|| [_unit, _shooter] call bcombat_fnc_relativeDirTo < 75
 							) }
 							
@@ -232,7 +233,7 @@ bcombat_fnc_suppression =
 			_unit forcespeed 20;
 			_unit doWatch objNull;
 			//_unit doTarget objNull;
-			_unit setcombatmode "BLUE";
+			//_unit setcombatmode "GREEN";
 		};
 	
 		if( bcombat_debug_enable ) then { 

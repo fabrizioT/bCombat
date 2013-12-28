@@ -45,6 +45,11 @@ _nul = [ _this select 0] spawn
 			_unit addMagazine "SmokeShell"; 
 		};
 	};
+	
+	if( bcombat_cqb_radar ) then
+	{
+		[ _unit, bcombat_cqb_radar_clock, bcombat_cqb_radar_max_distance, bcombat_cqb_radar_params ] spawn bcombat_fnc_handle_targets;
+	};
 				
 	while { [_unit] call bcombat_fnc_is_alive } do 
 	{

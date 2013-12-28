@@ -153,17 +153,15 @@ bcombat_fnc_task_fire =
 			[ _msg, 6 ] call bcombat_fnc_debug;
 		};
 
-		if( [_unit, _enemy] call bcombat_fnc_knprec <= 1.5 || _dist < 150 ) then
+		if( [_unit, _enemy] call bcombat_fnc_knprec <= 2 || _dist < 150 ) then
 		{		
 			//_unit doWatch objNull;
 			//_unit doTarget objNull;
 			
-			_unit reveal [_enemy, 4];
-			
-			sleep .01;
-
+			//_unit reveal [_enemy, 4];
 			_unit glanceAt _enemy; 
 			_unit doWatch _enemy; 
+			sleep .01;
 
 			if( combatMode (group _unit) in ["RED", "YELLOW"]  ) then
 			{
@@ -228,20 +226,21 @@ bcombat_fnc_task_fire =
 				if( _visible ) then 
 				{
 					_unit suppressFor 0;
-
-					[_unit, _enemy] call bcombat_fnc_lookat;
-					
+	
+					[_unit, _enemy, 15, false] call bcombat_fnc_lookat;
+					_unit dofire _enemy;
+					/*
 					//if( currentWeapon _unit == primaryWeapon _unit && _unit ammo (currentWeapon _unit) > 20 && _dist < 200 ) then {
 					if( _mgun && _dist < 300 ) then 
 					{
-						_unit dofire _enemy;
+						//_unit dofire _enemy;
 						//_unit forceWeaponFire [ currentWeapon _unit, "FullAuto"];
 						//_unit suppressFor 2;
 					}
 					else
 					{
-						_unit dofire _enemy;
-					};
+						//_unit dofire _enemy;
+					};*/
 				}
 				else
 				{
@@ -385,7 +384,7 @@ bcombat_fnc_task_move_to_cover =
 
 bcombat_fnc_task_throw_grenade = 
 {
-	private ["_unit", "_task", "_priority", "_args", "_enemy", "_pos", "_distance", "_h", "_ang", "_eh", "_w", "_msg"];
+	private ["_unit", "_task", "_priority", "_args", "_enemy", "_pos", "_p", "_distance", "_h", "_ang", "_eh", "_w", "_msg"];
 
 	_unit = _this select 0;
 	_task = _this select 1; 
@@ -418,13 +417,16 @@ bcombat_fnc_task_throw_grenade =
 		
 		if( _muzzle == "HandGrenadeMuzzle" &&  !(isNil {_unit getVariable ["bcombat_grenade_distance", nil ]})  ) then // typeOf _bullet == "GrenadeHand"
 		{
+			_p = getPosASL _bullet;
+			
 			_v = velocity _bullet;
 			_k = ( (( _unit getvariable "bcombat_grenade_distance")  -  (_unit getvariable "bcombat_grenade_h") ) / 45) ^ 0.5;
 
 			_vx = (_v select 0) * _k * 1.1;
 			_vz = (_v select 1) * _k * 1.1;
-			_vy = (_v select 2) * _k * 1.33;
+			_vy = (_v select 2) * _k * 1.35;
 			
+			_bullet setPos [_p select 0, _p select 1, (_p select 2) + 0.5]; 
 			_bullet setvelocity [_vx, _vz, _vy];
 		};
 	}];
@@ -435,7 +437,7 @@ bcombat_fnc_task_throw_grenade =
 	_unit selectWeapon "throw"; 
 	sleep .01;
 	
-	[_unit, _enemy] call bcombat_fnc_lookat;
+	[_unit, _enemy, 0, true] call bcombat_fnc_lookat;
 	
 	_ang = [_unit, _enemy] call bcombat_fnc_relativeDirTo_signed;
 	_unit setDir ((direction _unit) + _ang);
@@ -466,9 +468,11 @@ bcombat_fnc_task_throw_smoke_grenade =
 	_priority = _this select 2; 
 	_args = _this select 3;
 	_enemy = _args select 0;
+	/*
 player setpos (position _unit);
 hintc("SMOKE");
-sleep 3;
+sleep 4;
+*/
 	_w = format["%1", currentWeapon _unit];
 	sleep .01;
 	if(_w == "") then { _w = format["%1", primaryWeapon _unit]; };
@@ -515,7 +519,7 @@ sleep 3;
 	_unit selectWeapon "throw"; 
 	sleep .01;
 	
-	[_unit, _enemy] call bcombat_fnc_lookat;
+	[_unit, _enemy, 0, true] call bcombat_fnc_lookat;
 	
 	_ang = [_unit, _enemy] call bcombat_fnc_relativeDirTo_signed;
 	_unit setDir ((direction _unit) + _ang);

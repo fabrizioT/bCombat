@@ -13,7 +13,7 @@ bcombat_enable = true;								// (Boolean) Toggle feature on / off
 
 bcombat_incoming_bullet_timeout = 0.2;				// (Seconds) minimum timeout between bullets
 bcombat_danger_distance = 300; 						// (Meters) Minimum distance from shooter, for groups to automatically switch to "combat" behaviour
-bcombat_unit_clock = [3,6];							// (Seconds) [minimum timeout, maximum timeout]
+bcombat_unit_clock = [3,5];							// (Seconds) [minimum timeout, maximum timeout]
 		
 // -----------------------
 // CORE bDetect FEATURES
@@ -61,7 +61,7 @@ bcombat_penalty_explosion = 5;						// (Percent) %
 
 // Description: Casualty penalty
 // Triggered: when a dead unit from same group is discovered
-// Effect: up to 20% skill penalty
+// Effect: up to 15% skill penalty
 
 bcombat_penalty_casualty = 15; 						// (Percent) %
 
@@ -73,7 +73,7 @@ bcombat_penalty_wounded = 10; 						// (Percent) %
 
 // Description: penalty recovery rate
 // Triggered: once per second, if no penalty raising events have been triggered
-// Effect: up to 2% skill recovery, halved if units is wounded
+// Effect: up to 2% skill recovery, halved if unit is wounded
 
 bcombat_penalty_recovery = 2; 						// (Percent) %
 
@@ -90,14 +90,14 @@ bcombat_allow_fast_move = false;					// (Boolean) Toggle feature on / off
 
 // Description: fast rotation
 // Triggered: if a known target is on flank / back
-// Effect: depending on stance, unit swivels faster towards targer
+// Effect: depending on stance, unit swivels faster towards target
 // Known issues: sometimes rotation "animation" is a bit rough
 
-bcombat_allow_fast_rotate = true;					// (Boolean) Toggle feature on / off
+bcombat_allow_fast_rotate = false;					// (Boolean) Toggle feature on / off
 
 // Description: custom fleeing behaviour
 // Triggered: when morale is broken
-// Effect: unit leaves formation and moves away. As long as group is not destroyed it will join it back after morale recovery.
+// Effect: unit leaves formation and moves away. As long as group is not destroyed it will join it back after some morale recovery.
 
 bcombat_allow_fleeing = true; 						// (Boolean) Toggle feature on / off
 
@@ -154,16 +154,17 @@ bcombat_allow_hearing = true;						// (Boolean) Toggle feature on / off
 bcombat_allow_grenades = true;						// (Boolean) Toggle feature on / off
 bcombat_grenades_additional_number = 0; 			// (Number) number of additional grenades to be automatically ADDED to unit loadout
 bcombat_grenades_distance = [6,50,6]; 				// (Array) [ minimum distance, maximum distance, min. distance from target for friendly units] 
+bcombat_grenades_timeout = [10, 5];					// (Array) [ unit timeout, group timeout ]
 bcombat_grenades_no_los_only = true; 				// (Boolean) Whether enemy should be out of line-of-sight, for a unit to throw grenade
 
-// Description: 
-// Triggered: 
-// Effect: 
-// Known issues: 
+// Description: smoke grenade throwing
+// Triggered: whenever unit get under fire while moving slow, or if unit is leader or formation leader
+// Effect: a smoke grenade is thrown
 
 bcombat_allow_smoke_grenades = true;					// (Boolean) Toggle feature on / off
 bcombat_smoke_grenades_additional_number = 1; 			// (Number) number of additional smoke grenades to be automatically ADDED to unit loadou
 bcombat_smoke_grenades_distance = [75,300,25]; 			// (Array) [ minimum distance, maximum distance, min. distance from target for friendly units] 
+bcombat_smoke_grenades_timeout = [15, 5];				// (Array) [ unit timeout, group timeout ]
 
 // Description: investigation behavoiur
 // Triggered: if no enemy is known and some explosion / gunshot is heard, or another unit from same group gets killed
@@ -171,7 +172,7 @@ bcombat_smoke_grenades_distance = [75,300,25]; 			// (Array) [ minimum distance,
 // Note: needs bcombat_allow_hearing = true
 
 bcombat_allow_investigate = true;					// (Boolean) Toggle feature on / off
-bcombat_investigate_max_distance = 200;				// (Number) maximum distance from unit, for position to be investigated
+bcombat_investigate_max_distance = 250;				// (Number) maximum distance from unit, for position to be investigated
 	
 // Description: allow fatigue
 // Effect: allows for vanilla fatigue effects
@@ -185,14 +186,14 @@ bcombat_allow_fatigue = false;						// (Boolean) Toggle feature on / off
 
 bcombat_allow_cover = true;							// (Boolean) Toggle feature on / off
 bcombat_cover_mode = 1;								// (0,1) 0 = apply only to leader, 1 = apply to all units
-bcombat_cover_radius = [15,0]; 						// (Array) [ maximum distance from object, maximum distance from building] 
+bcombat_cover_radius = [20,30]; 						// (Array) [ maximum distance from object, maximum distance from building] 
 
 // Description: "target and chase" behaviour
 // Triggered: whenever unit has no target and it's close to a enemy
 // Effect: unit locks enemy as target moves towards its position
 
 bcombat_allow_targeting = true;						// (Boolean) Toggle feature on / off
-bcombat_targeting_max_distance = [50, 150];			// (Array) [ maximum distance, maximum distance if combatMode = "RED"] 
+bcombat_targeting_max_distance = [50, 150];			// (Array) [ maximum distance, maximum distance if combatMode is "RED"] 
 
 // Description: tighten formation
 // Triggered: whenever some in-formation unit falls behind
@@ -200,7 +201,7 @@ bcombat_targeting_max_distance = [50, 150];			// (Array) [ maximum distance, max
 // Known issues: for player led groups thightened formation is breaking the ADVANCE command
 
 bcombat_allow_tightened_formation = true;			// (Boolean) Toggle feature on / off
-bcombat_tightened_formation_max_distance = 50;		// (Meters) Maximum distance a unit can go off formation before being ordered to fall back
+bcombat_tightened_formation_max_distance = 60;		// (Meters) Maximum distance a unit can go off formation before being ordered to fall back
 
 // Description: friendly fire damage cap
 // Triggered: whenever unit is hit by a friendly unit (player excluded)
@@ -216,6 +217,23 @@ bcombat_friendly_fire_max_damage = 0.8;				// (0-1) damage cap ( 0 = allow no da
 bcombat_stop_overwatch = true;    					// (Boolean) Toggle feature on / off
 bcombat_stop_overwatch_mode = 0;    				// (0,1) 0 = apply only to machinegunners, 1 = apply to all units 
 
+// Description: stop / overwatch
+// Triggered: on unit following leader or formation leader
+// Effect: unit is allowed to provide prolonged suppressive fire, while rest of formation moves on
+
+bcombat_cqb_radar = true;    					// (Boolean) Toggle feature on / off
+bcombat_cqb_radar_clock = [0.5, 2.5];    		// (Seconds) 
+bcombat_cqb_radar_max_distance = 100;    		// (Meters) 
+bcombat_cqb_radar_params = [75, 5, 0, 5];		// (Array) [max. angle, min. precision, min. knowsabout, max enemy .speed]
+
+// 
+// 
+// 
+
+bcombat_fancy_moves = true;   
+bcombat_fancy_moves_frequency = .2;   
+
+
 // -----------------------------------------------------------------------------------------------------
 // bCombat MISC CALLS
 // -----------------------------------------------------------------------------------------------------
@@ -227,3 +245,6 @@ bcombat_stop_overwatch_mode = 0;    				// (0,1) 0 = apply only to machinegunner
 // [] spawn bcombat_fnc_fps; // Uncomment this line to activate FPS stats panel (as alternative to bdetect_fnc_benchmark;)
 
 OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
+
+// bdetect_startup_hint = false;
+// bcombat_startup_hint = false;

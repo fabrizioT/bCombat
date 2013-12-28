@@ -47,6 +47,8 @@ bcombat_fnc_debug_text =
 	while {true} do 
 	{
 		private ["_x"];
+		
+		waitUntil { bcombat_enable };
 		{
 			if(  !(_x getVariable["bcombat_text_debug", false]) && [_x] call bcombat_fnc_is_active) then // [_x] call bcombat_fnc_is_active &&
 			{
@@ -197,7 +199,7 @@ bcombat_fnc_debug_text =
 								
 								_unit,
 								_level, 
-								( (_unit getVariable ["bcombat_suppression_timeout_max", 0 ]) - time) max 0,
+								( (_unit getVariable ["bcombat_suppression_timeout_min", 0 ]) - time) max 0,
 								formationleader _unit,
 								
 								ceil( (_unit skill "aimingAccuracy") * 10) / 10, 
@@ -329,6 +331,8 @@ bcombat_fnc_debug_balloons =
 		
 		while { true } do
 		{
+		waitUntil { bcombat_enable };
+		waitUntil { bcombat_enable };
 			{
 				if( [_x] call bcombat_fnc_is_active) then
 				{
@@ -498,6 +502,7 @@ bdetect_fnc_benchmark =
 		
 		while { true } do
 		{
+		waitUntil { bcombat_enable };
 			_cnt = count ( bdetect_fired_bullets ) / 2;
 			if( _cnt > bdetect_stats_max_bullets ) then { bdetect_stats_max_bullets = _cnt; };
 			

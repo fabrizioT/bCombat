@@ -370,8 +370,7 @@ bcombat_fnc_eh_handledamage = {
 	_body_part_damage = _this select 2; // Damage to the above selection (sum of dealt and prior damage)
 	_enemy = _this select 3; //Source of damage (returns the unit if no source)
 	_ammo = _this select 4; // Ammo classname of the projectile that dealt the damage (returns "" if no projectile)
-	
-	//[_unit] call bcombat_fnc_task_clear;
+
 	if(  [_unit] call bcombat_fnc_is_active ) then 
 	{
 		if( bcombat_debug_enable ) then {
@@ -433,8 +432,6 @@ bcombat_fnc_grenade_throwable =
 		
 	_h = (getPosATL _enemy) select 2;
 	
-	//_ang = [_unit, _enemy] call bcombat_fnc_relativeDirTo_signed;
-	
 	if( _distance > _mindist 
 		&& { _distance < _maxdist }
 		&& { _hdiff < _maxhdiff }
@@ -442,8 +439,6 @@ bcombat_fnc_grenade_throwable =
 	{
 		_p = getPosASL _unit;
 		_p set[2, (eyepos _unit) select 2];
-		//_p = [eyePos _unit, .0, _ang + 90] call bcombat_fnc_relpos;
-		//_pos set[2, (eyePos _unit) select 2];
 
 		_p1 = [_p select 0, _p select 1, _p select 2]; 
 		
@@ -515,18 +510,13 @@ bcombat_fnc_find_cover_pos = {
 				{
 					if( _unit distance _r < 5) then	// too near, skip all
 					{
-	//player globalchat format["CLOSE: pos=%1 obj=%2 d=%3",_r, _x, _unit distance _r ];
 						BreakTo "bcombat_fnc_find_cover_pos_loop";
 					};
 					
 					_ret = [_r, _x, 1];
 
-					
-	//player globalchat format["pos=%1 obj=%2 d=%3",_r, _x, _unit distance _r ];
-
 					BreakTo "bcombat_fnc_find_cover_pos_loop";
 				};
-
 				// end blacklisting
 			}
 			else
@@ -605,16 +595,20 @@ bcombat_fnc_unit_skill_set =
 	private [ "_unit", "_k" ];
 	
 	_unit = _this select 0;
-	_k = (skill _unit ) ^ .75 ;
 	
-	_unit setskill [ "SpotDistance", _k];
+	//hintc format["---> %1 %2 %3", skill _unit, _unit skill "spotDistance", _unit skillFinal "spotDistance"];
+	_k = (skill _unit ) ^ .5 ;
+	//_unit setskill [ "SpotDistance", _k];
+	_unit setskill [ "Commanding", _k];
 	_unit setskill [ "Endurance", _k];
 	_unit setSkill [ "courage", _k];
-
+	_unit setSkill [ "AimingSpeed", _k];
+	_unit setSkill [ "SpotTime", _k];
+	/*
 	if( !([currentWeapon _unit] call bcombat_fnc_is_mgun) ) then
 	{
 		_unit setSkill [ "aimingAccuracy", (_unit skill "aimingAccuracy") ^ 1.25];
-	};
+	};*/
 	
 	_unit setVariable [ "bcombat_skill", _unit skill "general"];
 	_unit setVariable [ "bcombat_skill_ac", _unit skill "aimingAccuracy"];
@@ -742,7 +736,7 @@ bcombat_fnc_fast_move = {
 			&& { _unit distance _expos < 250  }
 			&& { (_unit distance _expos) > (_formleader distance _expos)  }
 			&& _speed < 2
-			 ) then // && _mode == "LEADER PLANNED" && _speed < 1
+			 ) then 
 		{
 
 			if (_unit != formLeader _unit && _unit != leader _unit) then { 
@@ -751,7 +745,6 @@ bcombat_fnc_fast_move = {
 			
 			_unit dowatch objNull;
 			_unit setDestination [ _expos, "LEADER PLANNED", true];
-			//_unit switchmove "";
 			_unit forcespeed -1;
 			_unit domove _expos;
 
@@ -761,21 +754,22 @@ bcombat_fnc_fast_move = {
 };
 
 
-
 // Benchmarking: 0.12s x 1000
 bcombat_fnc_lookat = {
 
-	private ["_unit1", "_unit2", "_ang", "_steps", "_step", "_dt", "_n"];
+	private ["_unit1", "_unit2", "_minang", "_force", "_ang", "_steps", "_step", "_dt", "_n"];
 	
 	_unit1 = _this select 0;
 	_unit2 = _this select 1;
+	_minang = _this select 2;
+	_force = _this select 3;
 	
 	_unit1 dowatch _unit2;
 
-	if ( bcombat_allow_fast_rotate 
+	if ( ( bcombat_allow_fast_rotate || _force )
+		&& { isNil { _unit1 getVariable ["bcombat_rotating", nil] } }  
 		&& { !(isPlayer _unit1) }
 		&& { [ _unit1 ] call bcombat_fnc_speed < 3 } 
-		&& { isNil { _unit1 getVariable ["bcombat_rotating", nil] } }  
 	) then {
 
 		_unit1 setVariable ["bcombat_rotating", true];
@@ -785,31 +779,25 @@ bcombat_fnc_lookat = {
 		
 		if(stance _unit1 == "PRONE") then
 		{
-			_step = 5;
+			_step = 6;
 			_dt = 0.03;
 		}
 		else
 		{
-			_step = 10;
+			_step = 12;
 			_dt = 0.03;
 		};
 		
-		if( abs _ang > 30) then 
+		if( abs _ang > _minang ) then 
 		{
 			_steps = ceil ((abs _ang) / _step);
-			_step = _ang / _steps;
-			
-			_n = 0;
-			
-			while { alive _unit1 
-				&& { _n <= _steps }
-			} do //  && [ _unit1 ] call bcombat_fnc_speed  < .5
-			{
-				_n = _n + 1;
+			_step = round(_ang * 10 / _steps) / 10;
+
+			_n=0;
+			for "_n" from 1 to _steps do {
 				_unit1 setDir (_dir + _n * _step  );
-				//player globalchat format["%1 %2 %3", _ang, _n * _step, _dir];
-				
-				sleep _dt;
+				diag_log format["%1 - %2: END rotation ang:%3, curr:%4, step:%5, %6/%7", time, _unit1, _ang, _n * _step, _step, _n, _steps];
+				sleep (_dt);
 			};
 			
 			//_unit1 setDir (_dir + _ang );
@@ -1029,7 +1017,7 @@ bcombat_fnc_stance_set = {
 			
 			case ( _time < _timeout_min  ): 
 			{ 
-				if( (getPosATL _unit) select 2 > .5 ) then 
+				if( (getPosATL _unit) select 2 > .25 ) then 
 				{
 					_st = "Middle";
 				}
@@ -1182,8 +1170,8 @@ bcombat_fnc_handle_grenade =
 			_utime = _unit getvariable ["bcombat_grenade_time", -99];
 
 			if( 
-				time - _utime > 10 
-				&& { time - _gtime > 5 }
+				time - _utime > ( bcombat_grenades_timeout select 0 )
+				&& { time - _gtime > ( bcombat_grenades_timeout select 1 ) }
 				&& { [_unit, _enemy, bcombat_grenades_distance, 5] call bcombat_fnc_grenade_throwable }
 			) then {
 			
@@ -1209,8 +1197,8 @@ bcombat_fnc_handle_smoke_grenade =
 
 	if( 
 		[_unit, _enemy, bcombat_smoke_grenades_distance, 5] call bcombat_fnc_grenade_throwable 
-		&& { time - _utime > 10 }
-		&& { time - _gtime > 5 }
+		&& { time - _utime > ( bcombat_smoke_grenades_timeout select 0 ) }
+		&& { time - _gtime > ( bcombat_smoke_grenades_timeout select 1 ) }
 	) then {
 	
 		(group _unit) setvariable ["bcombat_smoke_grenade_time", time];
@@ -1218,4 +1206,94 @@ bcombat_fnc_handle_smoke_grenade =
 		
 		[_unit, "bcombat_fnc_task_throw_smoke_grenade", 100, [_enemy]] call bcombat_fnc_task_set;
 	};
+};
+
+bcombat_fnc_handle_targets = 
+{
+	private  ["_unit", "_timeout", "_maxdist", "_params", "_nenemy", "_targets", "_x"];
+	
+	_unit = _this select 0;
+	_timeout = _this select 1;
+	_maxdist = _this select 2;
+	_params = _this select 3;
+	_targets = [];
+
+	while { alive _unit } do
+	{
+		waitUntil { bcombat_enable };
+		waitUntil { [_unit] call bcombat_fnc_is_active && !(isPlayer _unit) };
+		
+		_nenemy = _unit findnearestenemy _unit;
+		
+		if( !(isNull _nenemy) && { random 1 <= (_unit skill "general" ) ^ 0.5} && { _unit distance _nenemy < bcombat_cqb_radar_max_distance } ) then
+		{
+			_targets = [_unit, _maxdist, _params] call bcombat_fnc_targets;
+			
+			{
+				if( [_unit, _x] call bcombat_fnc_is_visible_head ) then
+				{
+					_unit reveal [_x, 4];
+					
+					if( isNull (assignedTarget _unit)
+						&& { !([_unit] call bcombat_fnc_has_task) }
+						//&& _x == _targets select 0					
+					) then {
+
+						_unit glanceAt _x;
+						_unit dowatch _x;
+						player globalchat format[" ----> %1 WATCH  %2", _x, _unit];
+						
+					};
+				}
+				else
+				{
+					_unit reveal [_x, 2];
+				};
+				
+			} foreach _targets;
+			
+			sleep (_timeout select 0);
+		}
+		else
+		{
+			sleep (_timeout select 1);
+		};
+		
+		//player globalchat format["%1 - targets: %2 ---> %3 %4", _unit, _targets, _maxdist, _params];
+	};
+};
+
+bcombat_fnc_targets = 
+{
+	private  ["_unit", "_maxdist", "_maxngle", "_minprec", "_minkn", "_maxspeed", "_targets", "_x", "_enemy", "_ret"];
+	
+	_unit = _this select 0;
+	_maxdist = _this select 1;
+	_maxangle = (_this select 2) select 0;
+	_minprec = (_this select 2) select 1;
+	_minkn = (_this select 2) select 2;
+	_maxspeed = (_this select 2) select 3;
+	_targets = _unit nearTargets _maxdist;
+	_ret = [];
+	
+	{
+		_enemy = (_x select 4);
+		
+		if( !(isNull _enemy) 
+			&& { _enemy isKindOf "CAManBase"  }
+			&& { vehicle _enemy == _enemy  }
+			&& { _unit distance _enemy < _maxdist }
+			&& { [ _unit, _enemy] call bcombat_fnc_is_enemy }
+			&& { [_unit, _enemy] call bcombat_fnc_relativeDirTo < _maxangle }
+			&& { [_unit, _enemy] call bcombat_fnc_knprec < _minprec }
+			&& {  _unit knowsabout _enemy > _minkn }
+			&& { [ _enemy ] call bcombat_fnc_speed < _maxspeed }
+		) then
+		{
+			_ret set[ count _ret, _enemy];
+		};
+		
+	} foreach _targets;
+	
+	_ret
 };

@@ -74,8 +74,8 @@ link30[] = {22,2};
 link31[] = {23,4};
 link32[] = {24,4};
 link33[] = {25,20};
-globals[] = {10.000000,1,0,1,16777215,640,480,1,216,6316128,1,-940.758118,273.185669,566.340576,-457.889221,1075,907,1};
-window[] = {2,-1,-1,-1,-1,920,140,1176,140,3,1095};
+globals[] = {10.000000,1,0,1,16777215,640,480,1,216,6316128,1,-748.216797,80.643898,403.888947,-295.438171,1075,907,1};
+window[] = {2,-1,-1,-32000,-32000,836,56,1092,56,3,1095};
 *//*%FSM</HEAD>*/
 class FSM
 {
@@ -112,16 +112,14 @@ class FSM
        "*/" \n
        "" \n
        "" \n
-       "if( !(isNil ""bcombat_init_done"") && [_this] call bcombat_fnc_is_active) then " \n
+       "if( !(isNil ""bcombat_init_done"") && { bcombat_enable } && { [_this] call bcombat_fnc_is_active } ) then " \n
        "{" \n
-       "	if( true ) then " \n
+       "	if( !(isPlayer _this) ) then " \n
        "	{" \n
        "		_beh = behaviour _this;" \n
        "" \n
        "		_q =   [ [_dangerCause, _dangerPos, _dangerUntil, _dangerCausedBy] ] + _queue;" \n
-       "" \n
        "		_data = [_this, _q] call bcombat_fnc_process_danger_queue;" \n
-       "" \n
        "" \n
        "" \n
        "		if(count _data >0) then" \n
@@ -134,33 +132,29 @@ class FSM
        "" \n
        "		_queue = [];" \n
        "" \n
-       "		if(  _dangerCause == 8 || (  _dangerCause in [0,3]  ) ) then" \n
+       "		if(  _dangerCause == 8 || (  _dangerCause in [3]  && [_this,  _dangerCausedBy] call bcombat_fnc_knprec < 5 && [_this,  _dangerCausedBy] call bcombat_fnc_relativeDirTo < 75) ) then" \n
        "		{ 	" \n
+       "" \n
        "			_visible = [_this, _dangerCausedBy] call bcombat_fnc_is_visible;" \n
-       "" \n
-       "" \n
-       "if(_visible) then {" \n
-       "//hintc format[""%1 %2"", _this, _dangerCausedBy];" \n
-       "};" \n
-       "" \n
+       "			_dist = _this distance _dangerCausedBy;" \n
        "" \n
        "			if( canfire _this " \n
-       "				&& ( _this distance _dangerCausedBy < 50 || _visible )" \n
+       "				&& ( _dist < 50 || _visible )" \n
        "				&& { !(fleeing _this) && !(captive _this) }" \n
        "				&& { combatmode _this in [""RED"", ""YELLOW""] }" \n
-       "				&& { random 100 > _this getVariable [""bcombat_suppression_level"", 0] }" \n
-       "				//&& { _this distance _dangerCausedBy < [_this] call bcombat_weapon_max_range  }" \n
+       "				&& { random 100 > _this getVariable [""bcombat_suppression_level"", 0] || _dist  < 25}" \n
+       "				//&& { _dist  < [_this] call bcombat_weapon_max_range  }" \n
        "				&& " \n
        "				{ ( " \n
        "					!( currentCommand _this in [""MOVE""]  )" \n
-       "					|| _this distance _dangerCausedBy < 150 " \n
+       "					|| _dist < 150 " \n
        "					|| combatMode _this in [""RED""]" \n
        "					|| (isHidden _this )" \n
        "					|| ([currentWeapon _this] call bcombat_fnc_is_mgun  && ((isHidden _this ) || [ _this ] call bcombat_fnc_speed == 0) )" \n
        "					|| (assignedTarget _this) == _dangerCausedBy" \n
        "					|| (bcombat_slow_leaders  && _this == leader _this )" \n
        "					|| ( " \n
-       "						[_this, _dangerCausedBy] call bcombat_fnc_relativeDirTo < 60 && _this distance _dangerCausedBy < 250 &&" \n
+       "						[_this, _dangerCausedBy] call bcombat_fnc_relativeDirTo < 60 && _dist  < 250 &&" \n
        "						(" \n
        "							(waypointPosition [group _this, currentWaypoint (group _this) ]) distance _dangerCausedBy< 100 " \n
        "							 || ((expecteddestination _this) select 0) distance _dangerCausedBy< 100" \n
@@ -255,7 +249,7 @@ class FSM
           priority = 100.000000;
           to="Check_queue";
           precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
-          condition=/*%FSM<CONDITION""">*/"!(isNil ""bcombat_init_done"") &&  [_this] call bcombat_fnc_is_active "/*%FSM</CONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"!(isNil ""bcombat_init_done"") && { bcombat_enable } && { [_this] call bcombat_fnc_is_active }"/*%FSM</CONDITION""">*/;
           action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
         };
         /*%FSM</LINK>*/

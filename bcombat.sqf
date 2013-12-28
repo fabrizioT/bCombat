@@ -141,6 +141,10 @@ if(isNil "bcombat_friendly_fire_max_damage") then { bcombat_friendly_fire_max_da
 if(isNil "bcombat_stop_overwatch") then { bcombat_stop_overwatch = false; }; 
 if(isNil "bcombat_stop_overwatch_mode") then { bcombat_stop_overwatch_mode = 0; }; 
 
+// Fanncy moves
+if(isNil "bcombat_fancy_moves") then { bcombat_fancy_moves = false; }; 
+if(isNil "bcombat_fancy_moves_frequency") then { bcombat_fancy_moves_frequency = 0; }; 
+
 // -----------------------------
 // Libs loading
 // -----------------------------

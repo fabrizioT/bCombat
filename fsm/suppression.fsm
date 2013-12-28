@@ -25,8 +25,8 @@ link9[] = {7,8};
 link10[] = {8,9};
 link11[] = {9,4};
 link12[] = {10,2};
-globals[] = {0.000000,0,0,0,0,640,480,1,18,6316128,1,-1127.216064,-538.346252,236.694138,-342.595337,922,907,1};
-window[] = {2,-1,-1,-1,-1,808,28,1064,28,3,942};
+globals[] = {0.000000,0,0,0,0,640,480,1,18,6316128,1,-953.901001,-711.661804,66.198471,-172.099747,922,907,1};
+window[] = {2,-1,-1,-32000,-32000,836,56,1092,56,3,942};
 *//*%FSM</HEAD>*/
 class FSM
 {
@@ -110,27 +110,50 @@ class FSM
        "if( _unit isKindOf ""CAManBase"" && _unit == vehicle _unit ) then " \n
        "{" \n
        "	_st = [ _unit,  _timeout_min, _timeout_mid, _timeout_max ] call bcombat_fnc_stance_set;   " \n
+       "	_visible= [_unit, _enemy] call bcombat_fnc_is_visible_head;" \n
        "" \n
        "	if (_st != """" ) then" \n
        "	{" \n
-       "" \n
        "		if(  (_event in  [1,11] || time > _timeout_stance_wait)  ) then  //|| [ _unit ] call bcombat_fnc_stance_get == ""up""" \n
        "		{" \n
        "			if( _event in  [1,11] " \n
        "				&& { _st == ""Down"" }" \n
        "				&& { stance _unit != ""PRONE"" }" \n
-       "				&& { [_unit, _enemy] call bcombat_fnc_is_visible_head } " \n
+       "				&& { _visible } " \n
        "				&& { time - _timeout_stance_anim > 5 }" \n
        "			) then {" \n
-       "				_unit playMoveNow ""AmovPpneMstpSrasWrflDnon"";" \n
        "				_timeout_stance_anim = time;" \n
+       "				_unit playMoveNow ""AmovPpneMstpSrasWrflDnon"";" \n
+       "				" \n
        "			};	" \n
        "" \n
        "			_unit setunitpos _st; " \n
        "			_unit setVariable [""bcombat_stance"", _st]; // debug only" \n
        "			_timeout_stance_wait = time + 3;" \n
        "		};" \n
+       "	}" \n
+       "	else" \n
+       "	{" \n
+       "				if( bcombat_fancy_moves &&  { random 1 < bcombat_fancy_moves_frequency } && { currentweapon _unit == primaryweapon _unit } && { [ _unit ] call bcombat_fnc_speed < 1 }  && { _event in  [1,11]  } && { time - _timeout_stance_anim > 3 } && { stance _unit == ""PRONE""}  && { _visible }  ) then " \n
+       "				{" \n
+       "					_timeout_stance_anim = time;" \n
+       "" \n
+       "					if( random 1 > 0.5) then {" \n
+       "						_unit playMoveNow ""amovppnemstpsraswrfldnon_amovppnemevaslowwrfldl"";" \n
+       "						if( random 1 > 0.5) then {" \n
+       "							_unit playMove ""amovppnemstpsraswrfldnon_amovppnemevaslowwrfldl"";" \n
+       "						};" \n
+       "					}else {" \n
+       "						_unit playMoveNow ""amovppnemstpsraswrfldnon_amovppnemevaslowwrfldr"";" \n
+       "						if( random 1 > 0.5) then {" \n
+       "							_unit playMove ""amovppnemstpsraswrfldnon_amovppnemevaslowwrfldr"";" \n
+       "						};" \n
+       "					};" \n
+       "				};" \n
        "	};" \n
+       "" \n
+       "" \n
+       "" \n
        "" \n
        "	if( bcombat_debug_enable ) then {" \n
        "		_msg = format[""[%1] suppression.fsm  idle state - level=%2, event=%3, stance=%4, timeout=%5, enemy=%6, skill=%7"", _unit, _level, _event, _st, _timeout_max, _enemy,  ( _unit getVariable ""bcombat_skill"" ) ];" \n
