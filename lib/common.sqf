@@ -1230,18 +1230,19 @@ bcombat_fnc_handle_targets =
 			_targets = [_unit, _maxdist, _params] call bcombat_fnc_targets;
 			
 			{
-				if( [_unit, _x] call bcombat_fnc_is_visible_head ) then
+				if( [_unit, _x] call bcombat_fnc_is_visible ) then
 				{
 					_unit reveal [_x, 4];
+					_unit glanceAt _x;
 					
 					if( isNull (assignedTarget _unit)
 						&& { !([_unit] call bcombat_fnc_has_task) }
 						//&& _x == _targets select 0					
 					) then {
 
-						_unit glanceAt _x;
+						
 						_unit dowatch _x;
-						player globalchat format[" ----> %1 WATCH  %2", _x, _unit];
+						//player globalchat format[" ----> %1 WATCH  %2", _x, _unit];
 						
 					};
 				}

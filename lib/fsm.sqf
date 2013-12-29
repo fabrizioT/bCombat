@@ -93,11 +93,11 @@ bcombat_fnc_process_danger_queue =
 	
 	_dictionary = 
 	[
-		[bcombat_penalty_enemy_contact, 0, (15 + random 15), (60 + random 30) ],	//0 enemy detected
+		[bcombat_penalty_enemy_contact, 0, (30 + random 30), (60 + random 30) ],	//0 enemy detected
 		[0, 0, 0, 0],	//1 fired near
-		[bcombat_penalty_wounded, 10, 15 + random 15, 60 + random 30],	//2	 being hit
+		[bcombat_penalty_wounded, 10 + random 10, 20 + random 20, 60 + random 30],	//2	 being hit
 		[bcombat_penalty_enemy_close, 0, 15 + random 15, 60 + random 30],	//3	enemy near
-		[bcombat_penalty_explosion, 10, 15 + random 15, 60 + random 30],	//4	explosion near
+		[bcombat_penalty_explosion, 5 + random 5, 15 + random 15, 60 + random 30],	//4	explosion near
 		[bcombat_penalty_casualty, 0, 15 + random 15, 60 + random 30],	//5 friendly dead
 		[0, 0, 0, 0],	//6 enemy dead
 		[bcombat_penalty_scream, 0, 0, 60 + random 30],	//7 being hit, screaming

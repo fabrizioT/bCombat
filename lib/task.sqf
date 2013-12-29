@@ -185,7 +185,7 @@ bcombat_fnc_task_fire =
 						(
 							_dist < 250 
 							&& [_unit, _enemy] call bcombat_fnc_relativeDirTo < 90
-							&& ( _speed < 3 || !([_unit] call bcombat_fnc_in_formation) || _unit distance (formationLeader _unit) < 50 ) 
+							&& ( !([_unit] call bcombat_fnc_in_formation) || _unit distance (formationLeader _unit) < 50 ) 
 						) 
 					) then
 					{
@@ -195,7 +195,7 @@ bcombat_fnc_task_fire =
 						}
 						else
 						{
-							[_unit, 3, 5 + random 5, 2, _dist] call bcombat_fnc_stop;
+							[_unit, 3, 3 + random 5, 2, _dist] call bcombat_fnc_stop;
 						};
 					};
 				}
@@ -209,7 +209,7 @@ bcombat_fnc_task_fire =
 						(
 							_dist < 250 
 							&& [_unit, _enemy] call bcombat_fnc_relativeDirTo < 60
-							&& ( _speed < 3 || !([_unit] call bcombat_fnc_in_formation) || _unit distance (formationLeader _unit) < 50 ) 
+							&& ( !([_unit] call bcombat_fnc_in_formation) || _unit distance (formationLeader _unit) < 50 ) 
 						) 
 					) then
 					{
@@ -218,7 +218,7 @@ bcombat_fnc_task_fire =
 						}
 						else
 						{
-							[_unit, 3, 5 + random 5, 2, _dist] call bcombat_fnc_stop;
+							[_unit, 3, 3 + random 5, 2, _dist] call bcombat_fnc_stop;
 						};
 					};
 				};
@@ -417,16 +417,15 @@ bcombat_fnc_task_throw_grenade =
 		
 		if( _muzzle == "HandGrenadeMuzzle" &&  !(isNil {_unit getVariable ["bcombat_grenade_distance", nil ]})  ) then // typeOf _bullet == "GrenadeHand"
 		{
-			_p = getPosASL _bullet;
-			
 			_v = velocity _bullet;
 			_k = ( (( _unit getvariable "bcombat_grenade_distance")  -  (_unit getvariable "bcombat_grenade_h") ) / 45) ^ 0.5;
 
 			_vx = (_v select 0) * _k * 1.1;
 			_vz = (_v select 1) * _k * 1.1;
-			_vy = (_v select 2) * _k * 1.35;
+			_vy = (_v select 2) * _k * 1.1;
 			
-			_bullet setPos [_p select 0, _p select 1, (_p select 2) + 0.5]; 
+			_p = getPosASL _bullet;
+			_bullet setPos [_p select 0, _p select 1, (_p select 2) + 0.3]; 
 			_bullet setvelocity [_vx, _vz, _vy];
 		};
 	}];

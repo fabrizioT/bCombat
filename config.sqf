@@ -21,8 +21,8 @@ bcombat_features_clock = [3,5];						// (Seconds) Additional features clocking [
 
 bdetect_bullet_max_distance = 750;  				// (Meters) Maximum travelled distance for a bullet (to cause suppression)
 bdetect_bullet_max_lifespan = 2; 					// (Seconds) Maximum lifespan for bullet
-bdetect_bullet_max_proximity = 6; 					// (Meters) Maximum distance from unit for bullet (to cause suppression)
-bdetect_bullet_max_height = 6;  					// (Meters) Maximum height on ground for bullet (to cause suppression)
+bdetect_bullet_max_proximity = 6.5; 					// (Meters) Maximum distance from unit for bullet (to cause suppression)
+bdetect_bullet_max_height =  6.5;  					// (Meters) Maximum height on ground for bullet (to cause suppression)
 
 // -----------------------------------------------------------------------------------------------------
 // bCombat SUPPRESSION CONFIGURATION
@@ -139,7 +139,7 @@ bcombat_fire_back_group_max_friend_distance = 250; 	// (Number) Maximum distance
 
 bcombat_allow_suppressive_fire = true;				// (Boolean) Toggle feature on / off
 bcombat_suppressive_fire_duration = [0.1, 0.2]; 	// (Array) [seconds of suppressive fire for common unit, seconds of suppressive fire for for autorifleman/machinegunner]
-bcombat_suppressive_fire_distance = [50, 200]; 		// (Array) [minimum distance from target, maximum distance from target]
+bcombat_suppressive_fire_distance = [50, 250]; 		// (Array) [minimum distance from target, maximum distance from target]
 
 // Description: enhanced hearing
 // Triggered: whenever some nearby explosion / gunshot is heard
@@ -154,7 +154,7 @@ bcombat_allow_hearing = true;						// (Boolean) Toggle feature on / off
 
 bcombat_allow_grenades = true;						// (Boolean) Toggle feature on / off
 bcombat_grenades_additional_number = 0; 			// (Number) number of additional grenades to be automatically ADDED to unit loadout
-bcombat_grenades_distance = [6,50,6]; 				// (Array) [ minimum distance, maximum distance, min. distance from target for friendly units] 
+bcombat_grenades_distance = [6,45,6]; 				// (Array) [ minimum distance, maximum distance, min. distance from target for friendly units] 
 bcombat_grenades_timeout = [10, 5];					// (Array) [ unit timeout, group timeout ]
 bcombat_grenades_no_los_only = true; 				// (Boolean) Whether enemy should be out of line-of-sight, for a unit to throw grenade
 
@@ -187,7 +187,7 @@ bcombat_allow_fatigue = false;						// (Boolean) Toggle feature on / off
 
 bcombat_allow_cover = true;							// (Boolean) Toggle feature on / off
 bcombat_cover_mode = 1;								// (0,1) 0 = apply only to leader, 1 = apply to all units
-bcombat_cover_radius = [20,30]; 					// (Array) [ maximum distance from object, maximum distance from building] 
+bcombat_cover_radius = [15,0]; 					// (Array) [ maximum distance from object, maximum distance from building] 
 
 // Description: "target and chase" behaviour
 // Triggered: whenever unit has no target and it's close to a enemy
@@ -202,7 +202,7 @@ bcombat_targeting_max_distance = [50, 150];			// (Array) [ maximum distance, max
 // Known issues: for player led groups thightened formation is breaking the ADVANCE command
 
 bcombat_allow_tightened_formation = true;			// (Boolean) Toggle feature on / off
-bcombat_tightened_formation_max_distance = 60;		// (Meters) Maximum distance a unit can go off formation before being ordered to fall back
+bcombat_tightened_formation_max_distance = 50;		// (Meters) Maximum distance a unit can go off formation before being ordered to fall back
 
 // Description: friendly fire damage cap
 // Triggered: whenever unit is hit by a friendly unit (player excluded)
@@ -232,19 +232,21 @@ bcombat_cqb_radar_params = [75, 5, 0, 5];		// (Array) [max. angle, min. precisio
 // Effect: some animations, such as rolling, are played
 
 bcombat_fancy_moves = true;     				// (Boolean) Toggle feature on / off
-bcombat_fancy_moves_frequency = 0.2;    		// (0-1) Probability of occurring. 0=never (0%), 1=all the time (100%). 
+bcombat_fancy_moves_frequency = 0.25;    		// (0-1) Probability of occurring. 0=never (0%), 1=all the time (100%). 
 
 // -----------------------------------------------------------------------------------------------------
 // bCombat MISC CALLS
 // -----------------------------------------------------------------------------------------------------
 
 //[] spawn bcombat_fnc_debug_text; // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
-//call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debug balloons (as alternative to bcombat_fnc_debug_text or bcombat_fnc_fps)
+call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debug balloons (as alternative to bcombat_fnc_debug_text or bcombat_fnc_fps)
 
-//call bdetect_fnc_benchmark; // Uncomment this line to activate bDetect live stats panel (as alternative to bcombat_fnc_fps)
+call bdetect_fnc_benchmark; // Uncomment this line to activate bDetect live stats panel (as alternative to bcombat_fnc_fps)
 // [] spawn bcombat_fnc_fps; // Uncomment this line to activate FPS stats panel (as alternative to bdetect_fnc_benchmark;)
 
-OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
-
+//OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
+player allowdamage false;
 // bdetect_startup_hint = false;
 // bcombat_startup_hint = false;
+
+hintc format["%1", getArray(configFile >> "CfgAISkill" >> "aimingAccuracy") ];
