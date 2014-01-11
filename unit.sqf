@@ -12,8 +12,6 @@ _nul = [ _this select 0] spawn
 	{
 		_unit enableFatigue false;
 	};
-
-	//player globalchat format["Initializing %1", _unit];
 	
 	[_unit] call bcombat_fnc_unit_skill_set;
 	
@@ -85,17 +83,6 @@ _nul = [ _this select 0] spawn
 					(group _unit) setVariable ["bcombat_cover_blacklist", _blacklist];
 				};
 	
-			/*
-				_dest = expecteddestination _unit;
-				_mode = _dest select 1;
-				
-				if( _mode != "LEADER PLANNED" && [ _unit ] call bcombat_fnc_speed == 0) then
-				{
-					hintc format["STUCK LEADER %1 - %2", _unit, _dest ];
-					_unit setdestination [ _dest select 0, "LEADER _PLANNED", true];
-					_unit domove (getPos _unit);
-				};
-				*/
 				_enemy = _unit findnearestEnemy _unit;
 				
 				if( !(isNull _enemy)) then

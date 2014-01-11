@@ -4,27 +4,27 @@ bCOMBAT AI MOD v0.15 [SP] for ARMA3
 INFORMATION
 -----------------------------------------
 
-bCombat is an ArmA3 infantry AI enhancement mod released in form of addon, currently under development.
-It's Single Player only (for now) and CBA is required.
+bCombat is an ArmA3 infantry AI enhancement mod in form of addon, currently under development.
+It's Single Player only (for now) and CBA is a requirement.
 
 
 REQUIREMENTS
 -----------------------------------------
 
-+   Download and install CBA A3 Beta 4 distribution, get it from here: http://dev-heaven.net/projects/cca/files
++   Download and install latest CBA distribution, get it from here: http://dev-heaven.net/projects/cca/files
 
 
 INSTALLATION
 -----------------------------------------
 
-+   Extract the bCombat compressed package anywhere.
-+   Move or copy the "@bcombat" folder from extracted package folder to ArmA 3 main folder, usually: <steam path>\steamapps\common\Arma 3\
-+   Copy "userconfig" folder to your ArmA 3 main folder (you probably have an existing "userconfig" folder, just overwrite it)
-	Once copied please verify that bcombat_config.hpp file exists, in the following path:
-  
-	<Arma 3 folder>\userconfig\bcombat\bcombat_config.hpp
++   Extract the bCombat zip package anywhere.
++   Move both "@bcombat" and "userconfig" folder from extraction location to ArmA 3 main folder, usually: <Your Steam Path>\steamapps\common\Arma 3\
 
-+   Launch ArmA 3 and activate bCombat into "Configure / Expansions" menu
+	Once both folders have been moved please doublecheck "bcombat_config.hpp" file exists in the path:
+  
+		<Your Steam Path>\steamapps\common\Arma 3\userconfig\bcombat\bcombat_config.hpp
+
++   Launch ArmA 3 and activate bCombat from "Configure / Expansions" menu.
 
 
 DESCRIPTION
@@ -111,12 +111,12 @@ This mod wouldn't have seen the light without the support of the testers:
 
 A final thanks to the talented and dedicated people who over time inspired this work:
 
-+	TonyRanger
-+	Kronzky
-+	Monsada
-+	Solus
-+	SNKMAN
-+	Rg7621
-+	Protegimus 
-+	Sickboy
++   TonyRanger
++   Kronzky
++   Monsada
++   Solus
++   SNKMAN
++   Rg7621
++   Protegimus 
++   Sickboy
 

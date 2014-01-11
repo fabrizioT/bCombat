@@ -417,8 +417,6 @@ bcombat_fnc_debug_balloons =
 						
 					if( _so ) then
 					{
-					//hintc("OK");
-					//player setpos (position _x);
 						if( isNull _ball_so ) then {
 					
 							_ball_so = "Sign_Sphere25cm_F" createvehicle getposATL _x;  
@@ -502,7 +500,7 @@ bdetect_fnc_benchmark =
 		
 		while { true } do
 		{
-		waitUntil { bcombat_enable };
+			//waitUntil { bcombat_enable };
 			_cnt = count ( bdetect_fired_bullets ) / 2;
 			if( _cnt > bdetect_stats_max_bullets ) then { bdetect_stats_max_bullets = _cnt; };
 			

@@ -30,6 +30,13 @@ bcombat_fnc_bullet_incoming =
 			{
 				if( !(isPlayer _unit ) ) then 
 				{
+					// Unknown enemy, go to cover
+					_nenemy = _unit findnearestEnemy _unit;
+					if(  isNull(_nenemy) && !(isHidden _unit) && { _dist > 50 } ) then // && !([_unit] call bcombat_fnc_has_task)
+					{ 	
+						[_unit, "bcombat_fnc_task_move_to_cover", 100, [bcombat_cover_radius, objNull]] call bcombat_fnc_task_set; 
+					};
+		
 					[_unit] call bcombat_fnc_allow_fire;
 					[_unit, _shooter] call bcombat_fnc_reveal;
 				
@@ -56,8 +63,6 @@ bcombat_fnc_bullet_incoming =
 						&& { [_unit, _shooter] call bcombat_fnc_knprec < 25 }
 						&& { [ _shooter ] call bcombat_fnc_speed < 3 }
 					) then {
-						//hintc format["has=%1 dist=%2 prec=%3 spd=%4 tsk=%5", "SmokeShell" in (magazines _unit), _dist, [_unit, _shooter] call bcombat_fnc_knprec < 25, [ _shooter ] call bcombat_fnc_speed, [_unit] call bcombat_fnc_has_task];
-					
 						[_unit, _shooter] call bcombat_fnc_handle_smoke_grenade;
 					}
 					else
@@ -71,7 +76,7 @@ bcombat_fnc_bullet_incoming =
 							&& { !(isPlayer (leader _unit)) }
 							&& { ( _speed < 3 || count(_unit nearroads 6) > 0 ) }
 							&& { (_unit == leader _unit || bcombat_cover_mode == 1) }
-							&& { !([_unit] call bcombat_fnc_has_task) }
+							//&& { !([_unit] call bcombat_fnc_has_task) }
 							&& { [_unit, _shooter] call bcombat_fnc_is_visible_head }
 							//&& ( count(_unit nearroads 10) > 0 ) 
 						) then { //&& [_unit] call bcombat_fnc_speed == 0 // !(isHidden _unit) ||
@@ -83,10 +88,17 @@ bcombat_fnc_bullet_incoming =
 					
 					_penalty  = (round( _penalty * ( 1 - ( _unit getVariable "bcombat_skill" ) ) ) min 100) max 1;
 					
-					if( (_dist > 250 || _speed > 3.5) 
+					if( (_dist > 250 ) 
 						&& _unit getVariable ["bcombat_suppression_level", 0] < 10 ) then
 					{
-						[ _unit, 1, _penalty, 0, time + 10 + random 10, time + 15 + random 15, _shooter ] call bcombat_fnc_fsm_trigger;
+						if( _speed > 3.5 ) then
+						{
+							[ _unit, 1, _penalty, time, time + 10 + random 10, time + 15 + random 15, _shooter ] call bcombat_fnc_fsm_trigger;
+						}
+						else
+						{
+							[ _unit, 1, _penalty, time + 5, time + 10 + random 10, time + 15 + random 15, _shooter ] call bcombat_fnc_fsm_trigger;
+						};
 					}
 					else
 					{

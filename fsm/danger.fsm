@@ -74,8 +74,8 @@ link30[] = {22,2};
 link31[] = {23,4};
 link32[] = {24,4};
 link33[] = {25,20};
-globals[] = {10.000000,1,0,1,16777215,640,480,1,216,6316128,1,-748.216797,80.643898,403.888947,-295.438171,1075,907,1};
-window[] = {2,-1,-1,-32000,-32000,836,56,1092,56,3,1095};
+globals[] = {10.000000,1,0,1,16777215,640,480,1,216,6316128,1,-1253.776855,-210.418350,494.376312,-385.927124,1075,907,1};
+window[] = {2,-1,-1,-1,-1,808,28,1064,28,3,1095};
 *//*%FSM</HEAD>*/
 class FSM
 {
@@ -116,6 +116,7 @@ class FSM
        "{" \n
        "	if( !(isPlayer _this) ) then " \n
        "	{" \n
+       "" \n
        "		_beh = behaviour _this;" \n
        "" \n
        "		_q =   [ [_dangerCause, _dangerPos, _dangerUntil, _dangerCausedBy] ] + _queue;" \n
@@ -132,10 +133,10 @@ class FSM
        "" \n
        "		_queue = [];" \n
        "" \n
+       "		_visible = [_this, _dangerCausedBy] call bcombat_fnc_is_visible;" \n
+       "" \n
        "		if(  _dangerCause == 8 || (  _dangerCause in [3]  && [_this,  _dangerCausedBy] call bcombat_fnc_knprec < 5 && [_this,  _dangerCausedBy] call bcombat_fnc_relativeDirTo < 75) ) then" \n
        "		{ 	" \n
-       "" \n
-       "			_visible = [_this, _dangerCausedBy] call bcombat_fnc_is_visible;" \n
        "			_dist = _this distance _dangerCausedBy;" \n
        "" \n
        "			if( canfire _this " \n
@@ -163,7 +164,6 @@ class FSM
        "				) }" \n
        "			) then //&& random 1 < _this skill ""general"" " \n
        "			{" \n
-       "				//hintc format[""%1 target %2"", _this,  _dangerCausedBy];" \n
        "				if( bcombat_debug_enable ) then {" \n
        "					_msg = format[""danger.fsm - OPEN FIRE: unit=%1, enemy=%2, distance=%4, angle=%5"", _this, _dangerCausedBy, _this distance _dangerCausedBy, [_this, _dangerCausedBy] call bcombat_fnc_relativeDirTo ];" \n
        "					[ _msg, 8 ] call bcombat_fnc_debug;" \n
@@ -176,37 +176,9 @@ class FSM
        "		{" \n
        "			if( bcombat_allow_investigate ) then" \n
        "			{" \n
-       "				if(  _dangerCause == 4) then" \n
+       "				if(  _dangerCause in [4,5] && { isNull ( _this findNearestEnemy _this) } ) then" \n
        "				{" \n
-       "					if( canfire _this " \n
-       "						&& { !(fleeing _this) && !(captive _this) }" \n
-       "						&& { combatmode _this in [""RED"", ""YELLOW""] }" \n
-       "						&& { !([_this] call bcombat_fnc_has_task) }" \n
-       "						&& { _this distance _dangerPos < 150 }" \n
-       "						&& { random 10 >= 3 }" \n
-       "						&& { isNull ( _this findNearestEnemy _this) }" \n
-       "					) then" \n
-       "					{" \n
-       "						_this domove _dangerPos;" \n
-       "						//diag_log format[""%1 - %2 investigate"", time, _this];" \n
-       "					};" \n
-       "				}" \n
-       "				else" \n
-       "				{" \n
-       "					if(  _dangerCause == 5) then" \n
-       "					{" \n
-       "						if( canfire _this " \n
-       "							&& { !(fleeing _this) && !(captive _this) }" \n
-       "							&& { !([_this] call bcombat_fnc_has_task) }" \n
-       "							&& { _this distance _dangerPos < bcombat_investigate_max_distance }" \n
-       "							&& { ( combatMode _this == ""RED"" || random 10 >= 3 ) }" \n
-       "							&& { isNull ( _this findNearestEnemy _this) }" \n
-       "						) then" \n
-       "						{" \n
-       "							_this domove _dangerPos;" \n
-       "							//diag_log format[""%1 - %2 found dead"", time, _this];" \n
-       "						};" \n
-       "					};" \n
+       "					[_this, _dangerPos] spawn bcombat_fnc_investigate;" \n
        "				};" \n
        "			};" \n
        "		};" \n
@@ -214,7 +186,6 @@ class FSM
        "}" \n
        "else" \n
        "{" \n
-       "	//diag_log format[""%1 -> %2 - %3 | %4"", time, _this, [_dangerCause, _dangerPos, _dangerUntil, _dangerCausedBy], _queue ];" \n
        "" \n
        "	// Retrieve the highest priority event from the _queue" \n
        "	private [""_priors"",""_priorCur""];" \n

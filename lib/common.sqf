@@ -38,6 +38,8 @@ bcombat_fnc_is_active = {	// bCOmbat is on, unit is man, alive, activated and on
 	_ret
 };
 
+
+
 // Benchmarking: <0.1s x 1000
 bcombat_fnc_is_stopped =
 {
@@ -177,9 +179,7 @@ bcombat_weapon_max_range =
 		_weapon = format["%1", primaryWeapon _unit];
 	};
 
-	//player globalchat format["error: %1  [%2] %3 %4 %5 - %6", _unit,  currentweapon _unit, side _unit, behaviour _unit,  primaryweapon _unit, getNumber(configFile >> "cfgWeapons" >> _weapon >> "Single" >> "maxRange") ];
 	//diag_log format["error: %1  [%2] %3 %4 %5 - %6", _unit,  currentweapon _unit, side _unit, behaviour _unit,  primaryweapon _unit, getNumber(configFile >> "cfgWeapons" >> _weapon >> "Single" >> "maxRange" ) ];
-	//hintc format["%1 %2 %3", _unit, _weapon, (getNumber(configFile >> "cfgWeapons" >> _weapon >> "Single" >> "maxRange" ) * (skill _unit ^ 0.2))];
 	(getNumber(configFile >> "cfgWeapons" >> _weapon >> "Single" >> "maxRange" ) * (skill _unit ^ 0.2)) max 50
 };
 
@@ -327,7 +327,7 @@ bcombat_fnc_building_position =
 
 bcombat_fnc_eh_fired = {
 
-	private ["_unit", "_weapon", "_muzzle", "_mode", "_ammo", "_magazine", "_bullet", "_msg"];
+	private ["_unit", "_weapon", "_muzzle", "_mode", "_ammo", "_magazine", "_bullet", "_bulletspeed", "_msg"];
 	
 	_unit = _this select 0; 
 	_weapon = _this select 1;
@@ -336,19 +336,31 @@ bcombat_fnc_eh_fired = {
 	//_ammo = _this select 4;
 	//_magazine = _this select 5;
 	_bullet = _this select 6;
-
+	_bulletspeed = speed _bullet / 3.6;
+	
 	if( [_unit] call bcombat_fnc_is_active ) then 
 	{
+
 		if( bcombat_allow_hearing ) then 
 		{
 			if(  time - (_unit getVariable ["bcombat_fire_time", 0 ]) > 1 
 				&& !([_unit, _weapon] call bcombat_fnc_weapon_is_silenced) 
 			) then {
+			
+				if( typeof _bullet == "GrenadeHand" ) then
+				{
+					[ _unit, _bullet, getPosATL _bullet, bcombat_allow_hearing_grenade_distance ] spawn bcombat_fnc_soundalert_grenade;
+
+				} else {
 				
-				[ _unit, _bullet] call bcombat_fnc_soundalert;
+					if( _bulletspeed  > 360 && !(currentWeapon _unit in ["Throw", "Put"]) ) then
+					{
+						[ _unit, _bullet, getPosATL _bullet, ( _bulletspeed  / bcombat_allow_hearing_coef) ] spawn bcombat_fnc_soundalert;
+					}
+				};
 			};
 		};
-
+		
 		//[ _unit] call bcombat_fnc_allow_fire;
 		[ _unit, objNull] call bcombat_fnc_danger;
 		
@@ -361,6 +373,8 @@ bcombat_fnc_eh_fired = {
 	};
 };
 
+
+
 bcombat_fnc_eh_handledamage = {
 
 	private ["_unit", "_body_part", "_body_part_damage", "_enemy", "_ammo", "_msg"];
@@ -371,6 +385,8 @@ bcombat_fnc_eh_handledamage = {
 	_enemy = _this select 3; //Source of damage (returns the unit if no source)
 	_ammo = _this select 4; // Ammo classname of the projectile that dealt the damage (returns "" if no projectile)
 
+	_body_part_damage = _body_part_damage * bcombat_damage_multiplier;
+	
 	if(  [_unit] call bcombat_fnc_is_active ) then 
 	{
 		if( bcombat_debug_enable ) then {
@@ -538,14 +554,12 @@ bcombat_fnc_find_cover_pos = {
 					
 					if( _unit distance _r < 5) then	// too near, skip all
 					{
-	//player globalchat format["CLOSE: pos=%1 obj=%2 d=%3",_r, _x, _unit distance _r ];
 						BreakTo "bcombat_fnc_find_cover_pos_loop";
 					};
 					
 					if( _blacklist find (str _r) == -1 ) then
 					{
 						_ret = [_r, _x, 2];
-	//player globalchat format["pos=%1 obj=%2 d=%3",_r, _x, _unit distance _r ];
 						BreakTo "bcombat_fnc_find_cover_pos_loop";
 					};
 
@@ -557,7 +571,6 @@ bcombat_fnc_find_cover_pos = {
 	};
 
 	
-	//hintc format["%1", _blacklist];
 	if( !isNil "_ret") then { _ret } else { nil }
 };
 
@@ -585,6 +598,7 @@ bcombat_fnc_random_pos = {
 	[ (_pos select 0) - _radius + random ( _radius * 2), (_pos select 1) - _radius + random ( _radius * 2), (_pos select 2)  ]
 };
 
+
 // ---------------------------------------
 // SCRIPTS
 // ---------------------------------------
@@ -595,15 +609,16 @@ bcombat_fnc_unit_skill_set =
 	private [ "_unit", "_k" ];
 	
 	_unit = _this select 0;
-	
-	//hintc format["---> %1 %2 %3", skill _unit, _unit skill "spotDistance", _unit skillFinal "spotDistance"];
+
 	_k = (skill _unit ) ^ .5 ;
+	
 	//_unit setskill [ "SpotDistance", _k];
 	_unit setskill [ "Commanding", _k];
 	_unit setskill [ "Endurance", _k];
 	_unit setSkill [ "courage", _k];
 	_unit setSkill [ "AimingSpeed", _k];
 	_unit setSkill [ "SpotTime", _k];
+	
 	/*
 	if( !([currentWeapon _unit] call bcombat_fnc_is_mgun) ) then
 	{
@@ -796,7 +811,6 @@ bcombat_fnc_lookat = {
 			_n=0;
 			for "_n" from 1 to _steps do {
 				_unit1 setDir (_dir + _n * _step  );
-				diag_log format["%1 - %2: END rotation ang:%3, curr:%4, step:%5, %6/%7", time, _unit1, _ang, _n * _step, _step, _n, _steps];
 				sleep (_dt);
 			};
 			
@@ -851,7 +865,7 @@ bcombat_fnc_stop =
 				&& { leader _unit != player }
 				&& { _unit != (formationLeader _unit) }
 				&& { _unit != (leader _unit) }
-				&& { leader _unit distance _unit < 100 }
+				&& { leader _unit distance _unit > (bcombat_stop_overwatch_max_distance select 0) }
 				&& { random 100 > _unit getVariable ["bcombat_suppression_level", 0] }
 			) then {
 				
@@ -869,6 +883,7 @@ bcombat_fnc_stop =
 				(!([_unit] call bcombat_fnc_is_active)
 					|| [ _unit ] call bcombat_fnc_speed > 1
 					//|| !(canfire _unit) 
+					|| { _stopow && ((leader _unit) distance _unit) > (bcombat_stop_overwatch_max_distance select 1) } 
 					|| time > _unit getVariable ["bcombat_stop_t2", 0 ]
 					|| ( time > _unit getVariable ["bcombat_stop_t1", 0 ] && time - ( _unit getVariable ["bcombat_fire_time", 0]) > _unit getVariable ["bcombat_stop_dt", 0] ) 
 					|| ( (_enemydist == 0 || _enemydist  > 25) && time > _unit getVariable ["bcombat_stop_t1", 0 ] && _unit getVariable ["bcombat_suppression_level", 0] > _level_unstop )
@@ -911,37 +926,58 @@ bcombat_fnc_stop =
 	if (true) exitWith {};
 };
 
+
+
+
+
+bcombat_fnc_soundalert_grenade = {
+
+	private [ "_unit", "_grenade", "_pos", "_maxdist"];
+	
+	_unit  = _this select 0;
+	_grenade = _this select 1;
+	_pos =  _this select 2;
+	_maxdist = _this select 3;
+	
+	waitUntil { isNull _grenade };
+
+	[ _unit, _grenade, _pos, _maxdist ] spawn bcombat_fnc_soundalert;
+};
+
 // Benchmarking: 0.78s x 1000
 bcombat_fnc_soundalert = {
 
-	private [ "_unit", "_bulletspeed", "_units", "_groups", "_x" ];
-		
+	private [ "_unit", "_bullet", "_maxdist", "_pos", "_units", "_groups", "_x" ];
+
 	_unit = _this select 0;
-	_bulletspeed = speed (_this select 1) / 3.6;
-	_units = (_unit nearEntities ["CAManBase", _bulletspeed / 2]) - [_unit];
+	_bullet = _this select 1;
+	_pos =  _this select 2;
+	_maxdist = _this select 3;
+	_units = (_pos nearEntities ["CAManBase", _maxdist]) - [_unit];
 	_groups = [];
 
 	{
 		if( [_x] call bcombat_fnc_is_active
-			&& { _bulletspeed > 360 }
 			&& { !(group _x in _groups) }
 			&& { !(isPlayer _x ) }
 			&& { [_x, _unit] call bcombat_fnc_is_enemy }
-			&& { random 1 <= (_x skill "general" ) }
 		) then {
 		
-			_groups = _groups + [group _x];
-		
+			//_groups = _groups + [group _x];
 			[leader _x, _unit] call bcombat_fnc_reveal;
+				
+			[ _unit, objNull] call bcombat_fnc_danger;
 			
 			if( !(isPlayer(leader _x)) ) then
 			{
 				[ _x, 10, 1, 0, 5 + random 10, 30 + random 30, objNull ] call bcombat_fnc_fsm_trigger;
+				
+				if( isNull ( _unit findNearestEnemy _unit) ) then {
+					[_x, _pos] call bcombat_fnc_investigate;
+				};
 			};
 		};
-		
 	} foreach _units;
-	
 }; 
 
 // Benchmarking: 0.88s x 1000
@@ -967,7 +1003,8 @@ bcombat_fnc_reveal = {
 			_ang = [_unit, _enemy] call bcombat_fnc_relativeDirTo;
 			_dist = _unit distance _enemy;
 			
-			_rv = 4 / ceil ( _dist / 50 +.1) / ceil ( _ang / 60 +.1); 
+			_rv = 4 / ceil ( _dist / 50 +.1) / ceil ( _ang / 45 +.1); 
+
 			if( !(_visible) ) then {_rv = _rv * .1;};
 			
 			_unit reveal [_enemy, _rv max 0.01 ];	
@@ -1208,6 +1245,7 @@ bcombat_fnc_handle_smoke_grenade =
 	};
 };
 
+
 bcombat_fnc_handle_targets = 
 {
 	private  ["_unit", "_timeout", "_maxdist", "_params", "_nenemy", "_targets", "_x"];
@@ -1225,7 +1263,7 @@ bcombat_fnc_handle_targets =
 		
 		_nenemy = _unit findnearestenemy _unit;
 		
-		if( !(isNull _nenemy) && { random 1 <= (_unit skill "general" ) ^ 0.5} && { _unit distance _nenemy < bcombat_cqb_radar_max_distance } ) then
+		if( !(isNull _nenemy) && { random 100 > _unit getVariable ["bcombat_suppression_level", 0] } && { random 1 <= (_unit skill "general" ) ^ 0.5} && { _unit distance _nenemy < bcombat_cqb_radar_max_distance } ) then
 		{
 			_targets = [_unit, _maxdist, _params] call bcombat_fnc_targets;
 			
@@ -1237,7 +1275,7 @@ bcombat_fnc_handle_targets =
 					
 					if( isNull (assignedTarget _unit)
 						&& { !([_unit] call bcombat_fnc_has_task) }
-						//&& _x == _targets select 0					
+						&& _x == _targets select 0					
 					) then {
 						_unit dowatch _x;
 						//player globalchat format[" ----> %1 WATCH  %2", _x, _unit];
@@ -1294,4 +1332,24 @@ bcombat_fnc_targets =
 	} foreach _targets;
 	
 	_ret
+};
+
+bcombat_fnc_investigate = {
+
+	private ["_unit", "_pos"];
+	
+	_unit = _this select 0;
+	_pos = _this select 1;
+	
+	if( canfire _unit
+		&& { random 1 <= (_unit skill "general" ) }
+		&& { combatmode _unit in ["RED", "YELLOW"] } 
+		&& { !(fleeing _unit) && !(captive _unit) }
+		&& { !([_unit] call bcombat_fnc_has_task) }
+		&& { _unit distance _pos < bcombat_investigate_max_distance }
+		&& { ( combatMode _unit == "RED" || random 10 >= 3 ) }
+	) then
+	{
+		_unit domove ([_pos, (_unit distance _pos) / 10 ] call bcombat_fnc_random_pos);
+	};
 };

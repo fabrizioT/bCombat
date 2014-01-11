@@ -3,13 +3,18 @@ v0.15
 
 Core:
 
-	* Fixed issue with cover blacklisting casuing .sqf script error popup
-	* Units more likely to cover eachother
-	* Targets of opportunity better filtered, stricter visibility checks
-	* AI group leaders are not supposed to flee anymore
-	* AI units are now able to throw smoke grenades
-	* Over 50 configuration variables exposed and briefly documented into "config.sqf"
+	* Fixed issue with cover blacklisting causing .sqf script error popup
+	* Units more likely to cover each other
+	* Targets of opportunity better filtered, with tighter visibility checks
+	* AI group leaders not supposed to flee anymore
+	* Configurable damage multiplier (bcombat_damage_multiplier) 
+	* CQB reactivity improvements
+	* Reduced vanilla AI hearing sensitivity
+	* 60+ configuration variables exposed and briefly documented into "config.sqf"
+	
+New optional features:
 
+	* AI units may throw smoke grenades when threatened
 	
 v0.14
 -----

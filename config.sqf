@@ -12,16 +12,17 @@ bcombat_enable = true;								// (Boolean) Toggle feature on / off
 // Lowering it can cause CPU overhead as well as excessive suppression-related penalties.
 
 bcombat_incoming_bullet_timeout = 0.2;				// (Seconds) minimum timeout between bullets
-bcombat_danger_distance = 300; 						// (Meters) Minimum distance from shooter, for groups to automatically switch to "combat" behaviour
-bcombat_features_clock = [3,5];						// (Seconds) Additional features clocking [minimum timeout, maximum timeout]
-		
+bcombat_danger_distance = 200; 						// (Meters) Minimum distance from shooter, for groups to automatically switch to "combat" behaviour
+bcombat_features_clock = [3,6];						// (Seconds) Additional features clocking [minimum timeout, maximum timeout]
+bcombat_damage_multiplier = 1;						// (0-1) Damage multiplier. Zero makes units invulnerable.
+
 // -----------------------
 // CORE bDetect FEATURES
 // -----------------------
 
 bdetect_bullet_max_distance = 750;  				// (Meters) Maximum travelled distance for a bullet (to cause suppression)
 bdetect_bullet_max_lifespan = 2; 					// (Seconds) Maximum lifespan for bullet
-bdetect_bullet_max_proximity = 6.5; 					// (Meters) Maximum distance from unit for bullet (to cause suppression)
+bdetect_bullet_max_proximity = 6.5; 				// (Meters) Maximum distance from unit for bullet (to cause suppression)
 bdetect_bullet_max_height =  6.5;  					// (Meters) Maximum height on ground for bullet (to cause suppression)
 
 // -----------------------------------------------------------------------------------------------------
@@ -75,7 +76,7 @@ bcombat_penalty_wounded = 10; 						// (Percent) %
 // Triggered: once per second, if no penalty raising events have been triggered
 // Effect: up to 2% skill recovery, halved if unit is wounded
 
-bcombat_penalty_recovery = 2; 						// (Percent) %
+bcombat_penalty_recovery = 3; 						// (Percent) %
 
 // -----------------------------------------------------------------------------------------------------
 // bCombat OPTIONAL FEATURES CONFIGURATION
@@ -92,13 +93,13 @@ bcombat_allow_fast_move = false;					// (Boolean) Toggle feature on / off
 // Triggered: if a known target is on flank / back
 // Effect: depending on stance, unit swivels faster towards target
 // Known issues: sometimes rotation "animation" is a bit rough
+// NOTE: Deprecated as of v0.15 - please keep it set to false
 
 bcombat_allow_fast_rotate = false;					// (Boolean) Toggle feature on / off
 
 // Description: custom fleeing behaviour
 // Triggered: when morale is broken
 // Effect: unit leaves formation and moves away. As long as group is not destroyed it will join it back after some morale recovery.
-// NOTE: Deprecated as of v0.15 - please keep it set to false
 
 bcombat_allow_fleeing = true; 						// (Boolean) Toggle feature on / off
 
@@ -112,7 +113,7 @@ bcombat_allow_surrender = true;						// (Boolean) Toggle feature on / off
 // Description: slow down leader
 // Triggered: whenever a target of opportunity is spotted, or under fire
 // Effect: leader stops to shoot, further observe or to return fire
-// Note: still working, but deprecated as of v0.14
+// NOTE: Deprecated as of v0.14 - please keep it set to false
 
 bcombat_slow_leaders = false;						// (Boolean) Toggle feature on / off
 
@@ -146,6 +147,8 @@ bcombat_suppressive_fire_distance = [50, 250]; 		// (Array) [minimum distance fr
 // Effect: unit is hinted about the shooter, depending on criteria such as visibility and distance. 
 
 bcombat_allow_hearing = true;						// (Boolean) Toggle feature on / off
+bcombat_allow_hearing_coef = 2;						// (Number) Bullet speed / bcombat_allow_hearing_coef = max. hearing distance (e.g. 800 meters/sec : 2 = max. hearing distance 400m.)
+bcombat_allow_hearing_grenade_distance = 200;		// (Meters) Max. distance for grenade hearing
 
 // Description: CQB hand grenade throwing
 // Triggered: whenever unit has a hand grenade + enemy is known and near
@@ -217,22 +220,24 @@ bcombat_friendly_fire_max_damage = 0.8;				// (0-1) damage cap ( 0 = allow no da
 
 bcombat_stop_overwatch = true;    					// (Boolean) Toggle feature on / off
 bcombat_stop_overwatch_mode = 0;    				// (0,1) 0 = apply only to machinegunners, 1 = apply to all units 
+bcombat_stop_overwatch_max_distance	= [100, 200];	// (Array) [max distance from leader to begin overwatch, max distance from leader to (force) end overwatch] 
 
-// Description: stop / overwatch
-// Triggered: on unit following leader or formation leader
-// Effect: unit is allowed to provide prolonged suppressive fire, while rest of formation moves on
+// Description: CQB awareness imporvements
+// Triggered: on short distance
+// Effect: depending on skill, unit is made more aware of nearby known threats
+// NOTE: this feature may cause sensible computational overhead. Set options wisely.
 
-bcombat_cqb_radar = true;    					// (Boolean) Toggle feature on / off
-bcombat_cqb_radar_clock = [0.5, 2.5];    		// (Seconds) 
-bcombat_cqb_radar_max_distance = 100;    		// (Meters) 
-bcombat_cqb_radar_params = [75, 5, 0, 5];		// (Array) [max. angle, min. precision, min. knowsabout, max enemy .speed]
+bcombat_cqb_radar = true;    						// (Boolean) Toggle feature on / off
+bcombat_cqb_radar_clock = [0.5, 2];    				// (Seconds) internal feaures clocking. Never use values below 0.1 ( = 10 times / second).
+bcombat_cqb_radar_max_distance = 100;    			// (Meters) Features are activated under this distance
+bcombat_cqb_radar_params = [95, 5, 0, 5];			// (Array) [max. angle, min. precision, min. knowsabout, max enemy .speed] - Don't edit this.
 
-// Description: misc animations, tribute to "tonyRanger"
-// Triggered: some particular events
-// Effect: some animations, such as rolling, are played
+// Description: misc animations as a tribute to "tonyRanger"
+// Triggered: seldom, when under fire
+// Effect: a prone rolling animation is played to evade enemy fire
 
-bcombat_fancy_moves = true;     				// (Boolean) Toggle feature on / off
-bcombat_fancy_moves_frequency = 0.25;    		// (0-1) Probability of occurring. 0=never (0%), 1=all the time (100%). 
+bcombat_fancy_moves = true;     					// (Boolean) Toggle feature on / off
+bcombat_fancy_moves_frequency = 0.1;    			// (0-1) Probability of occurring. 0=never (0%), 1=all the time (100%). 
 
 // -----------------------------------------------------------------------------------------------------
 // bCombat MISC CALLS
@@ -244,8 +249,9 @@ call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debu
 call bdetect_fnc_benchmark; // Uncomment this line to activate bDetect live stats panel (as alternative to bcombat_fnc_fps)
 // [] spawn bcombat_fnc_fps; // Uncomment this line to activate FPS stats panel (as alternative to bdetect_fnc_benchmark;)
 
-//OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
-//player allowdamage false;
+OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
+player allowdamage false;
+player setcaptive true;
+
 // bdetect_startup_hint = false;
 // bcombat_startup_hint = false;
-hintc format["%1", getArray(configFile >> "CfgAISkill" >> "aimingAccuracy") ];
