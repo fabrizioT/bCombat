@@ -18,11 +18,12 @@ INSTALLATION
 -----------------------------------------
 
 +   Extract the bCombat zip package anywhere.
-+   Move both "@bcombat" and "userconfig" folder from extraction location to ArmA 3 main folder, usually: <Your Steam Path>\steamapps\common\Arma 3\
++   Move "@bcombat" folder from extraction location to your ArmA 3 main folder ( usually: <Your Steam Path>\steamapps\common\Arma 3\ )
++   Move "userconfig" folder from "@bcombat" folder to your ArmA 3 main folder.
 
-	Once both folders have been moved please doublecheck "bcombat_config.hpp" file exists in the path:
+	Please doublecheck "bcombat_config.hpp" file exists within the path:
   
-		<Your Steam Path>\steamapps\common\Arma 3\userconfig\bcombat\bcombat_config.hpp
+		<Your Arma 3 main folder>\userconfig\bcombat\bcombat_config.hpp
 
 +   Launch ArmA 3 and activate bCombat from "Configure / Expansions" menu.
 
@@ -88,7 +89,6 @@ CREDITS
 
 bCombat was created by Fabrizio_T.
 It's dedicated to BIS and to the whole OFP/ARMA community.
-
 This mod wouldn't have seen the light without the support of the testers:
 
 +   Mustangdelta
@@ -109,7 +109,7 @@ This mod wouldn't have seen the light without the support of the testers:
 +   GDSN
 +   willywonka
 
-A final thanks to the talented and dedicated people who over time inspired this work:
+A final thanks to talented and dedicated modders who over time inspired this work:
 
 +   TonyRanger
 +   Kronzky
