@@ -10,6 +10,7 @@ Core:
 	* Configurable damage multiplier (bcombat_damage_multiplier) 
 	* CQB reactivity improvements
 	* Reduced vanilla AI hearing sensitivity
+	* bcombat_config.hpp path changed from "\userconfig\bcombat_config.hpp" to "\userconfig\bcombat\bcombat_config.hpp"
 	* 60+ configuration variables exposed and briefly documented into "config.sqf"
 	
 New optional features:
