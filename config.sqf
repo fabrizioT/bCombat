@@ -226,7 +226,7 @@ bcombat_stop_overwatch = true;    					// (Boolean) Toggle feature on / off
 bcombat_stop_overwatch_mode = 0;    				// (0,1) 0 = apply only to machinegunners, 1 = apply to all units 
 bcombat_stop_overwatch_max_distance	= [100, 200];	// (Array) [max distance from leader to begin overwatch, max distance from leader to (force) end overwatch] 
 
-// Description: CQB awareness imporvements
+// Description: CQB awareness improvements
 // Triggered: on short distance
 // Effect: depending on skill, unit is made more aware of nearby known threats
 // NOTE: this feature may cause sensible computational overhead. Set options wisely.

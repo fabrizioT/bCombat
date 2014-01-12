@@ -1193,7 +1193,7 @@ bcombat_fnc_handle_targets =
 					
 					if( isNull (assignedTarget _unit)
 						&& { !([_unit] call bcombat_fnc_has_task) }
-						&& { _x == _targets select 0 }				
+						// && { _x == _targets select 0 }				
 					) then {
 						_unit dowatch _x;
 						//player globalchat format[" ----> %1 WATCH  %2", _x, _unit];
