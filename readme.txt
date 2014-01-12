@@ -56,7 +56,7 @@ Core features include:
 +   Automatic, gunfire aware stance handling: units will crouch, sprint or go prone according to situation
 +   Enhanced fire & movement routines
 
-Optional (toggleable) experimental features include, as of v0.15:
+Optional (toggleable) features include, as of v0.15:
 
 +   Custom move to cover behaviour
 +   Aggressive return fire / fire back behaviour
@@ -82,7 +82,7 @@ All this is delivered pre-configured and ready to go, while it can be tweaked at
 FORUM THREAD
 -----------------------------------------
 
-+   http://forums.bistudio.com/showthread.php?167288-bCombat-test-candidates
++   http://forums.bistudio.com/showthread.php?171436-OPEN-BETA-SP-bCombat-infantry-AI-Mod
 
 
 SCREENHOTS
