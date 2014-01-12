@@ -37,6 +37,7 @@ call compile preprocessFileLineNumbers "\@bcombat\config.sqf";
 
 // Toggle
 if(isNil "bcombat_enable") then { bcombat_enable = true }; 													// Toggle mod on / off 
+if(isNil "bcombat_dev_mode") then { bcombat_dev_mode = false }; 											// Toggle mod on / off 
 
 // Debug
 if(isNil "bcombat_startup_hint") then { bcombat_startup_hint = true; }; 									// toggle to Enable / Disable bDetect startup Hint.
@@ -74,7 +75,7 @@ if(isNil "bcombat_fire_back_group_max_enemy_distance") then { bcombat_fire_back_
 if(isNil "bcombat_slow_leaders") then { bcombat_slow_leaders = false; }; 	
 
 // Fast rotation
-if(isNil "bcombat_allow_fast_rotate") then { bcombat_allow_fast_rotate = true; };		
+if(isNil "bcombat_allow_fast_rotate") then { bcombat_allow_fast_rotate = false; };		
 
 // Fleeing
 if(isNil "bcombat_allow_fleeing") then { bcombat_allow_fleeing = true; }; 	

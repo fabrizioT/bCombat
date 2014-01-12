@@ -109,8 +109,6 @@ class FSM
        "_unit setVariable [""bcombat_suppression_event"", 0 ];" \n
        "_unit setVariable [""bcombat_suppression_enemy"", objNull  ];" \n
        "" \n
-       "player globalchat format[""%1 - %2"", _event, _unit];" \n
-       "" \n
        "if( _unit isKindOf ""CAManBase"" && _unit == vehicle _unit ) then " \n
        "{" \n
        "	_st = [ _unit,  _timeout_min, _timeout_mid, _timeout_max ] call bcombat_fnc_stance_set;   " \n

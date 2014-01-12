@@ -6,6 +6,10 @@
 
 bcombat_enable = true;								// (Boolean) Toggle feature on / off
 
+// Description: toggle verbose debug for debugging purpose
+
+bcombat_dev_mode = false;							// (Boolean) Toggle feature on / off
+
 // Description: minimum timeout since last incoming bullet, for the current one to cause suppression.
 // As default no more than 5 ( = 1 / 0.2 ) bullets / second would cause suppression on a single AI unit.
 // Please be careful tweaking bcombat_incoming_bullet_timeout. 
@@ -13,7 +17,7 @@ bcombat_enable = true;								// (Boolean) Toggle feature on / off
 
 bcombat_incoming_bullet_timeout = 0.2;				// (Seconds) minimum timeout between bullets
 bcombat_danger_distance = 200; 						// (Meters) Minimum distance from shooter, for groups to automatically switch to "combat" behaviour
-bcombat_features_clock = [3,6];						// (Seconds) Additional features clocking [minimum timeout, maximum timeout]
+bcombat_features_clock = [3,5];						// (Seconds) Additional features clocking [minimum timeout, maximum timeout]
 bcombat_damage_multiplier = 1;						// (0-1) Damage multiplier. Zero makes units invulnerable.
 
 // -----------------------
@@ -190,7 +194,7 @@ bcombat_allow_fatigue = false;						// (Boolean) Toggle feature on / off
 
 bcombat_allow_cover = true;							// (Boolean) Toggle feature on / off
 bcombat_cover_mode = 1;								// (0,1) 0 = apply only to leader, 1 = apply to all units
-bcombat_cover_radius = [15,0]; 					// (Array) [ maximum distance from object, maximum distance from building] 
+bcombat_cover_radius = [15,0]; 						// (Array) [ maximum distance from object, maximum distance from building] 
 
 // Description: "target and chase" behaviour
 // Triggered: whenever unit has no target and it's close to a enemy
@@ -243,15 +247,16 @@ bcombat_fancy_moves_frequency = 0.1;    			// (0-1) Probability of occurring. 0=
 // bCombat MISC CALLS
 // -----------------------------------------------------------------------------------------------------
 
-//[] spawn bcombat_fnc_debug_text; // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
-call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debug balloons (as alternative to bcombat_fnc_debug_text or bcombat_fnc_fps)
+if ( bcombat_dev_mode ) then
+{
+	//[] spawn bcombat_fnc_debug_text; // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
+	call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debug balloons (as alternative to bcombat_fnc_debug_text or bcombat_fnc_fps)
 
-call bdetect_fnc_benchmark; // Uncomment this line to activate bDetect live stats panel (as alternative to bcombat_fnc_fps)
-// [] spawn bcombat_fnc_fps; // Uncomment this line to activate FPS stats panel (as alternative to bdetect_fnc_benchmark;)
+	call bdetect_fnc_benchmark; // Uncomment this line to activate bDetect live stats panel (as alternative to bcombat_fnc_fps)
+	// [] spawn bcombat_fnc_fps; // Uncomment this line to activate FPS stats panel (as alternative to bdetect_fnc_benchmark;)
 
-OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
-player allowdamage false;
-player setcaptive true;
+	OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
+};
 
 // bdetect_startup_hint = false;
 // bcombat_startup_hint = false;

@@ -1,11 +1,11 @@
 bCOMBAT AI MOD v0.15 [SP] for ARMA3
 =========================================
 
-INFORMATION
+INTRODUCTION
 -----------------------------------------
 
-bCombat is an ArmA3 infantry AI enhancement mod in form of addon, currently under development.
-It's Single Player only (for now) and CBA is a requirement.
+bCombat is an ArmA 3 infantry AI enhancement mod in form of addon, still under development.
+It's currently Single Player. CBA is this only requirement.
 
 
 REQUIREMENTS
@@ -31,8 +31,22 @@ INSTALLATION
 DESCRIPTION
 -----------------------------------------
 
-bCombat main objective is to achieve both a more effective and human-alike AI.
-It features an unique ecosystem, including a complex morale system, event aware AI behaviour and all-around AI enhancements.
+bCombat aims to achieve both a more aware and human-alike infantry AI.
+It features an unique ecosystem, including an event-driven AI morale / skill system as well as many optional AI enhancements.
+
+Highlights:
+
++	Morale system driving dynamically AI behavour and skills.
++	AI behaviour is affected by many environmental events (spotted enemies, explosions, bullets whizzling by, ricochets, wounds, casualties, ...).
++	Modular mod architecture: optional features may be toggled on/off or tweaked at will.
++   Reduced (excessive) AI firing accuracy.
++   AI units proactively lay suppressive fire and suffer sensible morale / skill penalty when suppressed.
++   Increased AI survivability: better use of cover, movement and suppressive fire lead to longer firefights. 
++	Player led AI units require far less micro-management on the battlefield.
+
+
+FEATURES
+-----------------------------------------
 
 Core features include:
 
@@ -42,7 +56,7 @@ Core features include:
 +   Automatic, gunfire aware stance handling: units will crouch, sprint or go prone according to situation
 +   Enhanced fire & movement routines
 
-Optional (toggleable) experimental features include, as of v0.14:
+Optional (toggleable) experimental features include, as of v0.15:
 
 +   Custom move to cover behaviour
 +   Aggressive return fire / fire back behaviour
@@ -55,9 +69,11 @@ Optional (toggleable) experimental features include, as of v0.14:
 +   Enhanced hearing: units do hear gunfire and explosions at distance
 +   Investigate behaviour: units alerted by casualties or gunfire may move to nearby places to investigate enemy presence
 +   Enhanced grenade throwing: very short to long distance, includes blind throwing over obstacles
++   Smoke grenade throwing
 +   Automatic formation tightening feature
 +   Faster movement feature
 +   Friendly fire damage capping
++ 	Custom damage multiplier
 +   And more ...
 
 All this is delivered pre-configured and ready to go, while it can be tweaked at will via its own configuration file (config.sqf).
