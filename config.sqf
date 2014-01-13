@@ -6,7 +6,7 @@
 
 bcombat_enable = true;								// (Boolean) Toggle feature on / off
 
-// Description: toggle verbose debug for debugging purpose
+// Description: toggle debugging information on (true) or off (false)
 
 bcombat_dev_mode = false;							// (Boolean) Toggle feature on / off
 
@@ -16,7 +16,7 @@ bcombat_dev_mode = false;							// (Boolean) Toggle feature on / off
 // Lowering it can cause CPU overhead as well as excessive suppression-related penalties.
 
 bcombat_incoming_bullet_timeout = 0.2;				// (Seconds) minimum timeout between bullets
-bcombat_danger_distance = 200; 						// (Meters) Minimum distance from shooter, for groups to automatically switch to "combat" behaviour
+bcombat_danger_distance = 250; 						// (Meters) Minimum distance from shooter, for groups to automatically switch to "combat" behaviour
 bcombat_features_clock = [3,5];						// (Seconds) Additional features clocking [minimum timeout, maximum timeout]
 bcombat_damage_multiplier = 1;						// (0-1) Damage multiplier. Zero makes units invulnerable.
 

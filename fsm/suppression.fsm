@@ -136,7 +136,7 @@ class FSM
        "	}" \n
        "	else" \n
        "	{" \n
-       "				if( bcombat_fancy_moves &&  { random 1 < bcombat_fancy_moves_frequency } && { currentweapon _unit == primaryweapon _unit } && { [ _unit ] call bcombat_fnc_speed < 1 }  && { _event in  [1,11]  } && { time - _timeout_stance_anim > 3 } && { stance _unit == ""PRONE""}  && { _visible }  ) then " \n
+       "				if( bcombat_fancy_moves && { !(isPlayer _unit) } &&  { random 1 < bcombat_fancy_moves_frequency } && { currentweapon _unit == primaryweapon _unit } && { [ _unit ] call bcombat_fnc_speed < 1 }  && { _event in  [1,11]  } && { time - _timeout_stance_anim > 3 } && { stance _unit == ""PRONE""}  && { _visible }  ) then " \n
        "				{" \n
        "					_timeout_stance_anim = time;" \n
        "" \n
