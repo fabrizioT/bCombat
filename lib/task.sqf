@@ -329,7 +329,6 @@ bcombat_fnc_task_move_to_cover =
 			_blacklist set [count _blacklist, (str _pos)];
 			_blacklist set [count _blacklist, _timeout1 + _timeout2 ];
 			_grp setvariable ["bcombat_cover_blacklist", _blacklist];
-
 			//player globalchat format["*** %1 move to %2 dist: %3 ***", _unit, _pos, _dist];
 			
 			if ( _unit != formLeader _unit && _unit != leader _unit) then { 
