@@ -122,50 +122,6 @@ bcombat_fnc_debug_text =
 							_task = "none";
 							_t = _unit getVariable ["bcombat_task", nil];
 							if( !(isNil "_t") ) then { _task = _t select 1; };
-
-						/*
-							_text0 = format["<t color='%1' size='0.35'>%32<br/>%13 Lv: %2<br/>AA:%4 CO:%5 GN:%6<br/>Fleeing: %3 | Dam: %11<br/>Stop: %7<br/>%14 %15<br/>mode: %27<br/>cmnd: %28<br/>dst: %29<br/>task: %30<br/>hidden: %31<br/>flead: %36<br/>atken: %33<br/>tgt: %34 (%35)</t>", 
-								_color, 
-								_level, 
-								fleeing _unit, 
-								ceil( (_unit skill "aimingAccuracy") * 100) / 100, 
-
-								ceil( (_unit skill "courage") * 100) / 100, 
-								ceil( (_unit skill "general") * 100) / 100,  
-								[_unit] call bcombat_fnc_is_stopped, 
-								"",
-								_unit getvariable ["bcombat_unit_task_time", 0],
-								_unit getVariable ["bcombat_stance", "--"],
-								ceil( damage _unit * 100) / 100, 
-								(((aimpos _unit) select 2) - ((getPosASL _unit) select 2)),
-								_unit,
-								combatmode _unit,
-								behaviour _unit,
-								attackenabled _unit,
-								currentCommand _unit,
-								( (_unit getVariable ["bcombat_suppression_timeout_min", 0 ]) - time) max 0,
-								( (_unit getVariable ["bcombat_suppression_timeout_mid", 0 ]) - time) max 0,
-								( (_unit getVariable ["bcombat_suppression_timeout_max", 0 ]) - time) max 0,
-								captive _unit,
-								_tgt,
-								[_unit ] call bcombat_weapon_max_range,
-								_unit ammo (primaryweapon  _unit),
-								getfatigue _unit,
-								leader _unit,
-								_mode,
-								currentCommand _unit,
-								_d,
-								_task,
-								isHidden _unit,
-								name _unit,
-								attackenabled _unit,
-								format["%1",assignedtarget _unit],
-								_unit distance (assignedtarget _unit),
-								formationleader _unit
-								
-								
-							];
-							*/
 							
 							_tgt = assignedtarget _unit;
 							_tgt_dist =0;
@@ -226,51 +182,6 @@ bcombat_fnc_debug_text =
 								_unit getVariable["bcombat_stop_overwatch", false]
 							];
 								
-								/*
-							_text2= format["<t color='%1' size='0.4'>%32<br/>%13 Lv: %2<br/>AA:%4 CO:%5 GN:%6<br/>Fleeing: %3 | Dam: %11<br/>Stop: %7<br/>%14 %15<br/>mode: %27<br/>cmnd: %28<br/>dst: %29<br/>task: %30<br/>hidden: %31<br/>flead: %36<br/>atken: %33<br/>tgt: %34 (%35)</t>", 
-								_unit,
-								_color, 
-								_level, 
-								fleeing _unit, 
-								ceil( (_unit skill "aimingAccuracy") * 100) / 100, 
-
-								ceil( (_unit skill "courage") * 100) / 100, 
-								ceil( (_unit skill "general") * 100) / 100,  
-								[_unit] call bcombat_fnc_is_stopped, 
-								"",
-								_unit getvariable ["bcombat_unit_task_time", 0],
-								_unit getVariable ["bcombat_stance", "--"],
-								ceil( damage _unit * 100) / 100, 
-								(((aimpos _unit) select 2) - ((getPosASL _unit) select 2)),
-								_unit,
-								combatmode _unit,
-								behaviour _unit,
-								attackenabled _unit,
-								currentCommand _unit,
-								( (_unit getVariable ["bcombat_suppression_timeout_min", 0 ]) - time) max 0,
-								( (_unit getVariable ["bcombat_suppression_timeout_mid", 0 ]) - time) max 0,
-								( (_unit getVariable ["bcombat_suppression_timeout_max", 0 ]) - time) max 0,
-								captive _unit,
-								_tgt,
-								[_unit ] call bcombat_weapon_max_range,
-								_unit ammo (primaryweapon  _unit),
-								getfatigue _unit,
-								leader _unit,
-								_mode,
-								currentCommand _unit,
-								_d,
-								_task,
-								isHidden _unit,
-								name _unit,
-								attackenabled _unit,
-								format["%1",assignedtarget _unit],
-								_unit distance (assignedtarget _unit),
-								formationleader _unit
-								
-								
-							];
-								*/
-								
 							_control ctrlsetposition [
 								(_pos2D select 0) - _w/2,
 								(_pos2D select 1) - _h/2,
@@ -322,9 +233,6 @@ bcombat_fnc_debug_balloons =
 {
 	private ["_handle"];
 
-	//_ball = "Sign_Sphere25cm_F" createvehicle getposatl player;  
-	//	_ball attachTo [player,[0,0,2]];   
-	
 	_handle = [] spawn 
 	{
 		private ["_ball", "_marker", "_level", "_x", "_nul", "_color"];
@@ -410,7 +318,6 @@ bcombat_fnc_debug_balloons =
 						};
 					};
 					
-						
 					// Stop / overwatch
 					_so = _x getVariable["bcombat_stop_overwatch", false];
 					_ball_so = _x getVariable ["bcombat_debug_ball_so", objNull ];
@@ -500,7 +407,6 @@ bdetect_fnc_benchmark =
 		
 		while { true } do
 		{
-			//waitUntil { bcombat_enable };
 			_cnt = count ( bdetect_fired_bullets ) / 2;
 			if( _cnt > bdetect_stats_max_bullets ) then { bdetect_stats_max_bullets = _cnt; };
 			

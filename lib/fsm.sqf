@@ -1,5 +1,4 @@
 // _thisFSM (to get handle from within FSM)
-
 bcombat_fnc_fsm_trigger = 
 {
 	private [ "_unit", "_event", "_penalty", "_timeout_min", "_timeout_mid", "_timeout_max", "_enemy", "_fsm", "_msg" ];

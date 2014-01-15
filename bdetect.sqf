@@ -42,7 +42,7 @@ if(isNil "bdetect_bullet_initial_min_speed") then { bdetect_bullet_initial_min_s
 if(isNil "bdetect_bullet_max_proximity") then { bdetect_bullet_max_proximity = 6; }; 							// (Meters, Default 10) Maximum proximity to unit for triggering detection
 if(isNil "bdetect_bullet_min_distance") then { bdetect_bullet_min_distance = 20; }; 							// (Meters, Default 25) Bullets having travelled less than this distance are ignored
 if(isNil "bdetect_bullet_max_distance") then { bdetect_bullet_max_distance = 750; }; 							// (Meters, Default 500) Bullets havin travelled more than distance are ignored
-if(isNil "bdetect_bullet_max_lifespan") then { bdetect_bullet_max_lifespan = 2; }; 							// (Seconds, Default 0.7) Bullets living more than these seconds are ignored
+if(isNil "bdetect_bullet_max_lifespan") then { bdetect_bullet_max_lifespan = 2; }; 								// (Seconds, Default 0.7) Bullets living more than these seconds are ignored
 if(isNil "bdetect_bullet_max_height") then { bdetect_bullet_max_height = 6; }; 									// (Meters, Default 8)  Bullets going higher than this -and- diverging from ground are ignored
 if(isNil "bdetect_bullet_skip_mags") then { bdetect_bullet_skip_mags = []; }; 									// (Array) Skip these bullet types altogether. Example: ["30rnd_9x19_MP5", "30rnd_9x19_MP5SD", "15Rnd_9x19_M9"]
 if(isNil "bdetect_mp_enable") then { bdetect_mp_enable = true; }; 												// (Boolean, Default true) Toggle to Enable / Disable MP experimental support

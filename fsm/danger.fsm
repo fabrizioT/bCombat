@@ -111,7 +111,6 @@ class FSM
        "comment ""8  DCCanFire"";" \n
        "*/" \n
        "" \n
-       "" \n
        "if( !(isNil ""bcombat_init_done"") && { bcombat_enable } && { [_this] call bcombat_fnc_is_active } ) then " \n
        "{" \n
        "	if( !(isPlayer _this) ) then " \n

@@ -4,13 +4,14 @@ v0.15
 Core:
 
 	* Fixed issue with cover blacklisting causing .sqf script error popup
-	* Units more likely to cover each other
+	* AI units more likely to cover each other
 	* Targets of opportunity better filtered, with tighter visibility checks
 	* AI group leaders not supposed to flee anymore
 	* Configurable damage multiplier (bcombat_damage_multiplier) 
 	* CQB reactivity improvements
 	* Reduced vanilla AI hearing sensitivity
 	* bcombat_config.hpp path changed from "\userconfig\bcombat_config.hpp" to "\userconfig\bcombat\bcombat_config.hpp"
+	* Further CfgAISkill tweaking
 	* 60+ configuration variables exposed and briefly documented into "config.sqf"
 	
 New optional features:

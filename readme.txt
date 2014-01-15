@@ -17,6 +17,9 @@ REQUIREMENTS
 INSTALLATION
 -----------------------------------------
 
+Please remove any existing bCombat installations:
+delete "@bcombat" folder as well as "userconfig\bcombat_config.hpp" configuration file.
+
 +   Extract the bCombat zip package anywhere.
 +   Move "@bcombat" folder from extraction location to your ArmA 3 main folder ( usually: <Your Steam Path>\steamapps\common\Arma 3\ )
 +   Move "userconfig" folder from "@bcombat" folder to your ArmA 3 main folder.
@@ -100,11 +103,12 @@ VIDEOS
 +   http://www.youtube.com/watch?v=GZ3PC-mrGE4
 +   http://www.youtube.com/watch?v=8u8bUqCppG4
 
+
 CREDITS
 ----------------------------------------
 
 bCombat was created by Fabrizio_T.
-It's dedicated to BIS and to the whole OFP/ARMA community.
+It's dedicated to the OFP/ARMA community and to BIS.
 This mod wouldn't have seen the light without the support of the testers:
 
 +   Mustangdelta
@@ -125,7 +129,7 @@ This mod wouldn't have seen the light without the support of the testers:
 +   GDSN
 +   willywonka
 
-A final thanks to talented and dedicated modders who over time inspired this work:
+A final thanks to talented modders who over time inspired this work:
 
 +   TonyRanger
 +   Kronzky
@@ -135,4 +139,17 @@ A final thanks to talented and dedicated modders who over time inspired this wor
 +   Rg7621
 +   Protegimus 
 +   Sickboy
++	zGuba
 
+
+FEEDBACK
+----------------------------------------
+
+Any constructive feedback is welcome, as long as expressed in polite and mature manner.
+
+
+DISCLAIMER
+----------------------------------------
+
+The modification is provided as is, without warranty of any kind.
+Author is not responsible for any direct, indirect, incidental or consequential damage of any kind, without limitation.

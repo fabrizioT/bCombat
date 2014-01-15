@@ -52,15 +52,7 @@ _nul = [ _this select 0] spawn
 	while { [_unit] call bcombat_fnc_is_alive } do 
 	{
 		waitUntil { [_unit] call bcombat_fnc_is_active };
-	
-		/*
-		_speed = [ _unit ] call bcombat_fnc_speed;
-		if( _unit == formLeader _unit && _speed > 3)  then
-		{
-			(group _unit ) setFormDir (getDir _unit);
-		};
-		*/
-		
+
 		if( !(isPlayer _unit) )  then
 		{
 			if( _unit == leader _unit) then

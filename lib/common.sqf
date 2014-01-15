@@ -460,8 +460,7 @@ bcombat_fnc_grenade_throwable =
 			};
 		};
 	};
-	
-	//hintc format["%1", _ret];
+
 	_ret
 };
 
@@ -689,7 +688,6 @@ bcombat_fnc_fall_into_formation = {
 			_pos = _dest select 0; 
 			
 			//if( [ _unit ] call bcombat_fnc_speed == 0) then { _unit domove position _leader; sleep .1; };
-
 			//_unit setDestination [ _pos, (_dest select 1), true];
 			
 			if( _unit distance _pos > bcombat_tightened_formation_max_distance ) then
@@ -1160,7 +1158,6 @@ bcombat_fnc_handle_smoke_grenade =
 	};
 };
 
-
 bcombat_fnc_handle_targets = 
 {
 	private  ["_unit", "_timeout", "_maxdist", "_params", "_nenemy", "_targets", "_x"];
@@ -1212,8 +1209,6 @@ bcombat_fnc_handle_targets =
 		{
 			sleep (_timeout select 1);
 		};
-		
-		//player globalchat format["%1 - targets: %2 ---> %3 %4", _unit, _targets, _maxdist, _params];
 	};
 };
 

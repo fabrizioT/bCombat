@@ -244,8 +244,6 @@ bcombat_fnc_suppression =
 		{
 			_unit forcespeed 20;
 			_unit doWatch objNull;
-			//_unit doTarget objNull;
-			//_unit setcombatmode "GREEN";
 		};
 	
 		if( bcombat_debug_enable ) then { 
@@ -377,7 +375,6 @@ bcombat_fnc_unit_handle_fleeing = {
 		&& { (leader _unit) getVariable ["bcombat_suppression_level", 0] > 50 }
 		&& { !([player] in units (group _unit)) }
 		&& { _unit != leader _unit }
-		//&& random 1 < .7
 	) then {
 
 		if( [_unit] call bcombat_fnc_has_task ) then
@@ -393,14 +390,11 @@ bcombat_fnc_unit_handle_fleeing = {
 		};
 		
 		sleep .1;
+		
 		_unit allowfleeing 1;
 		_unit forcespeed 20;
 		_unit doWatch objNull;
 		_unit setUnitpos "Auto";
-		
-		//_unit disablaAI "TARGET";
-		//_unit disablaAI "FSM";
-		//_unit setcombatmode "GREEN";
 	
 		sleep 30;
 		

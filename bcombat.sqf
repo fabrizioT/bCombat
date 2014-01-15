@@ -2,7 +2,7 @@
 // bcombat | combat framework
 // ----------------------------------------
 // Version: 0.15
-// Date: 23/12/2013
+// Date: 14/01/2014
 // Author: Fabrizio_T 
 // License: GNU/GPL
 // ----------------------------------------
@@ -54,7 +54,7 @@ if(isNil "bcombat_allowed_units") then { bcombat_allowed_units = []; };									
 if(isNil "bcombat_damage_multiplier") then { bcombat_damage_multiplier = 1; }; 	
 
 // Units internal clock (for optional features)
-if(isNil "bcombat_features_clock") then { bcombat_features_clock = [3,6]; }; 							
+if(isNil "bcombat_features_clock") then { bcombat_features_clock = [3,5]; }; 							
 
 // Switch to danger distance
 if(isNil "bcombat_danger_distance") then { bcombat_danger_distance = 250; };	
@@ -102,7 +102,7 @@ if(isNil "bcombat_investigate_max_distance") then { bcombat_investigate_max_dist
 // Move to cover
 if(isNil "bcombat_allow_cover") then { bcombat_allow_cover = false; }; 
 if(isNil "bcombat_cover_mode") then { bcombat_cover_mode = 0; }; 		
-if(isNil "bcombat_cover_radius") then { bcombat_cover_radius = [15,35]; }; 	
+if(isNil "bcombat_cover_radius") then { bcombat_cover_radius = [15,0]; }; 	
 
 // Hand grenades
 if(isNil "bcombat_allow_grenades") then { bcombat_allow_grenades = false; }; 				

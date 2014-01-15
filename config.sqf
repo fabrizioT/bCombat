@@ -209,7 +209,7 @@ bcombat_targeting_max_distance = [50, 150];			// (Array) [ maximum distance, max
 // Known issues: for player led groups thightened formation is breaking the ADVANCE command
 
 bcombat_allow_tightened_formation = true;			// (Boolean) Toggle feature on / off
-bcombat_tightened_formation_max_distance = 50;		// (Meters) Maximum distance a unit can go off formation before being ordered to fall back
+bcombat_tightened_formation_max_distance = 55;		// (Meters) Maximum distance a unit can go off formation before being ordered to fall back
 
 // Description: friendly fire damage cap
 // Triggered: whenever unit is hit by a friendly unit (player excluded)
@@ -234,14 +234,14 @@ bcombat_stop_overwatch_max_distance	= [100, 200];	// (Array) [max distance from 
 bcombat_cqb_radar = true;    						// (Boolean) Toggle feature on / off
 bcombat_cqb_radar_clock = [0.5, 2];    				// (Seconds) internal feaures clocking. Never use values below 0.1 ( = 10 times / second).
 bcombat_cqb_radar_max_distance = 100;    			// (Meters) Features are activated under this distance
-bcombat_cqb_radar_params = [95, 5, 0, 5];			// (Array) [max. angle, min. precision, min. knowsabout, max enemy .speed] - Don't edit this.
+bcombat_cqb_radar_params = [90, 5, 0, 5];			// (Array) [max. angle, min. precision, min. knowsabout, max enemy .speed] - Don't edit this.
 
 // Description: misc animations as a tribute to "tonyRanger"
 // Triggered: seldom, when under fire
 // Effect: a prone rolling animation is played to evade enemy fire
 
 bcombat_fancy_moves = true;     					// (Boolean) Toggle feature on / off
-bcombat_fancy_moves_frequency = 0.1;    			// (0-1) Probability of occurring. 0=never (0%), 1=all the time (100%). 
+bcombat_fancy_moves_frequency = 0.075;    			// (0-1) Probability of occurring. 0=never (0%), 1=all the time (100%). 
 
 // -----------------------------------------------------------------------------------------------------
 // bCombat MISC CALLS
@@ -255,7 +255,7 @@ if ( bcombat_dev_mode ) then
 	call bdetect_fnc_benchmark; // Uncomment this line to activate bDetect live stats panel (as alternative to bcombat_fnc_fps)
 	// [] spawn bcombat_fnc_fps; // Uncomment this line to activate FPS stats panel (as alternative to bdetect_fnc_benchmark;)
 
-	OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
+	// OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
 };
 
 // bdetect_startup_hint = false;

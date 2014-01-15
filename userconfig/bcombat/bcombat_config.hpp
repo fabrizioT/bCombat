@@ -43,7 +43,3 @@ class CfgAISkill
 	commanding[] = {0,0.2,1,1};
 	general[] = {0,0,1,1};
 };
-
-
-
-

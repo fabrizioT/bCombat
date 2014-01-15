@@ -1,10 +1,10 @@
 /*%FSM<COMPILE "G:\Program Files (x86)\Steam\steamapps\common\Arma 3\Tools\FSM Editor Personal Edition\scriptedFSM.cfg, bcombat">*/
 /*%FSM<HEAD>*/
 /*
-item0[] = {"INIT",0,250,-863.389832,-289.244141,-773.389832,-239.244370,0.000000,"INIT"};
+item0[] = {"INIT",0,4346,-863.389832,-289.244141,-773.389832,-239.244370,0.000000,"INIT"};
 item1[] = {"not_alive",4,218,-741.560730,-289.322144,-651.560669,-239.322342,1.000000,"not alive"};
 item2[] = {"END",1,250,-741.118408,-199.405289,-651.118469,-149.405350,0.000000,"END"};
-item3[] = {"true",4,4314,-862.919128,-194.638275,-772.919189,-144.638275,0.000000,"true"};
+item3[] = {"true",4,218,-862.919128,-194.638275,-772.919189,-144.638275,0.000000,"true"};
 item4[] = {"MAIN",2,250,-862.945801,-103.528008,-772.946045,-53.527988,0.000000,"MAIN"};
 item5[] = {"new_event",4,218,-1012.213379,-15.182938,-922.213379,34.817024,10.000000,"new event"};
 item6[] = {"incoming_event",2,250,-1011.458130,87.307632,-921.457703,137.307861,0.000000,"incoming event"};
@@ -41,8 +41,6 @@ class FSM
        "_timeout_stance_anim = -3;" \n
        "_timeout_stance_wait = 0;" \n
        "_level = 0;" \n
-       "" \n
-       "" \n
        "" \n
        "if( bcombat_debug_enable ) then {" \n
        "	_msg = format[""[%1] suppression.fsm initialized"", _unit];" \n
