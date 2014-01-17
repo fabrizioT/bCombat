@@ -999,11 +999,11 @@ bcombat_fnc_soundalert_grenade = {
 // Benchmarking: 0.78s x 1000
 bcombat_fnc_soundalert = {
 
-	private [ "_unit", "_bullet", "_maxdist", "_pos", "_units", "_groups", "_x" ];
+	private [ "_unit", "_bullet", "_maxdist", "_pos", "_units", "_groups", "_x", "_prec", "_ppos" ];
 
 	_unit = _this select 0;
 	_bullet = _this select 1;
-	_pos =  _this select 2;
+	_pos =  (_this select 2) ;
 	_maxdist = _this select 3;
 	_units = (_pos nearEntities ["CAManBase", _maxdist]) - [_unit];
 	_groups = [];
@@ -1015,17 +1015,30 @@ bcombat_fnc_soundalert = {
 			&& { [_x, _unit] call bcombat_fnc_is_enemy }
 		) then {
 		
+			_prec =  [_x, _unit] call bcombat_fnc_knprec;
+			_ppos = [_pos, ((_pos distance _x) / 10) min _prec] call bcombat_fnc_random_pos; // perceived enemy position
+			
 			//_groups = _groups + [group _x];
 			[leader _x, _unit] call bcombat_fnc_reveal;
 				
 			[ _unit, objNull] call bcombat_fnc_danger;
 			
+			//player globalchat format["%1 alerted, d: %2", _unit, _ppos distance player];
+			
 			if( !(isPlayer(leader _x)) ) then
 			{
+				private ["_nenemy", "_d1", "_d2"];
+				
 				[ _x, 10, 1, 0, 5 + random 10, 30 + random 30, objNull ] call bcombat_fnc_fsm_trigger;
 				
-				if( isNull ( _unit findNearestEnemy _unit) && { _unit distance (expecteddestination (leader _unit) select 0) < 100 } ) then {
-					[_x, _pos] call bcombat_fnc_investigate;
+				_nenemy = _x findNearestEnemy _x;
+				_d1 = _unit distance (expecteddestination (leader _unit) select 0);
+				_d2 = _unit distance (expecteddestination (_unit) select 0);
+				
+
+				if( ( isNull _nenemy || _nenemy == _unit ) && { _d1 < 100 || _d1 > 1000000 } && { _d2 < 100 || _d2 > 1000000 }) then {
+					//player globalchat format["--> %1 %2 -- %3 %4", _nenemy, _unit, _d1, _d2];
+					[_x, _ppos] call bcombat_fnc_investigate;
 				};
 			};
 		};
@@ -1327,6 +1340,7 @@ bcombat_fnc_investigate = {
 		&& { ( combatMode _unit == "RED" || random 10 >= 3 ) }
 	) then
 	{
+		//player globalchat format["%1 look for player, d: %2", _unit, _pos distance player];
 		_unit domove ([_pos, (_unit distance _pos) / 10 ] call bcombat_fnc_random_pos);
 	};
 };
@@ -1404,4 +1418,3 @@ bcombat_fnc_is_on_foot =
 	_ret;
 };
 */
-

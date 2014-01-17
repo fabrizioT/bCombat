@@ -8,7 +8,7 @@ bcombat_enable = true;								// (Boolean) Toggle feature on / off
 
 // Description: toggle debugging information on (true) or off (false)
 
-bcombat_dev_mode = false;							// (Boolean) Toggle feature on / off
+bcombat_dev_mode = true;							// (Boolean) Toggle feature on / off
 
 // Description: minimum timeout since last incoming bullet, for the current one to cause suppression.
 // As default no more than 5 ( = 1 / 0.2 ) bullets / second would cause suppression on a single AI unit.
@@ -186,7 +186,7 @@ bcombat_smoke_grenades_timeout = [15, 10];				// (Array) [ unit timeout, group t
 // Note: needs bcombat_allow_hearing = true
 
 bcombat_allow_investigate = true;					// (Boolean) Toggle feature on / off
-bcombat_investigate_max_distance = 250;				// (Number) maximum distance from unit, for position to be investigated
+bcombat_investigate_max_distance = 200;				// (Number) maximum distance from unit, for position to be investigated
 	
 // Description: allow fatigue
 // Effect: allows for vanilla fatigue effects
