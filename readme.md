@@ -1,4 +1,5 @@
-bCombat AI MOD v0.16 [SP] [DEVELOPMENT / UNSTABLE] for ARMA3
+bCombat AI MOD v0.16 [SP] for ARMA3
+DEVELOPMENT BUILD
 =========================================
 
 WARNING
