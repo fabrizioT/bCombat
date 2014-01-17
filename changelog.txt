@@ -7,6 +7,7 @@ Core:
 	* Fixed: episodic misfunctioning of smoke grenade throwing (hand grenade was thrown instead). Thanks to ebarstad for reporting.
 	* Fixed: bug somewhat reducing responsiveness of suppressed units.
 	* Fixed: bug in greade handling (thanks Torndeco)
+	* Fixed: small bug with investigate behaviour 
 	* Added 1 second post-spawn delay before unit initialization. This in order to allow custom / third party scripts to be executed.
 	* Bullet penalties rebalanced.
 	
