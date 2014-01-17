@@ -1100,7 +1100,7 @@ bcombat_fnc_handle_grenade =
 	private  ["_unit", "_targets", "_enemy", "_gtime", "_utime"];
 	
 	_unit = _this select 0;
-	_targets = player nearTargets (bcombat_grenades_distance select 1);
+	_targets = _unit nearTargets (bcombat_grenades_distance select 1);
 	
 	Scopename "grenadeTargetsLoop";
 		
