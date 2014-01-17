@@ -5,8 +5,10 @@ _nul = [ _this select 0] spawn
 	private ["_unit", "_e", "_nil"];
 
 	_unit = _this select 0;
-
+	
 	waitUntil { [_unit] call bcombat_fnc_is_active };
+	
+	sleep 1;
 	
 	if(!(bcombat_allow_fatigue)) then
 	{
@@ -15,14 +17,20 @@ _nul = [ _this select 0] spawn
 	
 	[_unit] call bcombat_fnc_unit_skill_set;
 	
-	_e = _unit addEventHandler ["Fired", bcombat_fnc_eh_fired];
-	_unit setvariable ["bcombat_eh_fired", _e ];
-	
-	_e = _unit addEventHandler ["HandleDamage", bcombat_fnc_eh_handledamage]; 
-	_unit setvariable ["bcombat_eh_handledamage", _e ];
+	if( isNil { _unit getvariable ["bcombat_eh_fired", nil ] } ) then {
+		_e = _unit addEventHandler ["Fired", bcombat_fnc_eh_fired];
+		_unit setvariable ["bcombat_eh_fired", _e ];
+	};
+		
+	if( isNil { _unit getvariable ["bcombat_eh_handledamage", nil ] } ) then {
+		_e = _unit addEventHandler ["HandleDamage", bcombat_fnc_eh_handledamage]; 
+		_unit setvariable ["bcombat_eh_handledamage", _e ];
+	};
 
-	_e = _unit addEventHandler ["Killed", bcombat_fnc_eh_killed];
-	_unit setvariable [ "bcombat_eh_killed", _e ];
+	if( isNil { _unit getvariable ["bcombat_fnc_eh_killed", nil ] } ) then {
+		_e = _unit addEventHandler ["Killed", bcombat_fnc_eh_killed];
+		_unit setvariable [ "bcombat_eh_killed", _e ];
+	};
 	
 	if( [_unit] call bcombat_fnc_is_active
 		&& bcombat_allow_grenades 
@@ -44,6 +52,7 @@ _nul = [ _this select 0] spawn
 		};
 	};
 	
+
 	if( bcombat_cqb_radar ) then
 	{
 		[ _unit, bcombat_cqb_radar_clock, bcombat_cqb_radar_max_distance, bcombat_cqb_radar_params ] spawn bcombat_fnc_handle_targets;
@@ -57,6 +66,10 @@ _nul = [ _this select 0] spawn
 		{
 			if( _unit == leader _unit) then
 			{
+				if( behaviour _unit == "COMBAT") then
+				{
+					(group _unit) setSpeedMode "FULL";
+				};
 			
 				_blacklist = (group _unit) getVariable ["bcombat_cover_blacklist", [] ];
 				
@@ -139,4 +152,7 @@ _nul = [ _this select 0] spawn
 		
 		sleep ( (bcombat_features_clock select 0) + random ( (bcombat_features_clock select 1) - (bcombat_features_clock select 0) ) );
 	};
+	
+	if(true) exitWith{};
+	
 };

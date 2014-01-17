@@ -152,7 +152,7 @@ class FSM
        "					|| (isHidden _this )" \n
        "					|| ([currentWeapon _this] call bcombat_fnc_is_mgun  && ((isHidden _this ) || [ _this ] call bcombat_fnc_speed == 0) )" \n
        "					|| (assignedTarget _this) == _dangerCausedBy" \n
-       "					|| (bcombat_slow_leaders  && _this == formleader _this )" \n
+       "					|| (bcombat_slow_leaders  && _this == formleader _this )" \n 
        "					|| ( " \n
        "						[_this, _dangerCausedBy] call bcombat_fnc_relativeDirTo < 60 && _dist  < 250 &&" \n
        "						(" \n
@@ -175,7 +175,7 @@ class FSM
        "		{" \n
        "			if( bcombat_allow_investigate ) then" \n
        "			{" \n
-       "				if(  _dangerCause in [4,5] && { isNull ( _this findNearestEnemy _this) } ) then" \n
+       "				if(  _dangerCause in [4,5] && { isNull ( _this findNearestEnemy _this) } && { _this distance (expecteddestination (leader _this) select 0) < 100 } ) then" \n
        "				{" \n
        "					[_this, _dangerPos] spawn bcombat_fnc_investigate;" \n
        "				};" \n

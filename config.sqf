@@ -8,7 +8,7 @@ bcombat_enable = true;								// (Boolean) Toggle feature on / off
 
 // Description: toggle debugging information on (true) or off (false)
 
-bcombat_dev_mode = false;							// (Boolean) Toggle feature on / off
+bcombat_dev_mode = true;							// (Boolean) Toggle feature on / off
 
 // Description: minimum timeout since last incoming bullet, for the current one to cause suppression.
 // As default no more than 5 ( = 1 / 0.2 ) bullets / second would cause suppression on a single AI unit.
@@ -17,7 +17,7 @@ bcombat_dev_mode = false;							// (Boolean) Toggle feature on / off
 
 bcombat_incoming_bullet_timeout = 0.2;				// (Seconds) minimum timeout between bullets
 bcombat_danger_distance = 250; 						// (Meters) Minimum distance from shooter, for groups to automatically switch to "combat" behaviour
-bcombat_features_clock = [3,5];						// (Seconds) Additional features clocking [minimum timeout, maximum timeout]
+bcombat_features_clock = [3,6];						// (Seconds) Additional features clocking [minimum timeout, maximum timeout]
 bcombat_damage_multiplier = 1;						// (0-1) Damage multiplier. Zero makes units invulnerable.
 
 // -----------------------
@@ -37,20 +37,20 @@ bdetect_bullet_max_height =  6.5;  					// (Meters) Maximum height on ground for
 // Triggered: whenever under fire and a close bullet is intercepted
 // Effect: Up to 5% of skill penalty is applied
 
-bcombat_penalty_bullet = 5; 						// (Percent) %
+bcombat_penalty_bullet = 3; 						// (Percent) %
 
 // Description: Flanking penalty
 // Triggered: whenever under fire and shooter is firing from flank / back, 
 // Effect: Adds up to 5% further skill penalty 
 
-bcombat_penalty_flanking = 5; 						// (Percent) %
+bcombat_penalty_flanking = 3; 						// (Percent) %
 
 // Description: Enemy unknown penalty
 // Adds further penalty to bcombat_penalty_bullet
 // Triggered: whenever under fire, if shooter is unknown 
 // Effect: Adds up to 5% further skill penalty
 
-bcombat_penalty_enemy_unknown = 5; 					// (Percent) %
+bcombat_penalty_enemy_unknown = 2; 					// (Percent) %
 
 // Description: Enemy contact penalty
 // Triggered: on first enemy contact or on further contact after area clear
@@ -62,7 +62,7 @@ bcombat_penalty_enemy_contact = 25; 				// (Percent) %
 // Triggered: on shell exploding nearby, or close ricochet
 // Effect: up to 5% skill penalty
 
-bcombat_penalty_explosion = 5;						// (Percent) %
+bcombat_penalty_explosion = 2;						// (Percent) %
 
 // Description: Casualty penalty
 // Triggered: when a dead unit from same group is discovered
@@ -80,11 +80,17 @@ bcombat_penalty_wounded = 10; 						// (Percent) %
 // Triggered: once per second, if no penalty raising events have been triggered
 // Effect: up to 2% skill recovery, halved if unit is wounded
 
-bcombat_penalty_recovery = 3; 						// (Percent) %
+bcombat_penalty_recovery = 2; 						// (Percent) %
 
 // -----------------------------------------------------------------------------------------------------
 // bCombat OPTIONAL FEATURES CONFIGURATION
 // -----------------------------------------------------------------------------------------------------
+
+// Description:
+// Triggered:
+// Effect: 
+
+bcombat_allow_lowerground_penalty = true;			// (Boolean) Toggle feature on / off
 
 // Description: fast movement
 // Triggered: if active and destination is at medium distance (50-500m.)
@@ -172,7 +178,7 @@ bcombat_grenades_no_los_only = true; 				// (Boolean) Whether enemy should be ou
 bcombat_allow_smoke_grenades = true;					// (Boolean) Toggle feature on / off
 bcombat_smoke_grenades_additional_number = 1; 			// (Number) number of additional smoke grenades to be automatically ADDED to unit loadou
 bcombat_smoke_grenades_distance = [75,300,25]; 			// (Array) [ minimum distance, maximum distance, min. distance from target for friendly units] 
-bcombat_smoke_grenades_timeout = [15, 5];				// (Array) [ unit timeout, group timeout ]
+bcombat_smoke_grenades_timeout = [15, 10];				// (Array) [ unit timeout, group timeout ]
 
 // Description: investigation behavoiur
 // Triggered: if no enemy is known and some explosion / gunshot is heard, or another unit from same group gets killed
@@ -255,7 +261,7 @@ if ( bcombat_dev_mode ) then
 	call bdetect_fnc_benchmark; // Uncomment this line to activate bDetect live stats panel (as alternative to bcombat_fnc_fps)
 	// [] spawn bcombat_fnc_fps; // Uncomment this line to activate FPS stats panel (as alternative to bdetect_fnc_benchmark;)
 
-	// OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
+	OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
 };
 
 // bdetect_startup_hint = false;

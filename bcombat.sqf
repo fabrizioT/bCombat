@@ -1,8 +1,8 @@
 // ----------------------------------------
 // bcombat | combat framework
 // ----------------------------------------
-// Version: 0.15
-// Date: 14/01/2014
+// Version: 0.16
+// Date: 16/01/2014
 // Author: Fabrizio_T 
 // License: GNU/GPL
 // ----------------------------------------
@@ -20,9 +20,9 @@ bcombat_debug_enable = false;
 bcombat_debug_levels = [1];//[1,6,8];
 bcombat_debug_chat = true;
 
-bcombat_name 		= "bcombat | AI Combat mod"; 
+bcombat_name 		= "bcombat AI Infantry mod"; 
 bcombat_short_name 	= "bcombat"; 
-bcombat_version 	= "0.15";
+bcombat_version 	= "0.16";
 
 // -----------------------------
 // files preload
@@ -49,6 +49,9 @@ if(isNil "bcombat_debug_levels") then { bcombat_debug_levels = [0,1,2,3,4,5,6,7,
 if(isNil "bcombat_allowed_sides") then { bcombat_allowed_sides = []; };										// Alpha feature please don't change
 if(isNil "bcombat_allowed_groups") then { bcombat_allowed_groups = []; };									// Alpha feature please don't change 
 if(isNil "bcombat_allowed_units") then { bcombat_allowed_units = []; };										// Alpha feature please don't change 
+
+// Lower ground penalty
+if(isNil "bcombat_allow_lowerground_penalty") then { bcombat_allow_lowerground_penalty = true; }; 	
 
 // Damage multiplier
 if(isNil "bcombat_damage_multiplier") then { bcombat_damage_multiplier = 1; }; 	

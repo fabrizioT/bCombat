@@ -13,7 +13,7 @@ bcombat_fnc_fsm_trigger =
 
 	if ( !(isPlayer _unit ) ) then //&& lifestate _unit == "HEALTHY"
 	{
-		_unit setVariable ["bcombat_suppression_time", time ];
+		
 		
 		[ _unit, _enemy] call bcombat_fnc_danger;
 

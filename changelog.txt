@@ -1,3 +1,20 @@
+v0.16
+-----
+
+Core:
+
+	* Fixed: HandleDamage EH related bug, possibly breaking respawn scripts. Thanks to LSD_Timewarp82 for reporting.
+	* Fixed: episodic misfunctioning of smoke grenade throwing (hand grenade was thrown instead). Thanks to ebarstad for reporting.
+	* Fixed: bug somewhat reducing responsiveness of suppressed units.
+	* Fixed: bug in greade handling (thanks Torndeco)
+	* Added 1 second post-spawn delay before unit initialization. This in order to allow custom / third party scripts to be executed.
+	* Bullet penalties rebalanced.
+	
+New optional features:
+
+	* Lower ground penalty: Firing from lower ground reduces effectivenes of suppressive fire (and viceversa)
+
+	
 v0.15
 -----
 
@@ -17,6 +34,7 @@ Core:
 New optional features:
 
 	* AI units may throw smoke grenades when threatened
+	
 	
 v0.14
 -----

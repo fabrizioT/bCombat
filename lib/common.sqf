@@ -2,6 +2,20 @@
 // FUNCTIONS
 // ---------------------------------------
 
+bcombat_fnc_array_invert = {
+
+	private [ "_arr", "_n", "_ret" ];
+	
+	_arr = _this select 0;
+	_ret = [];
+	
+	for "_n" from  (count(_arr) - 1) to 0 step -1 do {
+		_ret set[ count _ret, _arr select _n];
+	};
+	
+	_ret
+};
+
 // Benchmarking: 0.13s x 1000
 bcombat_fnc_is_active = {	// bCOmbat is on, unit is man, alive, activated and on foot
 
@@ -229,7 +243,7 @@ bcombat_fnc_is_alive =
 		_ret = false;
 	};
 	
-	_ret;
+	_ret
 };
 
 // Benchmarking: 0.16s x 1000
@@ -508,6 +522,53 @@ bcombat_fnc_eh_fired = {
 	
 	if( [_unit] call bcombat_fnc_is_active ) then 
 	{
+		_unit = _this select 0; 
+		_muzzle = _this select 2;
+		_bullet = _this select 6;
+		
+		if( _muzzle == "HandGrenadeMuzzle" ) then 
+		{
+			private ["_p", "_v", "_k", "_vx", "_vy", "_vz"]; 
+			
+			// Grenade
+			if( !(isNil {_unit getVariable ["bcombat_grenade_lock", nil ]}) ) then
+			{
+				_p = getPosASL _bullet;
+				
+				_v = velocity _bullet;
+				_k = ( (( _unit getvariable "bcombat_grenade_distance")  -  (_unit getvariable "bcombat_grenade_h") ) / 45) ^ 0.5;
+
+				_vx = (_v select 0) * _k * 1.0;
+				_vz = (_v select 1) * _k * 1.0;
+				_vy = (_v select 2) * _k * 1.1;
+				
+				_bullet setPos [_p select 0, _p select 1, (_p select 2) + 0.3]; 
+				_bullet setvelocity [_vx, _vz, _vy];
+				
+				_unit setvariable ["bcombat_grenade_lock", nil];
+				_unit setvariable ["bcombat_grenade_distance", nil];
+				_unit setvariable ["bcombat_grenade_h", nil];
+			}
+			else
+			{
+				if( !(isNil {_unit getVariable ["bcombat_smoke_grenade_lock", nil ]})  ) then 
+				{
+					_v = velocity _bullet;
+					_p = getPosASL _bullet;
+					
+					deleteVehicle _bullet;
+					_bullet = "SmokeShell" createvehicle _p;  
+					
+					_vx = (_v select 0) *  1;
+					_vz = (_v select 1) *  1;
+					_vy = (_v select 2) *  1;
+					
+					_bullet setvelocity [_vx, _vz, _vy];
+					
+					_unit setvariable ["bcombat_smoke_grenade_lock", nil];
+				};
+			};
+		};
 
 		if( bcombat_allow_hearing ) then 
 		{
@@ -551,10 +612,10 @@ bcombat_fnc_eh_handledamage = {
 	_enemy = _this select 3; //Source of damage (returns the unit if no source)
 	_ammo = _this select 4; // Ammo classname of the projectile that dealt the damage (returns "" if no projectile)
 
-	_body_part_damage = _body_part_damage * bcombat_damage_multiplier;
-	
-	if(  [_unit] call bcombat_fnc_is_active ) then 
+	if(  [_unit] call bcombat_fnc_is_active && { !(isPlayer _unit ) } ) then 
 	{
+		_body_part_damage = _body_part_damage * bcombat_damage_multiplier;
+		
 		if( bcombat_debug_enable ) then {
 			_msg = format["bcombat_fnc_eh_handledamage() - unit=%1", _unit ];
 			[ _msg, 10 ] call bcombat_fnc_debug;
@@ -571,6 +632,8 @@ bcombat_fnc_eh_handledamage = {
 
 		_body_part_damage;
 	};
+	
+	//_body_part_damage
 };
 
 bcombat_fnc_eh_killed = {
@@ -961,7 +1024,7 @@ bcombat_fnc_soundalert = {
 			{
 				[ _x, 10, 1, 0, 5 + random 10, 30 + random 30, objNull ] call bcombat_fnc_fsm_trigger;
 				
-				if( isNull ( _unit findNearestEnemy _unit) ) then {
+				if( isNull ( _unit findNearestEnemy _unit) && { _unit distance (expecteddestination (leader _unit) select 0) < 100 } ) then {
 					[_x, _pos] call bcombat_fnc_investigate;
 				};
 			};
@@ -992,7 +1055,7 @@ bcombat_fnc_reveal = {
 			_ang = [_unit, _enemy] call bcombat_fnc_relativeDirTo;
 			_dist = _unit distance _enemy;
 			
-			_rv = 4 / ceil ( _dist / 50 +.1) / ceil ( _ang / 45 +.1); 
+			_rv = 4 / ceil ( _dist / 50 +.1) / ceil ( _ang / 30 +.1); 
 
 			if( !(_visible) ) then {_rv = _rv * .1;};
 			
@@ -1181,6 +1244,7 @@ bcombat_fnc_handle_targets =
 			&& { _unit distance _nenemy < bcombat_cqb_radar_max_distance } ) then
 		{
 			_targets = [_unit, _maxdist, _params] call bcombat_fnc_targets;
+			_targets = [_targets] call bcombat_fnc_array_invert;
 			
 			{
 				if( [_unit, _x] call bcombat_fnc_is_visible ) then

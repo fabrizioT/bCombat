@@ -329,13 +329,13 @@ bcombat_fnc_task_move_to_cover =
 			_blacklist set [count _blacklist, (str _pos)];
 			_blacklist set [count _blacklist, _timeout1 + _timeout2 ];
 			_grp setvariable ["bcombat_cover_blacklist", _blacklist];
-			//player globalchat format["*** %1 move to %2 dist: %3 ***", _unit, _pos, _dist];
+//player globalchat format["*** %1 move to %2 dist: %3 ***", _unit, _pos, _dist];
 			
 			if ( _unit != formLeader _unit && _unit != leader _unit) then { 
 				dostop _unit; 
 			};
 			
-			_unit forcespeed -1;
+			_unit forcespeed 20;
 			_unit setDestination [ _pos , "LEADER PLANNED", true];
 			
 			sleep .01;
@@ -370,6 +370,7 @@ bcombat_fnc_task_move_to_cover =
 			
 			_unit enableAI "autotarget";
 			_unit enableAI "target";
+			_unit forcespeed -1;
 		};
 	};
 	
@@ -399,7 +400,7 @@ bcombat_fnc_task_throw_grenade =
 	_unit disableAI "MOVE";	
 	_unit disableAI "TARGET";
 	_unit disableAI "AUTOTARGET";
-	
+	/*
 	_eh = _unit addEventHandler ["Fired", {
 		private ["_unit", "_muzzle", "_bullet", "_v", "_k", "_vx", "_vy", "_vz"];
 			
@@ -420,9 +421,13 @@ bcombat_fnc_task_throw_grenade =
 			
 			_bullet setPos [_p select 0, _p select 1, (_p select 2) + 0.5]; 
 			_bullet setvelocity [_vx, _vz, _vy];
+			
+			_unit setvariable ["bcombat_grenade_distance", nil];
+			_unit setvariable ["bcombat_grenade_h", nil];
 		};
 	}];
-	
+	*/
+	_unit setvariable ["bcombat_grenade_lock", true];
 	_unit setvariable ["bcombat_grenade_distance", _distance];
 	_unit setvariable ["bcombat_grenade_h", _h];
 	_unit selectWeapon "throw"; 
@@ -435,10 +440,7 @@ bcombat_fnc_task_throw_grenade =
 	_unit fire ['HandGrenadeMuzzle', 'HandGrenadeMuzzle', 'HandGrenade'];
 	
 	sleep 2.5;
-	_unit removeEventHandler ["Fired", _eh];
-	_unit setvariable ["bcombat_grenade_distance", nil];
-	_unit setvariable ["bcombat_grenade_h", nil];
-	
+	//_unit removeEventHandler ["Fired", _eh];
 	_unit selectWeapon _w;
 
 	_unit enableAI "MOVE";
@@ -468,10 +470,11 @@ bcombat_fnc_task_throw_smoke_grenade =
 	_h 	= ((getPosASL _unit) select 2) - ((getPosASL _enemy) select 2);
 
 	_unit forcespeed 0;
+	_unit disableAI "FSM";	
 	_unit disableAI "MOVE";	
 	_unit disableAI "TARGET";
 	_unit disableAI "AUTOTARGET";
-	
+	/*
 	_eh = _unit addEventHandler ["Fired", {
 		private ["_unit", "_muzzle", "_bullet", "_v", "_k", "_vx", "_vy", "_vz"];
 			
@@ -492,8 +495,10 @@ bcombat_fnc_task_throw_smoke_grenade =
 			_vy = (_v select 2) *  1;
 			
 			_bullet setvelocity [_vx, _vz, _vy];
+			_unit setvariable ["bcombat_smoke_grenade_lock", nil];
 		};
 	}];
+	*/
 
 	_unit setvariable ["bcombat_smoke_grenade_lock", true];
 	_unit selectWeapon "throw"; 
@@ -507,13 +512,13 @@ bcombat_fnc_task_throw_smoke_grenade =
 	
 	sleep 2.5;
 	
-	_unit removeEventHandler ["Fired", _eh];
-	_unit setvariable ["bcombat_smoke_grenade_lock", nil];
+	//_unit removeEventHandler ["Fired", _eh];
 	_unit selectWeapon _w;
 
 	_unit enableAI "MOVE";
 	_unit enableAI "TARGET";
 	_unit enableAI "AUTOTARGET";
+	_unit enableAI "FSM";
 	_unit forcespeed -1;
 	
 	_unit setVariable ["bcombat_task", nil];
