@@ -4,7 +4,7 @@ bCombat v0.16 [DEVELOPMENT] [SP]
 WARNING
 -----------------------------------------
 
-Latest Stable version of bCombat is available here:
+Latest Stable version of bCombat AI mod for ArmA 3 is available here:
 
 +   http://forums.bistudio.com/showthread.php?171436-OPEN-BETA-SP-bCombat-infantry-AI-Mod
 

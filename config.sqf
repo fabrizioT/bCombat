@@ -8,7 +8,7 @@ bcombat_enable = true;								// (Boolean) Toggle feature on / off
 
 // Description: toggle debugging information on (true) or off (false)
 
-bcombat_dev_mode = true;							// (Boolean) Toggle feature on / off
+bcombat_dev_mode = false;							// (Boolean) Toggle feature on / off
 
 // Description: minimum timeout since last incoming bullet, for the current one to cause suppression.
 // As default no more than 5 ( = 1 / 0.2 ) bullets / second would cause suppression on a single AI unit.
