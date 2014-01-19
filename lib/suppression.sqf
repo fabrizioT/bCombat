@@ -103,12 +103,12 @@ bcombat_fnc_bullet_incoming =
 					if( bcombat_allow_lowerground_penalty ) then 
 					{
 						//player globalchat format["%1 %2 [%3 %4] [%5]", _unit, 1 + (( _hdiff / _dist ) min 1), _hdiff, _dist, _penalty ];
-						_penalty = _penalty * ( 1 + (( _hdiff / _dist ) min 1) );
+						_penalty = _penalty * ( 1 + ((( _hdiff / _dist ) min 1 ) max -0.5) );
 					};
 					
 					_penalty  = (round( _penalty * ( 1 - ( _unit getVariable "bcombat_skill" ) ) ) min 100) max 1;
 					
-					if( (_dist > 250 ) 
+					if( (_dist > bcombat_danger_distance ) 
 						&& _unit getVariable ["bcombat_suppression_level", 0] < 10 ) then
 					{
 						if( _speed > 3.5 ) then
@@ -130,7 +130,7 @@ bcombat_fnc_bullet_incoming =
 						// Return fire
 						if ( 
 							random 1 <= (_unit skill "general" ) 
-							&&  { _dist < [_unit ] call bcombat_weapon_max_range } 
+							&&  { _dist < [ _unit ] call bcombat_weapon_max_range } 
 							&&  { canFire _unit }  
 							&&  { !(combatMode _unit in ["BLUE"]) }  
 							&&  { [_unit, _shooter] call bcombat_fnc_knprec < 2 }  
@@ -277,8 +277,8 @@ bcombat_fnc_suppression =
 			bcombat_allow_surrender
 			&& { !(captive _unit) }
 			&& { fleeing _unit }
-			&& { _dist < 150 } //&& _dist > 0
-			&& { random 150 > _dist }
+			&& { _dist < 100 } //&& _dist > 0
+			&& { random 100 > _dist }
 			&& { (getPosATL _enemy) select 2 < 1 }
 			&& { [_enemy, _unit] call bcombat_fnc_relativeDirTo < 60 }
 			&& { [_enemy, _unit] call bcombat_fnc_is_visible }

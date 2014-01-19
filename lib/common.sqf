@@ -1032,11 +1032,10 @@ bcombat_fnc_soundalert = {
 				[ _x, 10, 1, 0, 5 + random 10, 30 + random 30, objNull ] call bcombat_fnc_fsm_trigger;
 				
 				_nenemy = _x findNearestEnemy _x;
-				_d1 = _unit distance (expecteddestination (leader _unit) select 0);
-				_d2 = _unit distance (expecteddestination (_unit) select 0);
+				_d1 = _x distance (expecteddestination (leader _x) select 0);
+				_d2 = _x distance (expecteddestination (_x) select 0);
 				
-
-				if( ( isNull _nenemy || _nenemy == _unit ) && { _d1 < 100 || _d1 > 1000000 } && { _d2 < 100 || _d2 > 1000000 }) then {
+				if( ( isNull _nenemy || _nenemy == _unit ) && { [_x] call bcombat_fnc_in_formation } && { _d1 < 100 || _d1 > 1000000 } && { _d2 < 100 || _d2 > 1000000 }) then {
 					//player globalchat format["--> %1 %2 -- %3 %4", _nenemy, _unit, _d1, _d2];
 					[_x, _ppos] call bcombat_fnc_investigate;
 				};
