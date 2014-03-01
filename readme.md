@@ -11,6 +11,13 @@ Latest Stable version of bCombat AI mod for ArmA 3 is available here:
 Please avoid directly installing GitHub project sources, unless you exactly know what you're doing.
 
 
+COMPATIBILITY
+-------------
+
+Running other AI mods may cause issues to bCombat.
+Please avoid running mods directly tweaking CfgAISkill config or using customized danger.fsm files.
+
+
 INTRODUCTION
 -----------------------------------------
 
@@ -31,7 +38,7 @@ Please remove any existing bCombat installations:
 delete "@bcombat" folder as well as "userconfig\bcombat_config.hpp" configuration file.
 
 +   Extract the bCombat zip package anywhere.
-+  [Users downloading mod from GitHub]: you have to rename "bCombat-master" folder to "@bcombat"
++  [ GitHub sources only ]: you have to rename "bCombat-master" folder to "@bcombat"
 +   Move "@bcombat" folder from extraction location to your ArmA 3 main folder ( usually: <Your Steam Path>\steamapps\common\Arma 3\ )
 +   Move "userconfig" folder from "@bcombat" folder to your ArmA 3 main folder.
 
@@ -114,6 +121,8 @@ VIDEOS
 +   http://www.youtube.com/watch?v=vGKy2fEPwD8
 +   http://www.youtube.com/watch?v=GZ3PC-mrGE4
 +   http://www.youtube.com/watch?v=8u8bUqCppG4
+
++	http://www.youtube.com/user/MrFabrizioT
 
 
 CREDITS

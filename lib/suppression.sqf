@@ -28,9 +28,6 @@ bcombat_fnc_bullet_incoming =
 			_hdiff = ((getPosASL _shooter) select 2) - ((getPosASL _unit) select 2);
 			_dt = time - (_unit getVariable ["bcombat_suppression_time", 1 ]);
 			
-		//hintc format["%1 %2", time - (_unit getVariable ["bcombat_suppression_time", 0 ]), bcombat_incoming_bullet_timeout];
-		
-			
 			if( _dt > bcombat_incoming_bullet_timeout ) then 
 			{
 				if( !(isPlayer _unit ) ) then 
@@ -83,27 +80,27 @@ bcombat_fnc_bullet_incoming =
 							
 								[_unit, "bcombat_fnc_task_move_to_cover", 100, [bcombat_cover_radius, objNull]] call bcombat_fnc_task_set;  
 							};
-							
 						};
 					};
 		
 					[_unit] call bcombat_fnc_allow_fire;
-					//[_unit, _shooter] call bcombat_fnc_reveal;
+					[_unit, _shooter] call bcombat_fnc_reveal;
 				
-					_penalty = bcombat_penalty_bullet;
-					
-					if( _visible ) then {
-						_penalty = _penalty + ( ( _ang / 180) * bcombat_penalty_flanking );
+					if( _visible ) then 
+					{
+						_penalty = bcombat_penalty_bullet;
 						
+						_penalty = _penalty + ( ( _ang / 180) * bcombat_penalty_flanking );
+					
 						if( [_unit, _shooter] call bcombat_fnc_knprec > 10 ) then { // isNull ( _unit findNearestEnemy _unit ) || 
 							_penalty = _penalty + bcombat_penalty_enemy_unknown; 
 						};
-					};
-					
-					if( bcombat_allow_lowerground_penalty ) then 
-					{
-						//player globalchat format["%1 %2 [%3 %4] [%5]", _unit, 1 + (( _hdiff / _dist ) min 1), _hdiff, _dist, _penalty ];
-						_penalty = _penalty * ( 1 + ((( _hdiff / _dist ) min 1 ) max -0.5) );
+						
+						if( bcombat_allow_lowerground_penalty ) then 
+						{
+							//player globalchat format["%1 %2 [%3 %4] [%5]", _unit, 1 + (( _hdiff / _dist ) min 1), _hdiff, _dist, _penalty ];
+							_penalty = _penalty * ( 1 + ((( _hdiff / _dist ) min 1 ) max -0.5) );
+						};
 					};
 					
 					_penalty  = (round( _penalty * ( 1 - ( _unit getVariable "bcombat_skill" ) ) ) min 100) max 1;
@@ -229,7 +226,7 @@ bcombat_fnc_bullet_incoming =
 bcombat_fnc_suppression = 
 {
 	private [ "_unit", "_level", "_leader", "_grp", "_enemy", "_dist", "_k", "_msg"];
-	
+
 	_unit = _this select 0;
 	_level = _this select 1;
 	_leader = leader _unit;
@@ -312,13 +309,8 @@ bcombat_surrender =
 			
 			_h = "groundweaponholder" createVehicle getpos _unit;
 
-			{
-				_h addweaponcargo [_x, 1];
-			} foreach weapons _unit;
-
-			{
-				_h addmagazinecargo [_x,1];
-			} foreach magazines _unit;
+			{ _h addweaponcargo [_x, 1]; } foreach weapons _unit;
+			{ _h addmagazinecargo [_x,1]; } foreach magazines _unit;
 			
 			_h  setPos [(getPosATL _unit) select 0,(getPosATL _unit) select 1,0.00];
 

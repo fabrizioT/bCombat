@@ -104,7 +104,7 @@ bcombat_fnc_process_danger_queue =
 	];
 
 	 // 0, 1, 2, 3, 4, 5, 6, 7, 8
-	_priors = [0, 4, 8, 3, 5, 12, 1, 0, 15];
+	_priors = [20, 4, 8, 3, 5, 12, 1, 0, 15];
 		
 	{
 		_cause = _x select 0;

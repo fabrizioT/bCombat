@@ -2,7 +2,7 @@
 // bcombat | combat framework
 // ----------------------------------------
 // Version: 0.16
-// Date: 16/01/2014
+// Date: 01/03/2014
 // Author: Fabrizio_T 
 // License: GNU/GPL
 // ----------------------------------------
@@ -17,7 +17,7 @@ if( !(isNil "bcombat") ) exitWith{}; bcombat = true; // avoid having multiple in
 if(isNil "bcombat_enable") then { bcombat_enable = true; }; 	
 
 bcombat_debug_enable = false;
-bcombat_debug_levels = [1];//[1,6,8];
+bcombat_debug_levels = [1,6,8];
 bcombat_debug_chat = true;
 
 bcombat_name 		= "bcombat AI Infantry mod"; 
@@ -155,6 +155,9 @@ if(isNil "bcombat_stop_overwatch_max_distance") then { bcombat_stop_overwatch_ma
 if(isNil "bcombat_fancy_moves") then { bcombat_fancy_moves = false; }; 
 if(isNil "bcombat_fancy_moves_frequency") then { bcombat_fancy_moves_frequency = 0; }; 
 
+// Remove all night googles
+if(isNil "bcombat_remove_nvgoggles") then { bcombat_remove_nvgoggles = false; }; 
+
 // -----------------------------
 // Libs loading
 // -----------------------------
@@ -197,4 +200,5 @@ _nil = [] spawn
 	};
 	
 	bcombat_init_done = true; 
+
 };

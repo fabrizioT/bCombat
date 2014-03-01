@@ -10,7 +10,17 @@ _nul = [ _this select 0] spawn
 	
 	sleep 1;
 	
-	if(!(bcombat_allow_fatigue)) then
+	if( bcombat_remove_nvgoggles ) then
+	{
+		_unit unassignitem "NVGoggles"; 
+		_unit unassignitem "NVGoggles_OPFOR"; 
+		_unit unassignitem "NVGoggles_INDEP"; 
+		_unit removeitem "NVGoggles";
+		_unit removeitem "NVGoggles_OPFOR";
+		_unit removeitem "NVGoggles_INDEP";
+	};
+
+	if( !(bcombat_allow_fatigue) ) then
 	{
 		_unit enableFatigue false;
 	};
@@ -52,7 +62,6 @@ _nul = [ _this select 0] spawn
 		};
 	};
 	
-
 	if( bcombat_cqb_radar ) then
 	{
 		[ _unit, bcombat_cqb_radar_clock, bcombat_cqb_radar_max_distance, bcombat_cqb_radar_params ] spawn bcombat_fnc_handle_targets;
@@ -62,8 +71,14 @@ _nul = [ _this select 0] spawn
 	{
 		waitUntil { [_unit] call bcombat_fnc_is_active };
 
+		_unit setskill [ "SpotDistance", ( _unit getVariable [ "bcombat_skill_sd", 0] ) * 2 * ( [_unit] call bcombat_fnc_visibility_multiplier ) ];
+		
 		if( !(isPlayer _unit) )  then
 		{
+			//hintc format["%1 (%2)", _unit skillfinal "spotDistance", ( _unit getVariable [ "bcombat_skill_sd", 0] )];
+			//player globalchat format[" ---->%1 %2 %3 [%4]", _unit, (_unit skill "SpotDistance"), _unit getVariable [ "bcombat_skill_sd", 0], _unit distance player];
+			//diag_log format[" ---->%1 %2 %3 [%4]", _unit, (_unit skill "SpotDistance"), _unit getVariable [ "bcombat_skill_sd", 0], _unit distance player];
+		
 			if( _unit == leader _unit) then
 			{
 				if( behaviour _unit == "COMBAT") then
@@ -154,5 +169,4 @@ _nul = [ _this select 0] spawn
 	};
 	
 	if(true) exitWith{};
-	
 };

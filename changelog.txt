@@ -1,21 +1,28 @@
 v0.16
 -----
 
-Core:
+Core features:
 
-	* Fixed: HandleDamage EH related bug, possibly breaking respawn scripts. Thanks to LSD_Timewarp82 for reporting.
-	* Fixed: episodic misfunctioning of smoke grenade throwing (hand grenade was thrown instead). Thanks to ebarstad for reporting.
+	* Fixed: HandleDamage EH related issue, possibly breaking respawn scripts. (Thanks LSD_Timewarp82).
 	* Fixed: bug somewhat reducing responsiveness of suppressed units.
-	* Fixed: bug in greade handling (thanks Torndeco)
-	* Further improvements to hearing and investigate behaviour 
-	* Added 1 second post-spawn delay before unit initialization. This in order to allow custom / third party scripts to be executed.
-	* Bullet penalties rebalanced.
+	* Fixed: bug in greade handling (thanks Torndeco).
+	* Fixed: AI units not scared by campfires anymore ;) .
 	
-New optional features:
-
-	* Lower ground penalty: Firing from lower ground reduces effectivenes of suppressive fire (and viceversa)
-
+	* New: Added 1 second post-spawn delay for unit initialization. Done in order to allow custom / third party scripts to be executed in the meantime.
+	* New: a few configuration variables within config.sqf.
+	* Tweaked: sensibly reduced spotting ability (about -50%) at night, for AI units wearing no night vision devices. 
+	* Tweaked: AI spotting ability sensibly affected by fog.
+	* Tweaked: bullet penalties rebalanced.
+	* Tweaked: damage multiplier: damage from null source (e.g. from falling or setDamage ) is not multiplied anymore. For sake of campaign compatibility.
+	* Tweaked: AI units peripheral vision.
 	
+Optional features:
+
+	* Fixed: ArmA3 v1.10 compatible custom grenade and smoke throwing.
+	
+	* New: lower ground penalty: Firing from lower ground reduces effectivenes of suppressive fire (and viceversa).
+	* Tweaked: further improvements to hearing and investigate behaviour .
+
 v0.15
 -----
 

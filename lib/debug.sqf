@@ -149,6 +149,7 @@ bcombat_fnc_debug_text =
 								Tsk=%16<br/>
 								Rng=%20<br/>
 								OW=%24<br/>
+								form=%25<br/>
 								</t>",
 								
 								_color,
@@ -179,7 +180,8 @@ bcombat_fnc_debug_text =
 								_tgt_dist,
 								_kn,
 								_mode,
-								_unit getVariable["bcombat_stop_overwatch", false]
+								_unit getVariable["bcombat_stop_overwatch", false],
+								[_unit] call bcombat_fnc_in_formation
 							];
 								
 							_control ctrlsetposition [

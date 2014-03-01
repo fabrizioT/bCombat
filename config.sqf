@@ -18,7 +18,8 @@ bcombat_dev_mode = true;							// (Boolean) Toggle feature on / off
 bcombat_incoming_bullet_timeout = 0.2;				// (Seconds) minimum timeout between bullets
 bcombat_danger_distance = 250; 						// (Meters) Minimum distance from shooter, for groups to automatically switch to "combat" behaviour
 bcombat_features_clock = [3,6];						// (Seconds) Additional features clocking [minimum timeout, maximum timeout]
-bcombat_damage_multiplier = 1;						// (0-1) Damage multiplier. Zero makes units invulnerable.
+
+bcombat_damage_multiplier = 1.0;					// (0-1) Damage multiplier. Zero makes units invulnerable.
 
 // -----------------------
 // CORE bDetect FEATURES
@@ -157,8 +158,8 @@ bcombat_suppressive_fire_distance = [50, 250]; 		// (Array) [minimum distance fr
 // Effect: unit is hinted about the shooter, depending on criteria such as visibility and distance. 
 
 bcombat_allow_hearing = true;						// (Boolean) Toggle feature on / off
-bcombat_allow_hearing_coef = 2;						// (Number) Bullet speed / bcombat_allow_hearing_coef = max. hearing distance (e.g. 800 meters/sec : 2 = max. hearing distance 400m.)
-bcombat_allow_hearing_grenade_distance = 200;		// (Meters) Max. distance for grenade hearing
+bcombat_allow_hearing_coef = 3;						// (Number) Bullet speed / bcombat_allow_hearing_coef = max. hearing distance (e.g. 900 meters/sec : 3 = max. hearing distance 300m.)
+bcombat_allow_hearing_grenade_distance = 150;		// (Meters) Max. distance for grenade hearing
 
 // Description: CQB hand grenade throwing
 // Triggered: whenever unit has a hand grenade + enemy is known and near
@@ -168,7 +169,7 @@ bcombat_allow_hearing_grenade_distance = 200;		// (Meters) Max. distance for gre
 bcombat_allow_grenades = true;						// (Boolean) Toggle feature on / off
 bcombat_grenades_additional_number = 0; 			// (Number) number of additional grenades to be automatically ADDED to unit loadout
 bcombat_grenades_distance = [6,45,6]; 				// (Array) [ minimum distance, maximum distance, min. distance from target for friendly units] 
-bcombat_grenades_timeout = [10, 5];					// (Array) [ unit timeout, group timeout ]
+bcombat_grenades_timeout = [15, 10];					// (Array) [ unit timeout, group timeout ]
 bcombat_grenades_no_los_only = true; 				// (Boolean) Whether enemy should be out of line-of-sight, for a unit to throw grenade
 
 // Description: smoke grenade throwing
@@ -176,8 +177,8 @@ bcombat_grenades_no_los_only = true; 				// (Boolean) Whether enemy should be ou
 // Effect: a smoke grenade is thrown
 
 bcombat_allow_smoke_grenades = true;					// (Boolean) Toggle feature on / off
-bcombat_smoke_grenades_additional_number = 1; 			// (Number) number of additional smoke grenades to be automatically ADDED to unit loadou
-bcombat_smoke_grenades_distance = [75,300,25]; 			// (Array) [ minimum distance, maximum distance, min. distance from target for friendly units] 
+bcombat_smoke_grenades_additional_number = 0; 			// (Number) number of additional smoke grenades to be automatically ADDED to unit loadout
+bcombat_smoke_grenades_distance = [75,250,0]; 			// (Array) [ minimum distance, maximum distance, min. distance from target for friendly units] 
 bcombat_smoke_grenades_timeout = [15, 10];				// (Array) [ unit timeout, group timeout ]
 
 // Description: investigation behavoiur
@@ -186,7 +187,7 @@ bcombat_smoke_grenades_timeout = [15, 10];				// (Array) [ unit timeout, group t
 // Note: needs bcombat_allow_hearing = true
 
 bcombat_allow_investigate = true;					// (Boolean) Toggle feature on / off
-bcombat_investigate_max_distance = 200;				// (Number) maximum distance from unit, for position to be investigated
+bcombat_investigate_max_distance = 150;				// (Number) maximum distance from unit, for position to be investigated
 	
 // Description: allow fatigue
 // Effect: allows for vanilla fatigue effects
@@ -240,14 +241,20 @@ bcombat_stop_overwatch_max_distance	= [100, 200];	// (Array) [max distance from 
 bcombat_cqb_radar = true;    						// (Boolean) Toggle feature on / off
 bcombat_cqb_radar_clock = [0.5, 2];    				// (Seconds) internal feaures clocking. Never use values below 0.1 ( = 10 times / second).
 bcombat_cqb_radar_max_distance = 100;    			// (Meters) Features are activated under this distance
-bcombat_cqb_radar_params = [90, 5, 0, 5];			// (Array) [max. angle, min. precision, min. knowsabout, max enemy .speed] - Don't edit this.
+bcombat_cqb_radar_params = [104, 5, 0, 5];			// (Array) [max. angle, min. precision, min. knowsabout, max enemy .speed] - Don't edit this.
 
 // Description: misc animations as a tribute to "tonyRanger"
 // Triggered: seldom, when under fire
 // Effect: a prone rolling animation is played to evade enemy fire
 
 bcombat_fancy_moves = true;     					// (Boolean) Toggle feature on / off
-bcombat_fancy_moves_frequency = 0.075;    			// (0-1) Probability of occurring. 0=never (0%), 1=all the time (100%). 
+bcombat_fancy_moves_frequency = 0.05;    			// (0-1) Probability of occurring. 0=never (0%), 1=all the time (100%). 
+
+// Description: remove night vision devices from any created / spawned units
+// Triggered: on unit creation / spawn
+// Effect: any night vision device is removed from unit
+
+bcombat_remove_nvgoggles = false;
 
 // -----------------------------------------------------------------------------------------------------
 // bCombat MISC CALLS
@@ -255,7 +262,7 @@ bcombat_fancy_moves_frequency = 0.075;    			// (0-1) Probability of occurring. 
 
 if ( bcombat_dev_mode ) then
 {
-	//[] spawn bcombat_fnc_debug_text; // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
+	// [] spawn bcombat_fnc_debug_text; // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
 	call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debug balloons (as alternative to bcombat_fnc_debug_text or bcombat_fnc_fps)
 
 	call bdetect_fnc_benchmark; // Uncomment this line to activate bDetect live stats panel (as alternative to bcombat_fnc_fps)

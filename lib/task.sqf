@@ -126,14 +126,17 @@ bcombat_fnc_task_fire =
 	
 	// Keep currently assigned target, if in LOS
 	_atarget = assignedtarget _unit;
-	if( !(isNull _atarget) && _unit != _atarget && _atarget != _enemy && alive _atarget && _mode == 1) then // && _atarget != _enemy 
-	{
+	if( !(isNull _atarget) 
+		&& { _unit != _atarget }
+		&& { _atarget != _enemy  }
+		&& { alive _atarget }
+		&& { _mode == 1 }
+	) then {
 		if( [ _unit, _atarget] call bcombat_fnc_is_visible ) then
 		{
 			//player globalchat format["%1 - Target changed from %2 to %3", _unit, _enemy, _atarget];
 			_enemy = _atarget;
 			_unit doWatch _atarget;
-			//_unit doTarget _atarget;
 		};
 	};
 	
@@ -143,9 +146,9 @@ bcombat_fnc_task_fire =
 	_visible = [ _unit, _enemy] call bcombat_fnc_is_visible;
 	
 	if( [_unit] call bcombat_fnc_is_active
-		&& _unit != _enemy
-		&& !(fleeing _unit) 
-		&& !(isPlayer _unit )
+		&& { _unit != _enemy }
+		&& { !(fleeing _unit) } 
+		&& { !(isPlayer _unit ) }
 		) then 
 	{
 		if( bcombat_debug_enable ) then {
@@ -163,14 +166,13 @@ bcombat_fnc_task_fire =
 			if( combatMode (group _unit) in ["RED", "YELLOW"]  ) then
 			{
 				if( bcombat_allow_targeting 
-					&& ( _dist < (bcombat_targeting_max_distance select 0) || ( combatMode _unit == "RED" && _dist < (bcombat_targeting_max_distance select 1) ) ) 
+					&& { _dist < (bcombat_targeting_max_distance select 0) || ( combatMode _unit == "RED" && _dist < (bcombat_targeting_max_distance select 1) ) } 
 					&& { !(isPlayer (leader _unit)) } 
 				    && { _unit getVariable ["bcombat_suppression_level", 0] <= 25  } 
 					&& { random 100 > _unit getVariable ["bcombat_suppression_level", 0] } 
 				) then {
 					_unit doTarget _enemy;
 					_unit domove getPosAtl _enemy;
-					//player globalchat format["+++ %1 TARGET %2", _unit, _enemy];
 				};
 				
 				if( _mode == 2 ) then
@@ -180,14 +182,13 @@ bcombat_fnc_task_fire =
 						(assignedTarget _unit) == _enemy ||
 						_dist < 25 || 
 						isHidden _unit ||
-						(
+						{
 							_dist < 250 
 							&& [_unit, _enemy] call bcombat_fnc_relativeDirTo < 90
 							&& ( _speed < 3 || !([_unit] call bcombat_fnc_in_formation) || _unit distance (formationLeader _unit) < 50 ) 
-						) 
+						}
 					) then
 					{
-						
 						if( _mgun ) then {
 							[_unit, 10 + random 20, 30 + random 30, 5,_dist] call bcombat_fnc_stop;
 						}
@@ -204,11 +205,11 @@ bcombat_fnc_task_fire =
 						 (assignedTarget _unit) == _enemy ||
 						_dist < 25 || 
 						isHidden _unit ||
-						(
+						{
 							_dist < 250 
 							&& [_unit, _enemy] call bcombat_fnc_relativeDirTo < 60
 							&& ( _speed < 3 || !([_unit] call bcombat_fnc_in_formation) || _unit distance (formationLeader _unit) < 50 ) 
-						) 
+						}
 					) then
 					{
 						if( _mgun ) then {
@@ -225,20 +226,9 @@ bcombat_fnc_task_fire =
 				{
 					_unit suppressFor 0;
 	
-					[_unit, _enemy, 15, false] call bcombat_fnc_lookat;
+					//[_unit, _enemy, 15, false] call bcombat_fnc_lookat;
+					//_unit lookAt _enemy;
 					_unit dofire _enemy;
-					/*
-					//if( currentWeapon _unit == primaryWeapon _unit && _unit ammo (currentWeapon _unit) > 20 && _dist < 200 ) then {
-					if( _mgun && _dist < 300 ) then 
-					{
-						//_unit dofire _enemy;
-						//_unit forceWeaponFire [ currentWeapon _unit, "FullAuto"];
-						//_unit suppressFor 2;
-					}
-					else
-					{
-						//_unit dofire _enemy;
-					};*/
 				}
 				else
 				{
@@ -251,7 +241,8 @@ bcombat_fnc_task_fire =
 					) then { 
 					
 						_unit suppressFor 0;
-						if( [currentWeapon _unit] call bcombat_fnc_is_mgun ) then {
+						if( [currentWeapon _unit] call bcombat_fnc_is_mgun ) then 
+						{
 							[_unit, _enemy, (bcombat_suppressive_fire_duration select 1)] call bcombat_fnc_suppress; 
 						}
 						else
@@ -265,17 +256,17 @@ bcombat_fnc_task_fire =
 			
 			sleep _timeout;
 		};
-		
-		if( bcombat_debug_enable ) then {
-			_msg = format["bcombat_fnc_task_fire() - END, unit=%1, enemy=%2, distance=%3, mode=%4, vis=%5, firetime=%6", _unit, _enemy, _dist, _mode, [_unit, _enemy] call bcombat_fnc_is_visible, _unit getVariable ["bcombat_fire_time", 0]];
-			[ _msg, 6 ] call bcombat_fnc_debug;
-		};
 	};
 	
 	if( [_unit] call bcombat_fnc_is_alive ) then 
 	{
 		_unit enableAI "autotarget";
 		_unit setVariable ["bcombat_task", nil];
+		
+		if( bcombat_debug_enable ) then {
+			_msg = format["bcombat_fnc_task_fire() - END, unit=%1, enemy=%2, distance=%3, mode=%4, vis=%5, firetime=%6", _unit, _enemy, _dist, _mode, [_unit, _enemy] call bcombat_fnc_is_visible, _unit getVariable ["bcombat_fire_time", 0]];
+			[ _msg, 6 ] call bcombat_fnc_debug;
+		};
 	};
 	
 	if (true) exitWith {};
@@ -329,7 +320,6 @@ bcombat_fnc_task_move_to_cover =
 			_blacklist set [count _blacklist, (str _pos)];
 			_blacklist set [count _blacklist, _timeout1 + _timeout2 ];
 			_grp setvariable ["bcombat_cover_blacklist", _blacklist];
-//player globalchat format["*** %1 move to %2 dist: %3 ***", _unit, _pos, _dist];
 			
 			if ( _unit != formLeader _unit && _unit != leader _unit) then { 
 				dostop _unit; 
@@ -400,33 +390,7 @@ bcombat_fnc_task_throw_grenade =
 	_unit disableAI "MOVE";	
 	_unit disableAI "TARGET";
 	_unit disableAI "AUTOTARGET";
-	/*
-	_eh = _unit addEventHandler ["Fired", {
-		private ["_unit", "_muzzle", "_bullet", "_v", "_k", "_vx", "_vy", "_vz"];
-			
-		_unit = _this select 0; 
-		_muzzle = _this select 2;
-		_bullet = _this select 6;
-		
-		if( _muzzle == "HandGrenadeMuzzle" &&  !(isNil {_unit getVariable ["bcombat_grenade_distance", nil ]})  ) then // typeOf _bullet == "GrenadeHand"
-		{
-			_p = getPosASL _bullet;
-			
-			_v = velocity _bullet;
-			_k = ( (( _unit getvariable "bcombat_grenade_distance")  -  (_unit getvariable "bcombat_grenade_h") ) / 45) ^ 0.5;
-
-			_vx = (_v select 0) * _k * 1.1;
-			_vz = (_v select 1) * _k * 1.1;
-			_vy = (_v select 2) * _k * 1.35;
-			
-			_bullet setPos [_p select 0, _p select 1, (_p select 2) + 0.5]; 
-			_bullet setvelocity [_vx, _vz, _vy];
-			
-			_unit setvariable ["bcombat_grenade_distance", nil];
-			_unit setvariable ["bcombat_grenade_h", nil];
-		};
-	}];
-	*/
+	
 	_unit setvariable ["bcombat_grenade_lock", true];
 	_unit setvariable ["bcombat_grenade_distance", _distance];
 	_unit setvariable ["bcombat_grenade_h", _h];
@@ -437,10 +401,12 @@ bcombat_fnc_task_throw_grenade =
 	
 	_ang = [_unit, _enemy] call bcombat_fnc_relativeDirTo_signed;
 	_unit setDir ((direction _unit) + _ang);
-	_unit fire ['HandGrenadeMuzzle', 'HandGrenadeMuzzle', 'HandGrenade'];
 	
+	//_unit fire ['HandGrenadeMuzzle', 'HandGrenadeMuzzle', 'HandGrenade'];
+	_unit forceWeaponFire ["HandGrenadeMuzzle","HandGrenadeMuzzle"];
+
 	sleep 2.5;
-	//_unit removeEventHandler ["Fired", _eh];
+
 	_unit selectWeapon _w;
 
 	_unit enableAI "MOVE";
@@ -474,33 +440,9 @@ bcombat_fnc_task_throw_smoke_grenade =
 	_unit disableAI "MOVE";	
 	_unit disableAI "TARGET";
 	_unit disableAI "AUTOTARGET";
-	/*
-	_eh = _unit addEventHandler ["Fired", {
-		private ["_unit", "_muzzle", "_bullet", "_v", "_k", "_vx", "_vy", "_vz"];
-			
-		_unit = _this select 0; 
-		_muzzle = _this select 2;
-		_bullet = _this select 6;
-		
-		if( _muzzle == "HandGrenadeMuzzle"  &&  !(isNil {_unit getVariable ["bcombat_smoke_grenade_lock", nil ]})  ) then 
-		{
-			_v = velocity _bullet;
-			_p = getPosASL _bullet;
-			
-			deleteVehicle _bullet;
-			_bullet = "SmokeShell" createvehicle _p;  
-			
-			_vx = (_v select 0) *  1;
-			_vz = (_v select 1) *  1;
-			_vy = (_v select 2) *  1;
-			
-			_bullet setvelocity [_vx, _vz, _vy];
-			_unit setvariable ["bcombat_smoke_grenade_lock", nil];
-		};
-	}];
-	*/
 
 	_unit setvariable ["bcombat_smoke_grenade_lock", true];
+	_unit setvariable ["bcombat_smoke_grenade_distance", _distance];
 	_unit selectWeapon "throw"; 
 	sleep .01;
 	
@@ -508,11 +450,11 @@ bcombat_fnc_task_throw_smoke_grenade =
 	
 	_ang = [_unit, _enemy] call bcombat_fnc_relativeDirTo_signed;
 	_unit setDir ((direction _unit) + _ang);
-	_unit fire ["HandGrenadeMuzzle","HandGrenadeMuzzle","HandGrenade"];
-	
+	//_unit fire ["HandGrenadeMuzzle","HandGrenadeMuzzle","HandGrenade"];
+	_unit forceWeaponFire ["SmokeShellMuzzle","SmokeShellMuzzle"];
+
 	sleep 2.5;
 	
-	//_unit removeEventHandler ["Fired", _eh];
 	_unit selectWeapon _w;
 
 	_unit enableAI "MOVE";
