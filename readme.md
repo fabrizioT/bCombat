@@ -1,4 +1,4 @@
-bCombat v0.16 [RELEASE CANDIDATE] [SP] 
+bCombat v0.16 RC [SP] 
 =========================================
 
 WARNING
