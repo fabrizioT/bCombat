@@ -17,6 +17,13 @@ COMPATIBILITY
 Running other AI mods may cause issues to bCombat.
 Please avoid running mods directly tweaking CfgAISkill config or using customized danger.fsm files.
 
+ArmA 3 campaign compatibility: bCombat is designed to cope with campaign, just set the following parameters within config.sqf:
+
+	bcombat_damage_multiplier = 1.0;
+	bcombat_allow_investigate = false;
+	bcombat_allow_fleeing = false;	
+	bcombat_allow_surrender = false;
+	
 
 INTRODUCTION
 -----------------------------------------

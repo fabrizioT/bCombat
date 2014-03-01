@@ -21,7 +21,7 @@ Optional features:
 
 	* Fixed: ArmA3 v1.10 compatible custom grenade and smoke throwing.
 	
-	* New: lower ground penalty: Firing from lower ground reduces effectivenes of suppressive fire (and viceversa).
+	* New: lower ground penalty: Firing from lower ground reducing effectiveness of suppressive fire (and viceversa).
 	* Tweaked: further improvements to hearing and investigate behaviour .
 
 v0.15
