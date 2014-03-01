@@ -5,16 +5,17 @@ Core features:
 
 	* Fixed: HandleDamage EH related issue, possibly breaking respawn scripts. (Thanks LSD_Timewarp82).
 	* Fixed: bug somewhat reducing responsiveness of suppressed units.
-	* Fixed: bug in greade handling (thanks Torndeco).
-	* Fixed: AI units not scared by campfires anymore ;) .
+	* Fixed: bug in grenade handling (thanks Torndeco).
+	* Fixed: AI units not scared by campfires anymore.
 	
 	* New: Added 1 second post-spawn delay for unit initialization. Done in order to allow custom / third party scripts to be executed in the meantime.
 	* New: a few configuration variables within config.sqf.
 	* Tweaked: sensibly reduced spotting ability (about -50%) at night, for AI units wearing no night vision devices. 
 	* Tweaked: AI spotting ability sensibly affected by fog.
 	* Tweaked: bullet penalties rebalanced.
+	* Tweaked: AI aiming accuracy slightly increased in average.
 	* Tweaked: damage multiplier: damage from null source (e.g. from falling or setDamage ) is not multiplied anymore. For sake of campaign compatibility.
-	* Tweaked: AI units peripheral vision.
+	* Tweaked: AI units' peripheral vision.
 	
 Optional features:
 
