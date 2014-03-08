@@ -11,6 +11,7 @@ bcombat_fnc_bullet_incoming =
 			!(fleeing _unit) 
 			&& { _unit != _shooter }
 			&& { !(captive _unit) }
+			&& { _unit distance player < bcombat_degradation_distance } 
 			&& { [_unit, _shooter] call bcombat_fnc_is_enemy }
 		) then {
 		
@@ -28,6 +29,7 @@ bcombat_fnc_bullet_incoming =
 			_hdiff = ((getPosASL _shooter) select 2) - ((getPosASL _unit) select 2);
 			_dt = time - (_unit getVariable ["bcombat_suppression_time", 1 ]);
 			
+			
 			if( _dt > bcombat_incoming_bullet_timeout ) then 
 			{
 				if( !(isPlayer _unit ) ) then 
@@ -40,8 +42,10 @@ bcombat_fnc_bullet_incoming =
 						_nenemy = _unit findnearestEnemy _unit;
 						
 						//hintc format["%1 %2", _unit, _nenemy];
-						if(  ( isNull(_nenemy) || [_unit, _nenemy] call bcombat_fnc_knprec > 25 )
+						if(  ( isNull(_nenemy) || [_unit, _nenemy] call bcombat_fnc_knprec > 10 )
 							&& { !(isHidden _unit) } 
+							&& { !(isPlayer (leader _unit)) }
+							
 							&& { _dist > 30 } ) then // && !([_unit] call bcombat_fnc_has_task)
 						{ 	
 							[_unit, "bcombat_fnc_task_move_to_cover", 100, [bcombat_cover_radius, objNull]] call bcombat_fnc_task_set; 
@@ -51,6 +55,7 @@ bcombat_fnc_bullet_incoming =
 						if(
 							bcombat_allow_smoke_grenades 
 							&& { random 1 <= (_unit skill "general" ) ^ 0.5}
+							&& { !(isPlayer (leader _unit)) }
 							//&& { _unit getVariable ["bcombat_suppression_level", 0] > 10 }
 							&& { random 100 > (_unit getVariable ["bcombat_suppression_level", 0]) }
 							&& { _dist > 50 }
@@ -74,7 +79,7 @@ bcombat_fnc_bullet_incoming =
 								&& { ( _speed < 3 || count(_unit nearroads 6) > 0 ) }
 								&& { (_unit == leader _unit || bcombat_cover_mode == 1) }
 								//&& { !([_unit] call bcombat_fnc_has_task) }
-								&& { [_unit, _shooter] call bcombat_fnc_is_visible_head }
+								// && { [_unit, _shooter] call bcombat_fnc_is_visible_head }
 								//&& ( count(_unit nearroads 10) > 0 ) 
 							) then { //&& [_unit] call bcombat_fnc_speed == 0 // !(isHidden _unit) ||
 							

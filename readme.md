@@ -1,4 +1,4 @@
-bCombat v0.16 RC [SP] 
+bCombat v0.16 RC2 [SP] 
 =========================================
 
 WARNING
@@ -14,15 +14,23 @@ Please avoid directly installing GitHub project sources, unless you exactly know
 COMPATIBILITY
 -------------
 
+__Running other Mods__:
 Running other AI mods may cause issues to bCombat.
 Please avoid running mods directly tweaking CfgAISkill config or using customized danger.fsm files.
 
-ArmA 3 campaign compatibility: bCombat is designed to cope with campaign, just set the following parameters within config.sqf:
+__Running ArmA 3 campaign:__
+bCombat is designed to cope with campaign, just set the following parameters within config.sqf:
 
 	bcombat_damage_multiplier = 1.0;
 	bcombat_allow_investigate = false;
 	bcombat_allow_fleeing = false;	
 	bcombat_allow_surrender = false;
+	
+__Running crowded missions:__ 
+if you're running missions involving hundreds of units please consider deactivating CQB routines into _config.sqf_, as they're resource intensive.
+This is achieved by setting:
+
+	bcombat_cqb_radar = false;
 	
 
 INTRODUCTION

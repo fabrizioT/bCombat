@@ -26,6 +26,7 @@ bdetect_version 	= "0.81 BETA";
 // You should set these variables elsewhere, don't edit them here since they're default. 
 // See bottom of this file for framework initialization example.
 if(isNil "bdetect_enable") then { bdetect_enable = true; }; 													// (Boolean, Default true) Toggle to Enable / Disable bdetect altogether.
+if(isNil "bdetect_degradation_distance") then { bdetect_degradation_distance = 1500; }; 
 if(isNil "bdetect_startup_hint") then { bdetect_startup_hint = true; }; 										// (Boolean, Default true) Toggle to Enable / Disable bDetect startup Hint.
 if(isNil "bdetect_debug_enable") then { bdetect_debug_enable = false; }; 										// (Boolean, Default false) Toggle to Enable / Disable debug messages.
 if(isNil "bdetect_debug_chat") then { bdetect_debug_chat = false; }; 											// (Boolean, Default false) Show debug messages also in globalChat.
@@ -248,36 +249,42 @@ bdetect_fnc_fired =
 		_time = time; //diag_tickTime
 		_dt = _time - ( _unit getVariable ["bdetect_fired_time", 0] );
 		
-		bdetect_fired_bullets_count = bdetect_fired_bullets_count + 1;
-	
-		if( ( side _unit ) getFriend WEST >= .6 ) then {
-			bdetect_fired_bullets_count_west = bdetect_fired_bullets_count_west + 1;
-		} else {
-			bdetect_fired_bullets_count_east = bdetect_fired_bullets_count_east + 1;
-		};
+		if( _unit distance player < bdetect_degradation_distance  ) then
+		{
+			bdetect_fired_bullets_count = bdetect_fired_bullets_count + 1;
 		
-		if( _dt > bdetect_bullet_delay 
-		&& !( _magazine in bdetect_bullet_skip_mags ) 
-		&& _speed > bdetect_bullet_initial_min_speed ) then {
+			if( ( side _unit ) getFriend WEST >= .6 ) then {
+				bdetect_fired_bullets_count_west = bdetect_fired_bullets_count_west + 1;
+			} else {
+				bdetect_fired_bullets_count_east = bdetect_fired_bullets_count_east + 1;
+			};
 			
-			_unit setVariable ["bdetect_fired_time", _time]; 
-			
-			// Append info to bullets array
-			[ _bullet, _unit, _time ] call bdetect_fnc_bullet_add;
-			
-			bdetect_fired_bullets_count_tracked = bdetect_fired_bullets_count_tracked + 1;
-			
-			if( bdetect_debug_enable ) then {
-				_msg = format["bdetect_fnc_fired() - Tracking: bullet=%1, shooter=%2, speed=%3, type=%4, _dt=%5", _bullet, _unit, _speed, typeOf _bullet, _dt ];
-				[ _msg, 2 ] call bdetect_fnc_debug;
+			if( _dt > bdetect_bullet_delay 
+			&& !( _magazine in bdetect_bullet_skip_mags ) 
+			&& _speed > bdetect_bullet_initial_min_speed ) then {
+				
+				_unit setVariable ["bdetect_fired_time", _time]; 
+				
+				// Append info to bullets array
+				[ _bullet, _unit, _time ] call bdetect_fnc_bullet_add;
+				
+				bdetect_fired_bullets_count_tracked = bdetect_fired_bullets_count_tracked + 1;
+				
+				if( bdetect_debug_enable ) then {
+					_msg = format["bdetect_fnc_fired() - Tracking: bullet=%1, shooter=%2, speed=%3, type=%4, _dt=%5", _bullet, _unit, _speed, typeOf _bullet, _dt ];
+					[ _msg, 2 ] call bdetect_fnc_debug;
+				};
+			}
+			else
+			{
+				if( bdetect_debug_enable ) then {
+					_msg = format["bdetect_fnc_fired() - Skipping: bullet=%1, shooter=%2, speed=%3 [min:%8], type=%4, _dt=%5 [min:%6 max:%7]", _bullet, _unit, _speed, typeOf _bullet, _dt, bdetect_bullet_min_delay, bdetect_bullet_max_delay, bdetect_bullet_initial_min_speed];
+					[ _msg, 2 ] call bdetect_fnc_debug;
+				};
 			};
 		}
 		else
 		{
-			if( bdetect_debug_enable ) then {
-				_msg = format["bdetect_fnc_fired() - Skipping: bullet=%1, shooter=%2, speed=%3 [min:%8], type=%4, _dt=%5 [min:%6 max:%7]", _bullet, _unit, _speed, typeOf _bullet, _dt, bdetect_bullet_min_delay, bdetect_bullet_max_delay, bdetect_bullet_initial_min_speed];
-				[ _msg, 2 ] call bdetect_fnc_debug;
-			};
 		};
 	};
 };

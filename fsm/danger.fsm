@@ -74,8 +74,8 @@ link30[] = {22,2};
 link31[] = {23,4};
 link32[] = {24,4};
 link33[] = {25,20};
-globals[] = {10.000000,1,0,1,16777215,640,480,1,216,6316128,1,-1196.757568,-267.438171,588.592529,-329.591217,918,907,1};
-window[] = {2,-1,-1,-1,-1,808,28,1064,28,3,938};
+globals[] = {10.000000,1,0,1,16777215,640,480,1,216,6316128,1,-1458.210693,-5.985683,633.861267,-541.132446,1121,907,1};
+window[] = {2,-1,-1,-1,-1,808,28,1064,28,3,1141};
 *//*%FSM</HEAD>*/
 class FSM
 {
@@ -111,7 +111,7 @@ class FSM
        "comment ""8  DCCanFire"";" \n
        "*/" \n
        "" \n
-       "if( !(isNil ""bcombat_init_done"") && { bcombat_enable } && { [_this] call bcombat_fnc_is_active } ) then " \n
+       "if( !(isNil ""bcombat_init_done"") && { bcombat_enable } && { [_this] call bcombat_fnc_is_active } && { _this distance player < bcombat_degradation_distance }) then " \n
        "{" \n
        "	if( !(isPlayer _this) ) then " \n
        "	{" \n

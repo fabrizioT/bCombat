@@ -18,8 +18,9 @@ bcombat_dev_mode = true;							// (Boolean) Toggle feature on / off
 bcombat_incoming_bullet_timeout = 0.2;				// (Seconds) minimum timeout between bullets
 bcombat_danger_distance = 250; 						// (Meters) Minimum distance from shooter, for groups to automatically switch to "combat" behaviour
 bcombat_features_clock = [3,6];						// (Seconds) Additional features clocking [minimum timeout, maximum timeout]
-
 bcombat_damage_multiplier = 1.0;					// (0-1) Damage multiplier. Zero makes units invulnerable.
+bcombat_degradation_distance = 1250;				// (Meters) some bCombat features are cut when some unit is farther than this from player
+bcombat_skill_multiplier = 1;						// 
 
 // -----------------------
 // CORE bDetect FEATURES
@@ -151,7 +152,7 @@ bcombat_fire_back_group_max_friend_distance = 250; 	// (Number) Maximum distance
 
 bcombat_allow_suppressive_fire = true;				// (Boolean) Toggle feature on / off
 bcombat_suppressive_fire_duration = [0.1, 0.2]; 	// (Array) [seconds of suppressive fire for common unit, seconds of suppressive fire for for autorifleman/machinegunner]
-bcombat_suppressive_fire_distance = [50, 250]; 		// (Array) [minimum distance from target, maximum distance from target]
+bcombat_suppressive_fire_distance = [50, 150]; 		// (Array) [minimum distance from target, maximum distance from target]
 
 // Description: enhanced hearing
 // Triggered: whenever some nearby explosion / gunshot is heard
@@ -187,7 +188,7 @@ bcombat_smoke_grenades_timeout = [15, 10];				// (Array) [ unit timeout, group t
 // Note: needs bcombat_allow_hearing = true
 
 bcombat_allow_investigate = true;					// (Boolean) Toggle feature on / off
-bcombat_investigate_max_distance = 150;				// (Number) maximum distance from unit, for position to be investigated
+bcombat_investigate_max_distance = 200;				// (Number) maximum distance from unit, for position to be investigated
 	
 // Description: allow fatigue
 // Effect: allows for vanilla fatigue effects
@@ -266,9 +267,9 @@ if ( bcombat_dev_mode ) then
 	call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debug balloons (as alternative to bcombat_fnc_debug_text or bcombat_fnc_fps)
 
 	call bdetect_fnc_benchmark; // Uncomment this line to activate bDetect live stats panel (as alternative to bcombat_fnc_fps)
-	// [] spawn bcombat_fnc_fps; // Uncomment this line to activate FPS stats panel (as alternative to bdetect_fnc_benchmark;)
+	//[] spawn bcombat_fnc_fps; // Uncomment this line to activate FPS stats panel (as alternative to bdetect_fnc_benchmark;)
 
-	OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
+	// OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
 };
 
 // bdetect_startup_hint = false;

@@ -1,8 +1,8 @@
 // ----------------------------------------
 // bcombat | combat framework
 // ----------------------------------------
-// Version: 0.16
-// Date: 01/03/2014
+// Version: 0.16RC2
+// Date: 08/03/2014
 // Author: Fabrizio_T 
 // License: GNU/GPL
 // ----------------------------------------
@@ -22,7 +22,7 @@ bcombat_debug_chat = true;
 
 bcombat_name 		= "bcombat AI Infantry mod"; 
 bcombat_short_name 	= "bcombat"; 
-bcombat_version 	= "0.16";
+bcombat_version 	= "0.16RC2";
 
 // -----------------------------
 // files preload
@@ -49,6 +49,12 @@ if(isNil "bcombat_debug_levels") then { bcombat_debug_levels = [0,1,2,3,4,5,6,7,
 if(isNil "bcombat_allowed_sides") then { bcombat_allowed_sides = []; };										// Alpha feature please don't change
 if(isNil "bcombat_allowed_groups") then { bcombat_allowed_groups = []; };									// Alpha feature please don't change 
 if(isNil "bcombat_allowed_units") then { bcombat_allowed_units = []; };										// Alpha feature please don't change 
+
+// Features degradation threshold distance
+if(isNil "bcombat_degradation_distance") then { bcombat_degradation_distance = 1250; }; 
+
+// Skill multiplier
+if(isNil "bcombat_skill_multiplier") then { bcombat_skill_multiplier = 1; }; 
 
 // Lower ground penalty
 if(isNil "bcombat_allow_lowerground_penalty") then { bcombat_allow_lowerground_penalty = true; }; 	
@@ -180,6 +186,7 @@ _nil = [] spawn
 	bdetect_debug_levels = [];		
 	bdetect_debug_chat = true;			
 	bdetect_mp_enable = false; 
+	bdetect_degradation_distance = bcombat_degradation_distance;
 	bdetect_callback = "bcombat_fnc_bullet_incoming";
 	
 	call bdetect_fnc_init;
@@ -202,3 +209,5 @@ _nil = [] spawn
 	bcombat_init_done = true; 
 
 };
+
+_nul = [] execVM "\@bcombat\loop.sqf";

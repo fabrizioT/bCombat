@@ -175,6 +175,8 @@ bcombat_fnc_task_fire =
 					_unit domove getPosAtl _enemy;
 				};
 				
+
+				
 				if( _mode == 2 ) then
 				{
 					if( 
@@ -224,11 +226,19 @@ bcombat_fnc_task_fire =
 
 				if( _visible ) then 
 				{
-					_unit suppressFor 0;
-	
-					//[_unit, _enemy, 15, false] call bcombat_fnc_lookat;
 					//_unit lookAt _enemy;
+
+					/*
+					if( _dist < 50) then
+					{
+						_unit doTarget _enemy;
+					};*/
+					
+					//[_unit, _enemy, 0, false] call bcombat_fnc_lookat;
+					
+					_unit suppressFor 0;
 					_unit dofire _enemy;
+					
 				}
 				else
 				{
