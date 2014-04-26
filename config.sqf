@@ -8,7 +8,7 @@ bcombat_enable = true;								// (Boolean) Toggle feature on / off
 
 // Description: toggle debugging information on (true) or off (false)
 
-bcombat_dev_mode = true;							// (Boolean) Toggle feature on / off
+bcombat_dev_mode = false;							// (Boolean) Toggle feature on / off
 
 // Description: minimum timeout since last incoming bullet, for the current one to cause suppression.
 // As default no more than 5 ( = 1 / 0.2 ) bullets / second would cause suppression on a single AI unit.
@@ -17,9 +17,9 @@ bcombat_dev_mode = true;							// (Boolean) Toggle feature on / off
 
 bcombat_incoming_bullet_timeout = 0.2;				// (Seconds) minimum timeout between bullets
 bcombat_danger_distance = 250; 						// (Meters) Minimum distance from shooter, for groups to automatically switch to "combat" behaviour
-bcombat_features_clock = [3,6];						// (Seconds) Additional features clocking [minimum timeout, maximum timeout]
+bcombat_features_clock = 3;							// (Seconds) Additional features clocking 
 bcombat_damage_multiplier = 1.0;					// (0-1) Damage multiplier. Zero makes units invulnerable.
-bcombat_degradation_distance = 1250;				// (Meters) some bCombat features are cut when some unit is farther than this from player
+bcombat_degradation_distance = 1500;				// (Meters) some bCombat features are cut when some unit is farther than this from player
 bcombat_skill_multiplier = 1;						// 
 
 // -----------------------
@@ -78,6 +78,12 @@ bcombat_penalty_casualty = 15; 						// (Percent) %
 
 bcombat_penalty_wounded = 10; 						// (Percent) %
 
+// Description: penalty for SAFE / CARELESS mode
+// Triggered: if unit is in SAFE or CARELESS mode
+// Effect: sudden and massive loss of morale when being fired upon
+
+bcombat_penalty_safe_mode = 35; 					// (Percent) %
+
 // Description: penalty recovery rate
 // Triggered: once per second, if no penalty raising events have been triggered
 // Effect: up to 2% skill recovery, halved if unit is wounded
@@ -99,7 +105,7 @@ bcombat_allow_lowerground_penalty = true;			// (Boolean) Toggle feature on / off
 // Effect: formation is breaked, units move individually towards destination picking different routes and using cover
 // Known issues: units may sometimes bunch at destination
 
-bcombat_allow_fast_move = false;					// (Boolean) Toggle feature on / off
+bcombat_allow_fast_move = true;					// (Boolean) Toggle feature on / off
 
 // Description: fast rotation
 // Triggered: if a known target is on flank / back
@@ -249,7 +255,7 @@ bcombat_cqb_radar_params = [104, 5, 0, 5];			// (Array) [max. angle, min. precis
 // Effect: a prone rolling animation is played to evade enemy fire
 
 bcombat_fancy_moves = true;     					// (Boolean) Toggle feature on / off
-bcombat_fancy_moves_frequency = 0.05;    			// (0-1) Probability of occurring. 0=never (0%), 1=all the time (100%). 
+bcombat_fancy_moves_frequency = 0.04;    			// (0-1) Probability of occurring. 0=never (0%), 1=all the time (100%). 
 
 // Description: remove night vision devices from any created / spawned units
 // Triggered: on unit creation / spawn
@@ -263,13 +269,13 @@ bcombat_remove_nvgoggles = false;
 
 if ( bcombat_dev_mode ) then
 {
-	// [] spawn bcombat_fnc_debug_text; // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
-	call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debug balloons (as alternative to bcombat_fnc_debug_text or bcombat_fnc_fps)
+	[] spawn bcombat_fnc_debug_text; // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
+	//call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debug balloons (as alternative to bcombat_fnc_debug_text or bcombat_fnc_fps)
 
 	call bdetect_fnc_benchmark; // Uncomment this line to activate bDetect live stats panel (as alternative to bcombat_fnc_fps)
 	//[] spawn bcombat_fnc_fps; // Uncomment this line to activate FPS stats panel (as alternative to bdetect_fnc_benchmark;)
 
-	// OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
+	OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
 };
 
 // bdetect_startup_hint = false;

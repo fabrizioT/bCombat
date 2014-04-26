@@ -22,7 +22,7 @@ bcombat_debug_chat = true;
 
 bcombat_name 		= "bcombat AI Infantry mod"; 
 bcombat_short_name 	= "bcombat"; 
-bcombat_version 	= "0.16RC2";
+bcombat_version 	= "0.16";
 
 // -----------------------------
 // files preload
@@ -63,7 +63,7 @@ if(isNil "bcombat_allow_lowerground_penalty") then { bcombat_allow_lowerground_p
 if(isNil "bcombat_damage_multiplier") then { bcombat_damage_multiplier = 1; }; 	
 
 // Units internal clock (for optional features)
-if(isNil "bcombat_features_clock") then { bcombat_features_clock = [3,5]; }; 							
+if(isNil "bcombat_features_clock") then { bcombat_features_clock = 3; }; 							
 
 // Switch to danger distance
 if(isNil "bcombat_danger_distance") then { bcombat_danger_distance = 250; };	
@@ -101,7 +101,8 @@ if(isNil "bcombat_penalty_enemy_contact") then { bcombat_penalty_enemy_contact =
 if(isNil "bcombat_penalty_enemy_close") then { bcombat_penalty_enemy_close = 0; };			
 if(isNil "bcombat_penalty_casualty") then { bcombat_penalty_casualty = 20; }; 		
 if(isNil "bcombat_penalty_wounded") then { bcombat_penalty_wounded = 10; };				
-if(isNil "bcombat_penalty_explosion") then { bcombat_penalty_explosion = 4; };		
+if(isNil "bcombat_penalty_explosion") then { bcombat_penalty_explosion = 4; };	
+if(isNil "bcombat_penalty_safe_mode") then { bcombat_penalty_safe_mode = 35; };	
 if(isNil "bcombat_penalty_recovery") then { bcombat_penalty_recovery = 2; };		
 
 // Investigate

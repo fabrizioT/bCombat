@@ -13,8 +13,6 @@ bcombat_fnc_fsm_trigger =
 
 	if ( !(isPlayer _unit ) ) then //&& lifestate _unit == "HEALTHY"
 	{
-		
-		
 		[ _unit, _enemy] call bcombat_fnc_danger;
 
 		_fsm = nil;

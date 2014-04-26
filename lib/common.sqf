@@ -28,7 +28,7 @@ bcombat_fnc_is_active = {	// bCOmbat is on, unit is man, alive, activated and on
 		&& !(isNil "bcombat_init_done")
 		&& { alive _unit }
 		&& { simulationEnabled _unit }
-		&& { _unit isKindOf "CAManBase" }
+		&& { (vehicle _unit) isKindOf "CAManBase" }
 		&& { str (side _unit) != "CIV" }
 		&& { vehicle _unit == _unit }
 	) then
@@ -70,7 +70,7 @@ bcombat_fnc_is_stopped =
 // Benchmarking: <0.1s x 1000
 bcombat_fnc_knprec = {
 
-	private [ "_unit", "_enemy"];
+	private ["_enemy"];
 	
 	_enemy = _this select 1;
 
@@ -225,6 +225,20 @@ bcombat_fnc_is_enemy =
 	
 	_ret = false;
 	if( (side (_this select 0)) getFriend (side (_this select 1)) < 0.6 ) then
+	{
+		_ret = true;
+	};
+	
+	_ret;
+};
+
+
+bcombat_fnc_is_friendly = 
+{
+	private ["_ret"];
+	
+	_ret = false;
+	if( (side (_this select 0)) getFriend (side (_this select 1)) >= 0.6 ) then
 	{
 		_ret = true;
 	};
@@ -739,7 +753,7 @@ bcombat_fnc_eh_hit = {
 		if( _isenemy 
 			&& { [_unit, _enemy] call bcombat_fnc_knprec < 2 }
 			//&& { [_unit, _shooter] call bcombat_fnc_relativeDirTo < 75 }
-			&& { _unit getVariable ["bcombat_suppression_level", 0] < 50 }
+			&& { _unit getVariable ["bcombat_suppression_level", 0] < 35 }
 		) then {
 			[_unit, "bcombat_fnc_task_fire", 11, [_enemy, 2] ] call bcombat_fnc_task_set;
 			// player globalchat format["%1 RETURN FIRE ON by %2", _unit, _enemy];
@@ -770,7 +784,7 @@ bcombat_fnc_eh_handledamage = {
 		
 		if( bcombat_allow_friendly_capped_damage 
 			&& { !(isPlayer _enemy ) }
-			&& { !([_enemy, _unit] call bcombat_fnc_is_enemy) || isNull _enemy } 
+			&& { [_enemy, _unit] call bcombat_fnc_is_friendly } 
 		) then { 
 			_body_part_damage = _body_part_damage min bcombat_friendly_fire_max_damage;
 		};
@@ -814,13 +828,16 @@ bcombat_fnc_unit_skill_set =
 	_unit = _this select 0;
 
 	_unit setSkill ( ((skill _unit) * bcombat_skill_multiplier) min 1 );
+	// hintc format["%1 %2 %3", _unit, _unit skill "general", _unit skill "aimingAccuracy" ];
 	
-	_k = (skill _unit ) ^ .5 ;
+	_k = (skill _unit ) ^ .66 ;
 	
 	_unit setskill [ "Commanding", _k];
 	_unit setskill [ "Endurance", _k];
 	_unit setSkill [ "courage", _k];
 	_unit setSkill [ "AimingSpeed", _k];
+	_unit setSkill [ "aimingShake", _k];
+	 _unit setSkill [ "aimingAccuracy", _k];
 	//_unit setSkill [ "SpotTime", _k];
 
 	/*
@@ -912,6 +929,7 @@ bcombat_fnc_fast_move = {
 	_leader = leader _grp;
 	_formleader = formationLeader _unit;
 		
+			
 	if( 
 		[_unit] call bcombat_fnc_is_active
 		&& { ( behaviour _unit == "COMBAT" ) } // || _mode == "LEADER PLANNED"
@@ -925,12 +943,12 @@ bcombat_fnc_fast_move = {
 		&& { [_formleader] call bcombat_fnc_is_active }
 		&& { !(fleeing _formleader) }
 		&& { !(captive _formleader) }
-		//&& _formleader != _leader
 		&& { _formleader != _unit }
 		&& { !( [_unit] call bcombat_fnc_has_task ) }
 		&& { !( [_unit] call bcombat_fnc_is_stopped ) }
 		) then
 	{	
+
 		_speed = [ _unit ] call bcombat_fnc_speed;
 		_expos = getposATL _formleader;
 		_mode = (expecteddestination _unit) select 1;
@@ -944,11 +962,11 @@ bcombat_fnc_fast_move = {
 		};
 			
 		if(  count _expos > 0
-			&& { !(isNull _enemy) && _enemy distance _formleader < 400 }
-			&& { _unit distance _expos > 50 }
-			&& { _unit distance _expos < 250  }
+			&& { !(isNull _enemy) && _enemy distance _formleader < 250 }
+			&& { _unit distance _expos > 100 }
+			&& { _unit distance _expos < 400  }
 			&& { (_unit distance _expos) > (_formleader distance _expos)  }
-			&& _speed < 2
+			&& _speed < 3
 			 ) then 
 		{
 
@@ -961,7 +979,7 @@ bcombat_fnc_fast_move = {
 			_unit forcespeed -1;
 			_unit domove _expos;
 
-			//player globalchat format["%1 - %2 MOVE TO %3 [dist: %4]", time, _unit, _expos,  (_unit distance _expos) ];
+			// player globalchat format["%1 - %2 MOVE TO %3 [dist: %4]", time, _unit, _expos,  (_unit distance _expos) ];
 		};
 	};
 };
@@ -1073,7 +1091,6 @@ bcombat_fnc_stop =
 				_unit setVariable["bcombat_stop_overwatch", true];
 				dostop _unit;
 				_unit disableAI "target";
-
 			};
 			
 			_level_unstop = ( ( _unit getVariable ["bcombat_suppression_level", 0] ) + 10) max 30;
@@ -1094,7 +1111,6 @@ bcombat_fnc_stop =
 			if( alive _unit ) then
 			{
 				_unit forcespeed -1;
-				_unit setVariable ["bcombat_stop_handle", nil];
 				
 				if( _stopow ) then 
 				{
@@ -1103,11 +1119,13 @@ bcombat_fnc_stop =
 					_unit dofollow (formationLeader _unit); 
 					_unit enableAI "target";
 				};
-
+				
 				if( bcombat_debug_enable ) then {
 					_msg = format["bcombat_fnc_stop() - END, unit=%1, timeout=%2, timeout_max=%3, Deltafiretime=%4 [%5], level=%6", _unit, _unit getVariable ["bcombat_stop_t1", 0 ], _unit getVariable ["bcombat_stop_t2", 0 ], time - ( _unit getVariable ["bcombat_fire_time", 0]), _unit getVariable ["bcombat_fire_time", 0],  _unit getVariable ["bcombat_suppression_level", 0] ];
 					[ _msg, 20 ] call bcombat_fnc_debug;
 				};
+				
+				_unit setVariable ["bcombat_stop_handle", nil];
 			};
 		};
 		
@@ -1183,7 +1201,10 @@ bcombat_fnc_soundalert = {
 				
 				// player globalchat format["%1 alerted, d: %2 [%3 %4 %5]", _x, _ppos distance _x, _d1, _d2, [_x] call bcombat_fnc_in_formation];
 				
-				if( ( isNull _nenemy || _nenemy == _unit ) && { [_x] call bcombat_fnc_in_formation || (formLeader _x) == _x } && { _d1 < 100 || _d1 > 1000000 } && { _d2 < 100 || _d2 > 1000000 } ) then {
+				if( ( isNull _nenemy || _nenemy == _unit ) 
+					&& { [_x] call bcombat_fnc_in_formation || (formLeader _x) == _x } 
+					&& { _d1 < 100 || _d1 > 1000000 } 
+					&& { _d2 < 100 || _d2 > 1000000 } ) then {
 					//player globalchat format["--> %5: %1 %2 -- %3 %4", _x, _nenemy, _unit, _d1, _d2];
 					[_x, _ppos] call bcombat_fnc_investigate;
 					//hintc("Test");
@@ -1208,15 +1229,15 @@ bcombat_fnc_visibility_multiplier  = {
 			|| "NVGoggles_INDEP" in _items
 		) then {
 	
-			_maxdist = 0.7;
+			_maxdist = 0.8;
 		} else {
-			_maxdist = ( 0.5 * ( moonIntensity ) ) max .1;
+			_maxdist = 0.5; //( 0.65 * ( moonIntensity ) ) max .1;
 		};
 	};
 	
-	 //player globalchat format["---> %1 [%2] [%3] [%4] [%5]", 	_maxdist * ( 1 - ( fog ^ 2 ) / 2 ) * ( skill _unit ^ 0.5 ), sunormoon, fog, skill _unit, moonintensity];
+	// player globalchat format["%6, ---> %1 [%2] [%3] [%4] [%5]", ( _maxdist * ( 1 - ( fog ^ 2 ) / 2 ) * ( skill _unit ^ 0.5 ) ) max 0.1, sunormoon, fog, skill _unit, moonintensity, _unit ];
 	 
-	( _maxdist * ( 1 - ( fog ^ 2 ) / 2 ) * ( skill _unit ^ 0.5 ) ) max 0.1
+	( _maxdist * ( 1 - ( fog ^ 2 ) / 2 ) ) max 0.1
 	
 };
 
@@ -1235,7 +1256,10 @@ bcombat_fnc_reveal = {
 		_dist = _unit distance _enemy;
 		_ang = [_unit, _enemy] call bcombat_fnc_relativeDirTo;
 		
-		if(_prc < 1.5 && { _ang < 104 } && { _visible } && { _dist < ( 200 * ( [_unit] call bcombat_fnc_visibility_multiplier ) ) } ) then
+		if(_prc < 1.5 
+			&& { _ang < 104 } 
+			&& { _visible } 
+			&& { _dist < ( 200 * ( [_unit] call bcombat_fnc_visibility_multiplier ) ) } ) then
 		{
 			_unit reveal [_enemy, 4 ];	
 			_unit glanceAt _enemy;
@@ -1252,7 +1276,7 @@ bcombat_fnc_reveal = {
 			{
 				_unit glanceAt _p;
 				
-				if( !(combatMode _unit in ["COMBAT"]) ) then
+				if( !(combatMode _unit in ["COMBAT","STEALTH"]) ) then
 				{
 					_unit dowatch _p;
 				};
@@ -1407,6 +1431,7 @@ bcombat_fnc_handle_smoke_grenade =
 	};
 };
 
+/*
 bcombat_fnc_handle_targets = 
 {
 	private  ["_unit", "_timeout", "_maxdist", "_params", "_nenemy", "_targets", "_x"];
@@ -1465,6 +1490,7 @@ bcombat_fnc_handle_targets =
 		};
 	};
 };
+*/
 
 bcombat_fnc_cqb = 
 {
@@ -1498,7 +1524,7 @@ bcombat_fnc_cqb =
 
 		if( 
 			random 100 > _unit getVariable ["bcombat_suppression_level", 0] 
-			&& { random 1 <= (_unit skill "general" ) ^ 0.5} 
+			//&& { random 1 <= (_unit skill "general" ) ^ 0.5} 
 			) then
 		{
 			_targets = [_unit, _maxdist, _params] call bcombat_fnc_targets;
@@ -1514,7 +1540,7 @@ bcombat_fnc_cqb =
 				if(  _unit distance _x < ( 200 * ( [_unit] call bcombat_fnc_visibility_multiplier ) ) ) then
 				{
 					if( [_unit, _x] call bcombat_fnc_is_visible 
-						&& {  [_unit, _x] call bcombat_fnc_relativeDirTo < 95 } 
+						&& {  [_unit, _x] call bcombat_fnc_relativeDirTo < 104 } 
 					) then {
 					
 						_unit reveal [_x, 4];
@@ -1523,7 +1549,7 @@ bcombat_fnc_cqb =
 						if( isNull (assignedTarget _unit)
 							&& { !([_unit] call bcombat_fnc_has_task) }
 							// && { _x == _targets select 0 }	
-								&& isNull _target
+							&& isNull _target
 						) then {
 							_target = _x;
 							_unit dowatch _x;
@@ -1532,10 +1558,24 @@ bcombat_fnc_cqb =
 					else
 					{
 						_unit reveal [_x, _unit knowsabout _x];
+						_unit glanceAt _x;
 					};
 				};
 				
 			} foreach _targets;
+			
+			if( combatMode _unit in ["RED", "YELLOW"]
+				&& { _unit distance _target < 100 }
+				&& { !(isNull _target) }
+				&& { canfire _unit  }
+				&& { alive _target } 
+				&& { !([_unit] call bcombat_fnc_has_task) }
+				&& { [_unit, _target] call bcombat_fnc_knprec < 2 } 
+				&& { [_unit, _target] call bcombat_fnc_relativeDirTo < 75 } ) then 
+			{
+				[_unit, "bcombat_fnc_task_fire", 1 , [_target, 1]] call bcombat_fnc_task_set; 
+				// player globalchat format["----> %1 attack %2", _unit, _target];
+			};
 		};
 		
 		//	player globalchat format["%1 looping ", _unit];
@@ -1564,13 +1604,13 @@ bcombat_fnc_targets =
 		_enemy = (_x select 4);
 		
 		if( !(isNull _enemy) 
-			&& { _enemy isKindOf "CAManBase"  }
+			&& { (vehicle _enemy) isKindOf "CAManBase"  }
 			&& { vehicle _enemy == _enemy  }
 			&& { _unit distance _enemy < _maxdist }
 			&& { [ _unit, _enemy] call bcombat_fnc_is_enemy }
 			&& { [_unit, _enemy] call bcombat_fnc_relativeDirTo < _maxangle }
 			&& { [_unit, _enemy] call bcombat_fnc_knprec < _minprec }
-			&& {  _unit knowsabout _enemy > _minkn }
+			// && {  _unit knowsabout _enemy > _minkn }
 			&& { [ _enemy ] call bcombat_fnc_speed < _maxspeed }
 		) then
 		{

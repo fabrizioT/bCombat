@@ -1,3 +1,14 @@
+v0.16 (FINAL)
+-------------
+
+Core features:
+
+	* New: Introduced a strong morale penalty for units surprised by enemy fire while in SAFE/CARELESS mode
+	* Tweaked: Minor code optimizations
+	* Tweaked: Slightly higher firing accuracy
+	* Tweaked: Units more likely to open fire on nearby threats in CQB
+
+
 v0.16 RC2
 ---------
 

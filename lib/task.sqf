@@ -196,7 +196,7 @@ bcombat_fnc_task_fire =
 						}
 						else
 						{
-							[_unit, 3, 5 + random 5, 2, _dist] call bcombat_fnc_stop;
+							[_unit, 3, 5 + random 5, 3, _dist] call bcombat_fnc_stop;
 						};
 					};
 				}
@@ -219,7 +219,7 @@ bcombat_fnc_task_fire =
 						}
 						else
 						{
-							[_unit, 3, 5 + random 5, 2, _dist] call bcombat_fnc_stop;
+							[_unit, 3, 5 + random 5, 3, _dist] call bcombat_fnc_stop;
 						};
 					};
 				};
@@ -294,7 +294,7 @@ bcombat_fnc_task_move_to_cover =
 	_enemy = _args select 1;
 	_grp = group _unit;
 	
-	sleep random .2;
+	sleep random .1;
 	
 	_cover = [_unit, _enemy, _radius] call bcombat_fnc_find_cover_pos;
 	
@@ -305,10 +305,10 @@ bcombat_fnc_task_move_to_cover =
 		_pos = _cover select 0;
 		_type = _cover select 2;
 		_dist =  _unit distance _pos;
-		_timeout1 = time + 3;
+		_timeout1 = time + 5;
 		_timeout2 = 0;
 		
-		if( _type == 1) Then // bulinding with positions
+		if( _type == 1) Then // building with positions
 		{
 			_timeout1 = time + 15 + random 15;
 			_timeout2 = 30 + random 30;
@@ -335,12 +335,12 @@ bcombat_fnc_task_move_to_cover =
 				dostop _unit; 
 			};
 			
-			_unit forcespeed 20;
+			_unit forcespeed 10;
 			_unit setDestination [ _pos , "LEADER PLANNED", true];
 			
 			sleep .01;
 			_unit domove _pos;
-			
+
 			while { alive _unit 
 				&& { !(unitready _unit) }
 				&& { time < _timeout1 }
@@ -348,29 +348,30 @@ bcombat_fnc_task_move_to_cover =
 				sleep 1;
 				
 				_unit doWatch objNull;
-				_unit forcespeed -1;
+				_unit forcespeed 10;
 					
 				if( !(unitready _unit) )  then 
 				{ 
 					if( [ _unit ] call bcombat_fnc_speed == 0 ) then 
 					{
-						_unit setDestination [ _pos , "LEADER PLANNED", false];
+						
 						_unit domove _pos;
+						_unit setDestination [ _pos , "LEADER PLANNED", false];
 					};
 				};
 			};
+			
+			_unit enableAI "autotarget";
+			_unit enableAI "target";
+			_unit forcespeed -1;
 			
 			if( _type == 1
 				&& unitready _unit 
 				&& _unit distance _pos < 3) then
 			{
 				_unit dofollow (formleader _unit);
-				[_unit, _timeout2, _timeout2, 2, _dist] call bcombat_fnc_stop;
+				[_unit, _timeout2, _timeout2, 5, _dist] call bcombat_fnc_stop;
 			};
-			
-			_unit enableAI "autotarget";
-			_unit enableAI "target";
-			_unit forcespeed -1;
 		};
 	};
 	

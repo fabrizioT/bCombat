@@ -31,6 +31,7 @@ while { true } do
 				};
 				
 				[_unit] call bcombat_fnc_unit_skill_set;
+				//diag_log format["%1", _unit];
 				
 				if( isNil { _unit getvariable ["bcombat_eh_fired", nil ] } ) then {
 					_e = _unit addEventHandler ["Fired", bcombat_fnc_eh_fired];
@@ -49,7 +50,6 @@ while { true } do
 
 				if( isNil { _unit getvariable ["bcombat_eh_handledamage", nil ] } ) then {
 					_e = _unit addEventHandler ["HandleDamage", bcombat_fnc_eh_handledamage]; 
-					//if( _unit == player ) then { hintc format["%1", _e];  };	
 					_unit setvariable ["bcombat_eh_handledamage", _e ];
 				};
 				
@@ -84,10 +84,12 @@ while { true } do
 			
 				_enemy = _unit findnearestEnemy _unit;
 				
+				/*
 				if( !(isNull _enemy) ) then
 				{
 					[ _unit, _enemy ] call bcombat_fnc_set_firemode;
 				};
+				*/
 				
 				// CQB
 				if( !(isNull _enemy) && { _unit distance _enemy < bcombat_cqb_radar_max_distance } ) then
@@ -102,12 +104,6 @@ while { true } do
 				
 				if( _unit == leader _unit) then
 				{
-				/*
-					if( behaviour _unit == "COMBAT") then
-					{
-						(group _unit) setSpeedMode "FULL";
-					};*/
-				
 					_blacklist = (group _unit) getVariable ["bcombat_cover_blacklist", [] ];
 					
 					if( count _blacklist > 0 ) then
@@ -155,13 +151,14 @@ while { true } do
 				};
 
 				if( 
-					[_unit] call bcombat_fnc_has_task
+					!([_unit] call bcombat_fnc_has_task)
 					&& !(fleeing _unit)
 					&& !(captive _unit)
 				) then 
 				{
 					if( bcombat_allow_grenades 
-						&& { _i mod 2 == 0}
+						&& { combatmode _unit in ["RED", "YELLOW"] }
+						&& { _i mod 3 == 0}
 						&& { !(isNull _enemy) } 
 						&& { _unit distance _enemy < ( bcombat_grenades_distance select 1 ) }
 						&& { "HandGrenade" in (magazines _unit) }
@@ -173,6 +170,7 @@ while { true } do
 					}
 					else
 					{
+					
 						if( bcombat_allow_fast_move || isPlayer (leader _unit) ) then //  && isPlayer (leader _unit) 
 						{
 							[_unit] call bcombat_fnc_fast_move;
@@ -197,5 +195,5 @@ while { true } do
 	// player globalchat format["----->%1 / %2 / %3", count allunits, count allgroups , time - _t1];
 	//diag_log format["----->%1 / %2 / %3", count allunits, count allgroups ,_t2 - _t1];
 	//sleep ( (bcombat_features_clock select 0) + random ( (bcombat_features_clock select 1) - (bcombat_features_clock select 0) ) );
-	sleep 3;
+	sleep bcombat_features_clock;
 };

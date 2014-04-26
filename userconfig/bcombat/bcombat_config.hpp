@@ -13,49 +13,18 @@ class CfgAISkill
 	commanding[] = {0,0,1,1};
 	general[] = {0,0,1,1};
 };
-
-// v0.14
-class CfgAISkill
-{
-	aimingAccuracy[] = {0,0,1,0.7};
-	aimingSpeed[] = {0,0.3,1,1};
-	aimingShake[] = {0,0,1,1};
-	endurance[] = {0,0,1,1};
-	spotDistance[] = {0,0.3,1,0.6};
-	spotTime[] = {0,0.2,1,1};
-	courage[] = {0,0,1,1};
-	reloadSpeed[] = {0,0.2,1,1};
-	commanding[] = {0,0.3,1,1};
-	general[] = {0,0,1,1};
-};
-
-// v0.15
-class CfgAISkill
-{
-	aimingAccuracy[] = {0,0,1,0.7};
-	aimingSpeed[] = {0,0.5,1,1};
-	aimingShake[] = {0,0,1,1};
-	endurance[] = {0,0,1,1};
-	spotDistance[] = {0,0.2,1,0.6};
-	spotTime[] = {0,0.2,1,1};
-	courage[] = {0,0,1,1};
-	reloadSpeed[] = {0,0.2,1,1};
-	commanding[] = {0,0.2,1,1};
-	general[] = {0,0,1,1};
-};
-
 */
 
 class CfgAISkill
 {
-	aimingAccuracy[] = {0,0.07,1,0.65};
+	aimingAccuracy[] = {0,0.05,1,0.5};
 	aimingSpeed[] = {0,0.5,1,1};
-	aimingShake[] = {0,0,1,1};
+	aimingShake[] = {0,0.05,1,1};
 	endurance[] = {0,0,1,1};
 	spotDistance[] = {0,0.1,1,0.3};
-	spotTime[] = {0,0.2,1,1};
+	spotTime[] = {0,0.05,1,1};
 	courage[] = {0,0,1,1};
 	reloadSpeed[] = {0,0.2,1,1};
-	commanding[] = {0,0.2,1,1};
-	general[] = {0,0,1,1};
+	commanding[] = {0,0.25,1,1};
+	general[] = {0,0.05,1,1};
 };

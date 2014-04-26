@@ -28,68 +28,90 @@ bcombat_fnc_bullet_incoming =
 			_ang = [_unit, _shooter] call bcombat_fnc_relativeDirTo;
 			_hdiff = ((getPosASL _shooter) select 2) - ((getPosASL _unit) select 2);
 			_dt = time - (_unit getVariable ["bcombat_suppression_time", 1 ]);
-			
-			
+
 			if( _dt > bcombat_incoming_bullet_timeout ) then 
 			{
+				_unit setVariable ["bcombat_suppression_time", time ];
+				
 				if( !(isPlayer _unit ) ) then 
 				{
-					_unit setVariable ["bcombat_suppression_time", time ];
-					
-					if( _dt > 1 ) then
+					if( _dt > 1 && { !(isPlayer (leader _unit)) }  ) then
 					{
-						// Unknown enemy, go to cover
-						_nenemy = _unit findnearestEnemy _unit;
+						private ["_move_to_cover", "_nenemy"];
 						
-						//hintc format["%1 %2", _unit, _nenemy];
-						if(  ( isNull(_nenemy) || [_unit, _nenemy] call bcombat_fnc_knprec > 10 )
-							&& { !(isHidden _unit) } 
-							&& { !(isPlayer (leader _unit)) }
-							
-							&& { _dist > 30 } ) then // && !([_unit] call bcombat_fnc_has_task)
-						{ 	
-							[_unit, "bcombat_fnc_task_move_to_cover", 100, [bcombat_cover_radius, objNull]] call bcombat_fnc_task_set; 
+						// SAFE mode penalty
+						if( behaviour _unit in ["SAFE", "CARELESS"] ) then 
+						{
+							{
+								_x setBehaviour "COMBAT";
+								[ _x, 15, bcombat_penalty_safe_mode, time, time + 15 + random 15, time + 30 + random 30, _shooter ] call bcombat_fnc_fsm_trigger;
+								player globalchat format["%1: penalty for SAFE mode applied", _x];
+							} foreach units (group _unit);  
 						};
 						
-						// Smoke grenade
-						if(
-							bcombat_allow_smoke_grenades 
-							&& { random 1 <= (_unit skill "general" ) ^ 0.5}
-							&& { !(isPlayer (leader _unit)) }
-							//&& { _unit getVariable ["bcombat_suppression_level", 0] > 10 }
-							&& { random 100 > (_unit getVariable ["bcombat_suppression_level", 0]) }
-							&& { _dist > 50 }
-							&& { "SmokeShell" in (magazines _unit) }
-							&& { _unit == leader _unit || _unit == formLeader _unit ||  [ _unit ] call bcombat_fnc_speed < 3}
-							&& { !( [_unit] call bcombat_fnc_has_task ) }
-							&& { [_unit, _shooter] call bcombat_fnc_knprec < 25 }
-							&& { [ _shooter ] call bcombat_fnc_speed < 3 }
-						) then {
-							[_unit, _shooter] call bcombat_fnc_handle_smoke_grenade;
+						// MOVE TO COVER
+						_move_to_cover = false;
+						_nenemy = _unit findnearestEnemy _unit;
+						
+						// Unknown enemy, go to cover
+						if(  ( isNull(_nenemy) || [_unit, _nenemy] call bcombat_fnc_knprec > 10 )
+							&& { !(isHidden _unit) } 
+							&& { _dist > 30 } ) then // && !([_unit] call bcombat_fnc_has_task)
+						{ 	
+							_move_to_cover = true;
+							//[_unit, "bcombat_fnc_task_move_to_cover", 100, [bcombat_cover_radius, objNull]] call bcombat_fnc_task_set; 
 						}
 						else
 						{
-							// move to cover
 							if( 
 								bcombat_allow_cover
+								&& { !_move_to_cover}
 								&& { _dist > 30 }
 								&& { _visible }
+								&& { !(isHidden _unit) } 
 								&& { _unit getVariable ["bcombat_suppression_level", 0] > 10 }
-								&& { !(isPlayer (leader _unit)) }
 								&& { ( _speed < 3 || count(_unit nearroads 6) > 0 ) }
 								&& { (_unit == leader _unit || bcombat_cover_mode == 1) }
 								//&& { !([_unit] call bcombat_fnc_has_task) }
 								// && { [_unit, _shooter] call bcombat_fnc_is_visible_head }
 								//&& ( count(_unit nearroads 10) > 0 ) 
 							) then { //&& [_unit] call bcombat_fnc_speed == 0 // !(isHidden _unit) ||
-							
-								[_unit, "bcombat_fnc_task_move_to_cover", 100, [bcombat_cover_radius, objNull]] call bcombat_fnc_task_set;  
+								_move_to_cover = true;
+								//[_unit, "bcombat_fnc_task_move_to_cover", 100, [bcombat_cover_radius, objNull]] call bcombat_fnc_task_set;  
+							};
+						};
+						
+						if( _move_to_cover ) then
+						{
+							[_unit, "bcombat_fnc_task_move_to_cover", 100, [bcombat_cover_radius, objNull]] call bcombat_fnc_task_set; 
+						}
+						else
+						{
+							// Smoke grenade
+							if(
+								bcombat_allow_smoke_grenades 
+								&& { !( [_unit] call bcombat_fnc_has_task ) }
+								&& { random 1 <= (_unit skill "general" ) ^ 0.5}
+								//&& { _unit getVariable ["bcombat_suppression_level", 0] > 10 }
+								&& { random 100 > (_unit getVariable ["bcombat_suppression_level", 0]) }
+								&& { _dist > 50 }
+								&& { "SmokeShell" in (magazines _unit) }
+								&& { _unit == leader _unit || _unit == formLeader _unit ||  [ _unit ] call bcombat_fnc_speed < 3}
+								&& { [_unit, _shooter] call bcombat_fnc_knprec < 25 }
+								&& { [ _shooter ] call bcombat_fnc_speed < 3 }
+							) then {
+								[_unit, _shooter] call bcombat_fnc_handle_smoke_grenade;
 							};
 						};
 					};
 		
 					[_unit] call bcombat_fnc_allow_fire;
-					[_unit, _shooter] call bcombat_fnc_reveal;
+					/*
+					if(  !([_unit] call bcombat_fnc_has_task) ) then 
+					{
+						[_unit, _shooter] call bcombat_fnc_reveal;
+					};
+					*/
 				
 					if( _visible ) then 
 					{
@@ -129,24 +151,20 @@ bcombat_fnc_bullet_incoming =
 					
 					if(	bcombat_allow_fire_back ) then
 					{
-						// Return fire
+						// RETURN FIRE
 						if ( 
 							random 1 <= (_unit skill "general" ) 
 							&&  { _dist < [ _unit ] call bcombat_weapon_max_range } 
 							&&  { canFire _unit }  
 							&&  { !(combatMode _unit in ["BLUE"]) }  
 							&&  { [_unit, _shooter] call bcombat_fnc_knprec < 2 }  
-							&&  { ( isHidden _unit || _dist < 150 || _speed < 3 || [currentWeapon _unit] call bcombat_fnc_is_mgun) }  
+							&&  { ( isHidden _unit || _dist < 200 || _speed < 3 || [currentWeapon _unit] call bcombat_fnc_is_mgun) }  
 							&&  { _visible }
-							&& 
-							{ ( 
-								( random 100 > _unit getVariable ["bcombat_suppression_level", 0] )  // && ( _unit getVariable ["bcombat_suppression_level", 0] <= 65 )
-								|| _dist < 25
-								|| [_unit, _shooter] call bcombat_fnc_relativeDirTo < 75
-							) }
-							
-						) then { // RETURN FIRE 
-
+							&&  { [_unit, _shooter] call bcombat_fnc_relativeDirTo < 75 }
+							&&  { _dist < 30 || random 100 > _unit getVariable ["bcombat_suppression_level", 0]  } 
+				
+						) then { 
+//player globalchat format["%1 RETURN FIRE", _unit];
 							[_unit, "bcombat_fnc_task_fire", 10, [_shooter, 2] ] call bcombat_fnc_task_set;
 		
 							if( bcombat_debug_enable) then {
@@ -159,15 +177,16 @@ bcombat_fnc_bullet_incoming =
 							// SUPPRESSIVE FIRE 
 							if( bcombat_allow_suppressive_fire 
 								&& { !([_unit] call bcombat_fnc_has_task) }
-								&& { [_unit, _shooter] call bcombat_fnc_relativeDirTo < 45 } 
+								&& { [_unit, _shooter] call bcombat_fnc_relativeDirTo < 60 } 
 								&& { random 1 <= (_unit skill "general" ) }
 								&& { canFire _unit } 
-								&& { ( _unit getVariable ["bcombat_suppression_level", 0] <= 65 ) } 
+								&& { ( _unit getVariable ["bcombat_suppression_level", 0] <= 50 ) } 
 								&& { _dist >  (bcombat_suppressive_fire_distance select 0) }
 								&& { _dist <  (bcombat_suppressive_fire_distance select 1) }
 								&& { random 1 <= (_unit skill "general" ) } 
 								&& { _visible }
 							)  then {
+						
 								if( [currentWeapon _unit] call bcombat_fnc_is_mgun ) then {
 									[_unit, _shooter, (bcombat_suppressive_fire_duration select 1)] call bcombat_fnc_suppress; 
 								}
@@ -196,9 +215,9 @@ bcombat_fnc_bullet_incoming =
 							&& { ( isHidden _x || _x distance _shooter < bcombat_fire_back_group_max_enemy_distance ) } 
 							&& { _unit distance _x < bcombat_fire_back_group_max_friend_distance }
 							&& { _x distance _shooter < [_x] call bcombat_weapon_max_range }
-							&& { ( _x getVariable ["bcombat_suppression_level", 0] <= 30 ) }
+							&& { ( _x getVariable ["bcombat_suppression_level", 0] <= 50 ) }
 							&& { time - (_x getVariable ["bcombat_suppression_time", 1 ]) > bcombat_incoming_bullet_timeout }
-							&& { ([0,0] distance (velocity _x)) < 3 }
+							&& { [ _x ] call bcombat_fnc_speed < 3 }
 							&& { [_unit, _shooter] call bcombat_fnc_knprec < 2 }
 							&& { !([_x] call bcombat_fnc_has_task) }
 							//&& { random 1 <= ((leader _x) skill "general" ) } 
@@ -209,7 +228,7 @@ bcombat_fnc_bullet_incoming =
 						) then {
 
 							[_x, "bcombat_fnc_task_fire", 2 ,[_shooter, 1] ] call bcombat_fnc_task_set;
-						
+//player globalchat format["%1 support %2", _x, _unit];
 							if( bcombat_debug_enable ) then {
 								_msg = format["bcombat_fnc_bullet_incoming() - HELP: helper unit=%1, suppressed unit=%2, enemy=%3, distance=%4, angle=%5", _x, _unit, _shooter, _x distance _shooter, [_x, _shooter] call bcombat_fnc_relativeDirTo ];
 								[ _msg, 8 ] call bcombat_fnc_debug;
