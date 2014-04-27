@@ -45,7 +45,7 @@ bcombat_fnc_bullet_incoming =
 							{
 								_x setBehaviour "COMBAT";
 								[ _x, 15, bcombat_penalty_safe_mode, time, time + 15 + random 15, time + 30 + random 30, _shooter ] call bcombat_fnc_fsm_trigger;
-								player globalchat format["%1: penalty for SAFE mode applied", _x];
+								//player globalchat format["%1: penalty for SAFE mode applied", _x];
 							} foreach units (group _unit);  
 						};
 						
