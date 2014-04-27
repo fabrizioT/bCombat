@@ -830,7 +830,7 @@ bcombat_fnc_unit_skill_set =
 	_unit setSkill ( ((skill _unit) * bcombat_skill_multiplier) min 1 );
 	// hintc format["%1 %2 %3", _unit, _unit skill "general", _unit skill "aimingAccuracy" ];
 	
-	_k = (skill _unit ) ^ .66 ;
+	_k = (skill _unit ) ^ .5 ;
 	
 	_unit setskill [ "Commanding", _k];
 	_unit setskill [ "Endurance", _k];
@@ -1266,10 +1266,11 @@ bcombat_fnc_reveal = {
 		}
 		else
 		{
-			_rv = 4 / ceil ( _dist / 50 +.1) / ceil ( _ang / 30 +.1); 
+			_rv = 4 / ceil ( _dist / 50 +.1) / ceil ( _ang / 60 +.1); 
 
 			if( !(_visible) ) then {_rv = _rv * .1;};
 			
+			// hintc format["%1", _rv];
 			_unit reveal [_enemy, _rv max 0.01 ];	
 			
 			if (_prc / _dist < .3 && !([_unit] call bcombat_fnc_has_task) ) then

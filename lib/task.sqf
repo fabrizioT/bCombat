@@ -336,10 +336,11 @@ bcombat_fnc_task_move_to_cover =
 			};
 			
 			_unit forcespeed 10;
-			_unit setDestination [ _pos , "LEADER PLANNED", true];
+			
 			
 			sleep .01;
 			_unit domove _pos;
+			_unit setDestination [ _pos , "LEADER PLANNED", true];
 
 			while { alive _unit 
 				&& { !(unitready _unit) }

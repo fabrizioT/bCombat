@@ -8,7 +8,7 @@ bcombat_enable = true;								// (Boolean) Toggle feature on / off
 
 // Description: toggle debugging information on (true) or off (false)
 
-bcombat_dev_mode = false;							// (Boolean) Toggle feature on / off
+bcombat_dev_mode = true;							// (Boolean) Toggle feature on / off
 
 // Description: minimum timeout since last incoming bullet, for the current one to cause suppression.
 // As default no more than 5 ( = 1 / 0.2 ) bullets / second would cause suppression on a single AI unit.
@@ -28,7 +28,7 @@ bcombat_skill_multiplier = 1;						//
 
 bdetect_bullet_max_distance = 750;  				// (Meters) Maximum travelled distance for a bullet (to cause suppression)
 bdetect_bullet_max_lifespan = 2; 					// (Seconds) Maximum lifespan for bullet
-bdetect_bullet_max_proximity = 6.5; 				// (Meters) Maximum distance from unit for bullet (to cause suppression)
+bdetect_bullet_max_proximity = 7.5; 				// (Meters) Maximum distance from unit for bullet (to cause suppression)
 bdetect_bullet_max_height =  6.5;  					// (Meters) Maximum height on ground for bullet (to cause suppression)
 
 // -----------------------------------------------------------------------------------------------------
@@ -82,7 +82,7 @@ bcombat_penalty_wounded = 10; 						// (Percent) %
 // Triggered: if unit is in SAFE or CARELESS mode
 // Effect: sudden and massive loss of morale when being fired upon
 
-bcombat_penalty_safe_mode = 35; 					// (Percent) %
+bcombat_penalty_safe_mode = 50; 					// (Percent) %
 
 // Description: penalty recovery rate
 // Triggered: once per second, if no penalty raising events have been triggered

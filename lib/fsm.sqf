@@ -77,7 +77,7 @@ bcombat_fnc_fsm_trigger =
 bcombat_fnc_process_danger_queue = 
 {
 	private ["_unit", "_queue", "_penalty", "_timeout_min", "_timeout_mid", "_timeout_max", "_enemy", "_processed", "_ret", "_dictionary", "_priors", "_cause", "_dangerPos", "_dangerUntil", "_enemy", "_hash", "_x", "_c", "_v"];
-	
+		
 	_unit = _this select 0;
 	_queue = _this select 1;
 	_penalty = 0;
@@ -152,6 +152,7 @@ bcombat_fnc_process_danger_queue =
 				_timeout_max = _v;
 			};
 
+	
 			if( _cause in [0,3,8]) Then
 			{
 				[_unit, _enemy] call bcombat_fnc_reveal;

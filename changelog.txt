@@ -1,3 +1,10 @@
+v0.17 DEV
+---------
+
+* Tweaked: AI units made more aware of being fired upon
+* Tweaked: reworked probbaility of returning fire vs. moving to cover. Unsuppressed / lightly suppressed units more likely to return fire aggressively.
+
+
 v0.16 (FINAL)
 -------------
 
