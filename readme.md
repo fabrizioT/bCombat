@@ -1,16 +1,6 @@
 bCombat v0.17 DEV [SP]
 =========================================
 
-WARNING
------------------------------------------
-
-Latest Stable version of bCombat AI mod for ArmA 3 is available here:
-
-+   http://forums.bistudio.com/showthread.php?171436-OPEN-BETA-SP-bCombat-infantry-AI-Mod
-
-Please avoid directly installing GitHub project sources, unless you exactly know what you're doing.
-
-
 COMPATIBILITY
 -------------
 
@@ -171,6 +161,7 @@ A final thanks to talented modders who over time inspired this work:
 +   Kronzky
 +   Monsada
 +   Solus
++	keycat
 +   SNKMAN
 +   Rg7621
 +   Protegimus 
