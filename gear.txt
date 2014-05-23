@@ -1,0 +1,79 @@
+#gear
+        this addHeadgear 'H_Booniehat_mcamo';
+        this addVest 'V_mas_usr_BandollierB_rgr';
+        this addUniform 'U_OG_leader';
+        this addBackPack 'B_Carryall_cbr';
+        [this,'av_m16a4_d',6] call BIS_fnc_AddWeapon;
+        this addPrimaryWeaponItem 'optic_Arco';
+        this addPrimaryWeaponItem 'acc_mas_pointer_IR';
+		[this,'hgun_mas_usp_l_F',3] call BIS_fnc_AddWeapon;
+        this setFace 'WhiteHead_17';
+        this addGoggles 'AV_ESS_blk_clr';
+		[this,'',1] call BIS_fnc_AddWeapon;
+		
+		
+
+        this addHeadgear 'H_mas_usn_bandana';
+        this addVest 'V_mas_usr_BandollierB_rgr';
+        this addUniform 'AV_CombatUniform1_UCP_tshirt';
+        this addBackPack 'B_Carryall_cbr';
+        [this,'LMG_mas_M249a_F_a',6] call BIS_fnc_AddWeapon;
+        this addPrimaryWeaponItem 'optic_Arco';
+        this addPrimaryWeaponItem 'acc_mas_pointer_IR';
+		[this,'hgun_mas_usp_l_F',3] call BIS_fnc_AddWeapon;
+        this setFace 'WhiteHead_10';
+        this addGoggles 'G_Aviator';
+		[this,'',1] call BIS_fnc_AddWeapon;
+		
+
+        this addHeadgear 'H_mas_usd_Booniehat_tan';
+        this addVest 'V_mas_usr_BandollierB_rgr_d';
+        this addUniform 'AV_CombatUniform1_OCP_shortsleeve';
+        this addBackPack 'B_Carryall_cbr';
+        [this,'arifle_mas_m4_m203c_v_e',6] call BIS_fnc_AddWeapon;
+        this addPrimaryWeaponItem 'optic_Arco';
+        this addPrimaryWeaponItem 'acc_mas_pointer_IR';
+		[this,'hgun_mas_usp_l_F',3] call BIS_fnc_AddWeapon;
+        this setFace 'WhiteHead_10';
+        this addGoggles 'G_Aviator';
+		[this,'',1] call BIS_fnc_AddWeapon;
+		
+	
+        this addHeadgear '';
+        this addVest 'V_mas_usr_BandollierB_rgr_d';
+        this addUniform 'AV_OfficerUniform1_OCP';
+        this addBackPack 'B_Carryall_cbr';
+        [this,'arifle_mas_m4_m203c_v_e',6] call BIS_fnc_AddWeapon;
+        this addPrimaryWeaponItem 'optic_Arco';
+        this addPrimaryWeaponItem 'acc_mas_pointer_IR';
+		[this,'hgun_mas_usp_l_F',3] call BIS_fnc_AddWeapon;
+        this setFace 'AfricanHead_03';
+        this addGoggles '';
+		[this,'',1] call BIS_fnc_AddWeapon;
+		
+
+        this addHeadgear 'H_Beret_blk';
+        this addVest 'V_mas_usr_BandollierB_rgr_g';
+        this addUniform 'U_BG_Guerilla2_1';
+        this addBackPack 'B_mas_Kitbag_black';
+        [this,'srifle_mas_m24',6] call BIS_fnc_AddWeapon;
+        this addPrimaryWeaponItem 'optic_Arco';
+        this addPrimaryWeaponItem 'acc_mas_pointer_IR';
+		[this,'av_m9',3] call BIS_fnc_AddWeapon;
+        this setFace 'WhiteHead_17';
+        this addGoggles '';
+		[this,'',1] call BIS_fnc_AddWeapon;
+		
+
+
+        this addHeadgear 'H_Cap_blk';
+        this addVest 'V_mas_usr_ChestrigB_rgr';
+        this addUniform 'U_I_G_resistanceLeader_F';
+        this addBackPack 'B_mas_Kitbag_des';
+        [this,'av_m4',6] call BIS_fnc_AddWeapon;
+        this addPrimaryWeaponItem 'optic_mas_zeiss_eo';
+        this addPrimaryWeaponItem 'acc_mas_pointer_IR';
+		[this,'av_m9',3] call BIS_fnc_AddWeapon;
+        this setFace 'WhiteHead_17';
+        this addGoggles '';
+		[this,'',1] call BIS_fnc_AddWeapon;

@@ -11,8 +11,10 @@ while { true } do
 		{
 			if( isNil { _unit getvariable ["bcombat_init_done", nil ] } ) then 
 			{
+			
 				// player globalchat format["Initializing %1 ...", _unit];
-				
+				// diag_log format["unit:%1 - side:%2 - vehicle:%3 - skill:%4 - skillFinal:%5", _unit, side _unit, vehicle _unit, _unit skill "general", _unit skillfinal "general"];
+	
 				_unit setvariable ["bcombat_init_done", true ];
 				
 				if( bcombat_remove_nvgoggles ) then
@@ -92,7 +94,11 @@ while { true } do
 				*/
 				
 				// CQB
-				if( !(isNull _enemy) && { _unit distance _enemy < bcombat_cqb_radar_max_distance } ) then
+				if( !(isNull _enemy) 
+					&& { !(fleeing _unit) } 
+					&& { !(captive _unit) } 
+					&& { _unit distance _enemy < bcombat_cqb_radar_max_distance }  	
+					&& { random 1 <= (_unit skill "general" ) }) then
 				{
 					if( isNil { _unit getVariable ["bcombat_cqb_lock", nil] } ) then
 					{
@@ -121,27 +127,30 @@ while { true } do
 						(group _unit) setVariable ["bcombat_cover_blacklist", _blacklist];
 					};
 
-					if( !(isNull _enemy)) then
+					if( !(fleeing _unit) ) then
 					{
-						if (_unit distance _enemy < 500) then
+						if( !(isNull _enemy) ) then
 						{
-							_unit enableAttack true;
+							if (_unit distance _enemy <= 250) then
+							{
+								_unit enableAttack true;
+							}
+							else
+							{
+								_unit enableAttack false;
+							}
 						}
 						else
 						{
 							_unit enableAttack false;
-						}
-					}
-					else
-					{
-						_unit enableAttack false;
+						};
 					};
 				};
 				
-				if( !(isPlayer leader _unit) 
-					&& { _unit != leader _unit }
+				if( 
+					bcombat_allow_fleeing
 					&& { !(player in (units (group _unit))) }
-					&& { bcombat_allow_fleeing }
+					&& { !(fleeing _unit) }
 				) then {
 					[_unit] call bcombat_fnc_unit_handle_fleeing;
 				}
@@ -152,8 +161,8 @@ while { true } do
 
 				if( 
 					!([_unit] call bcombat_fnc_has_task)
-					&& !(fleeing _unit)
-					&& !(captive _unit)
+					&& { !(fleeing _unit) }
+					&& { !(captive _unit) }
 				) then 
 				{
 					if( bcombat_allow_grenades 
@@ -174,6 +183,7 @@ while { true } do
 						if( bcombat_allow_fast_move || isPlayer (leader _unit) ) then //  && isPlayer (leader _unit) 
 						{
 							[_unit] call bcombat_fnc_fast_move;
+							
 						}
 						else
 						{

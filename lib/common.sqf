@@ -184,7 +184,7 @@ bcombat_fnc_speed = {
 // Benchmarking: 0.17s x 1000
 bcombat_weapon_max_range =
 {
-	private ["_unit", "_weapon"];
+	private ["_unit", "_weapon", "_max"];
 	
 	_unit = _this select 0;
 	_weapon = currentWeapon _unit;//format["%1", currentWeapon _unit];
@@ -193,8 +193,26 @@ bcombat_weapon_max_range =
 		_weapon = format["%1", primaryWeapon _unit];
 	};
 
+	//_max = 0;
+	//if( isClass( configFile >> "cfgWeapons" >> _weapon ) ) then
+	//{
+		_max = getNumber(configFile >> "cfgWeapons" >> _weapon >> "Single" >> "maxRange" );
+		
+		if(_max < 50) then { 
+			_max = getNumber(configFile >> "cfgWeapons" >> _weapon >> "far_optic2" >> "maxRange" ); 
+		};
+		
+		if(_max < 50) then { 
+			_max = getNumber(configFile >> "cfgWeapons" >> _weapon >> "far_optic1" >> "maxRange" ); 
+		};
+		
+		if(_max < 50) then { 
+			//player globalchat format["%1 %2", _weapon, getNumber(configFile >> "cfgWeapons" >> _weapon  )];
+			if( _weapon == primaryWeapon _unit) then { _max = 500; };
+		};
+	//};
 	//diag_log format["error: %1  [%2] %3 %4 %5 - %6", _unit,  currentweapon _unit, side _unit, behaviour _unit,  primaryweapon _unit, getNumber(configFile >> "cfgWeapons" >> _weapon >> "Single" >> "maxRange" ) ];
-	(getNumber(configFile >> "cfgWeapons" >> _weapon >> "Single" >> "maxRange" ) * (skill _unit ^ 0.2)) max 50
+	(_max  * 1.0 * (skill _unit ^ 0.15)) max 50
 };
 
 // Benchmarking: see bcombat_fnc_relativeDirTo
@@ -609,6 +627,7 @@ bcombat_fnc_eh_fired = {
 					&& { !(currentWeapon _unit in ["Throw", "Put"]) } 
 					&& { !([_unit, _weapon] call bcombat_fnc_weapon_is_silenced) }					
 				) then {
+	
 					[ _unit, _bullet, getPosATL _bullet, ( _bulletspeed  / bcombat_allow_hearing_coef) ] call bcombat_fnc_soundalert;
 				}
 			};
@@ -834,10 +853,10 @@ bcombat_fnc_unit_skill_set =
 	
 	_unit setskill [ "Commanding", _k];
 	_unit setskill [ "Endurance", _k];
-	_unit setSkill [ "courage", _k];
+	 _unit setSkill [ "courage", _k];
 	_unit setSkill [ "AimingSpeed", _k];
-	_unit setSkill [ "aimingShake", _k];
-	 _unit setSkill [ "aimingAccuracy", _k];
+	 _unit setSkill [ "aimingShake", _k];
+	 // _unit setSkill [ "aimingAccuracy", _k ];
 	//_unit setSkill [ "SpotTime", _k];
 
 	/*
@@ -888,6 +907,9 @@ bcombat_fnc_fall_into_formation = {
 
 	private [ "_unit", "_leader", "_pos"];
 	
+	
+	// AI led: formation planned + no order = reached destination
+	// Player led: doNotPlan + no order = reached destination
 	_unit = _this select 0;
 	_leader = formLeader _unit;
 	
@@ -914,12 +936,13 @@ bcombat_fnc_fall_into_formation = {
 
 			if( _unit distance _pos > bcombat_tightened_formation_max_distance ) then
 			{
+				//hintc format["%1 fall into formation", _unit];
 				_unit dofollow _leader;
 			};
 		};
 	};
 };
-
+/*
 bcombat_fnc_fast_move = {
 
 	private [ "_unit", "_grp", "_leader", "_formleader", "_speed", "_expos", "_dest", "_mode"];
@@ -929,7 +952,78 @@ bcombat_fnc_fast_move = {
 	_leader = leader _grp;
 	_formleader = formationLeader _unit;
 		
+		
+	if( 
+		[_unit] call bcombat_fnc_is_active
+		&& { ( behaviour _unit == "COMBAT" ) } // || _mode == "LEADER PLANNED"
+		&& { currentcommand _unit in [ "MOVE", "ATTACK", "ATTACK AND FIRE"] }
+		&& { !(isPlayer _unit) }
+		&& { !(fleeing _unit) }
+		&& { !(captive _unit) }
+		&& { [_leader] call bcombat_fnc_is_active }		
+		&& { !(fleeing _leader) }
+		&& { !(captive _leader) }
+		&& { [_formleader] call bcombat_fnc_is_active }
+		&& { !(fleeing _formleader) }
+		&& { !(captive _formleader) }
+		&& { _formleader != _unit }
+		&& { !( [_unit] call bcombat_fnc_has_task ) }
+		&& { !( [_unit] call bcombat_fnc_is_stopped ) }
+		) then
+	{	
+
+		_speed = [ _unit ] call bcombat_fnc_speed;
+		_expos = getposATL _formleader;
+		_mode = (expecteddestination _unit) select 1;
+		_dest = expecteddestination _formleader;
+		_enemy = _unit findnearestenemy _unit;
+		
+		if( count _dest > 0) then { 
+			_expos = _dest select 0; 
+			//_expos = [ (_dest select 0) select 0, (_dest select 0)  select 1];
+		};
+
+		if (_unit != formLeader _unit && _unit != leader _unit) then { 
+			_expos  = [_expos, 15] call bcombat_fnc_random_pos;
+		};
 			
+		if(  count _expos > 0
+			// && { !(isNull _enemy) }
+			// && { _enemy distance _formleader < 250 }
+			&& { _unit distance _expos >= 150 }
+			// && { _formleader distance _expos < 250 }
+			// && { _unit distance _expos < 250  }
+			// && { (_unit distance _expos) > (_formleader distance _expos)  }
+			// && _speed < 3
+			 ) then 
+		{
+
+			if (_unit != formLeader _unit && _unit != leader _unit) then { 
+			//	dostop _unit; 
+			};
+			
+			_unit dowatch objNull;
+			
+			_unit forcespeed -1;
+			_unit domove _expos;
+			//_unit setDestination [ _expos, "LEADER DIRECT", true];
+_unit setDestination [ _expos, "LEADER PLANNED", true];
+			player globalchat format["%1 - %2 MOVE TO %3 [dist: %4]", time, _unit, _expos,  (_unit distance _expos) ];
+		};
+	};
+};
+*/
+
+bcombat_fnc_fast_move = {
+
+	private [ "_unit", "_grp", "_leader", "_formleader", "_speed", "_expos", "_dest", "_mode"];
+
+	_unit = _this select 0;	
+	_grp = group _unit;
+	_leader = leader _grp;
+	_formleader = formationLeader _unit;
+
+
 	if( 
 		[_unit] call bcombat_fnc_is_active
 		&& { ( behaviour _unit == "COMBAT" ) } // || _mode == "LEADER PLANNED"
@@ -954,13 +1048,13 @@ bcombat_fnc_fast_move = {
 		_mode = (expecteddestination _unit) select 1;
 		_dest = expecteddestination _formleader;
 		_enemy = _unit findnearestenemy _unit;
-		
+
 		if( count _dest > 0) then { _expos = _dest select 0; };
-		
+
 		if (_unit != formLeader _unit && _unit != leader _unit) then { 
 			_expos  = [_expos, 15] call bcombat_fnc_random_pos;
 		};
-			
+
 		if(  count _expos > 0
 			&& { !(isNull _enemy) && _enemy distance _formleader < 250 }
 			&& { _unit distance _expos > 100 }
@@ -973,7 +1067,7 @@ bcombat_fnc_fast_move = {
 			if (_unit != formLeader _unit && _unit != leader _unit) then { 
 				dostop _unit; 
 			};
-			
+
 			_unit dowatch objNull;
 			_unit setDestination [ _expos, "LEADER PLANNED", true];
 			_unit forcespeed -1;
@@ -983,6 +1077,7 @@ bcombat_fnc_fast_move = {
 		};
 	};
 };
+
 
 // Benchmarking: 0.12s x 1000
 bcombat_fnc_lookat = {
@@ -1116,7 +1211,16 @@ bcombat_fnc_stop =
 				{
 					_unit setVariable["bcombat_stop_overwatch", false];
 					_unit domove (position _unit);
-					_unit dofollow (formationLeader _unit); 
+					
+					if( formationLeader _unit != _unit) then 
+					{
+						_unit dofollow (formationLeader _unit);  
+					}
+					else
+					{
+						_unit dofollow (leader _unit);  
+					};
+					
 					_unit enableAI "target";
 				};
 				
@@ -1170,36 +1274,46 @@ bcombat_fnc_soundalert = {
 
 	{
 		if( [_x] call bcombat_fnc_is_active
-			&& { [_x, _unit] call bcombat_fnc_is_enemy }
 			&& { !(isPlayer _x ) }
+			&& { [_x, _unit] call bcombat_fnc_is_enemy }
 		) then {
+		
+			// player globalchat format["%1 %2 -> %3", _unit, _maxdist, _x];
 		
 			_prec =  [_x, _unit] call bcombat_fnc_knprec;
 			_ppos = [_pos, ((_pos distance _x) / 10) min _prec] call bcombat_fnc_random_pos; // perceived enemy position
 			
+			// reveal once per group
+			if( !(group _x in _groups) ) then
+			{
+				_groups = _groups + [group _x];
+				[leader _x, _unit] call bcombat_fnc_reveal;
+			};
+				
 			if( !(isPlayer(leader _x)) ) then
 			{
 				private ["_nenemy", "_d1", "_d2"];
 				
-				// reveal once per group
-				if( !(group _x in _groups) ) then
+				// Switch to aware if needed
+				if( behaviour (leader _x) in ["SAFE"] ) then
 				{
-					_groups = _groups + [group _x];
-					[leader _x, _unit] call bcombat_fnc_reveal;
+					(leader _x) setBehaviour "AWARE";
 				};
-					
+
 				if ( _ppos distance _x < 100 ) then {
 					[ _x, objNull] call bcombat_fnc_danger;
 				};
 				
 				//[ _unit, objNull] call bcombat_fnc_danger;
-				[ _x, 10, 1, 0, 5 + random 10, 30 + random 30, objNull ] call bcombat_fnc_fsm_trigger;
+				if(  _x getVariable ["bcombat_suppression_level", 0] < 5) then {
+					[ _x, 10, 1, 0, 5 + random 10, 30 + random 30, objNull ] call bcombat_fnc_fsm_trigger;
+				};
 				
 				_nenemy = _x findNearestEnemy _x;
 				_d1 = _x distance (expecteddestination (leader _x) select 0);
 				_d2 = _x distance (expecteddestination (_x) select 0);
 				
-				// player globalchat format["%1 alerted, d: %2 [%3 %4 %5]", _x, _ppos distance _x, _d1, _d2, [_x] call bcombat_fnc_in_formation];
+				// player globalchat format["-----> %1 alerted, d: %2 [%3 %4 %5]", _x, _ppos distance _x, _d1, _d2, [_x] call bcombat_fnc_in_formation];
 				
 				if( ( isNull _nenemy || _nenemy == _unit ) 
 					&& { [_x] call bcombat_fnc_in_formation || (formLeader _x) == _x } 
@@ -1229,9 +1343,9 @@ bcombat_fnc_visibility_multiplier  = {
 			|| "NVGoggles_INDEP" in _items
 		) then {
 	
-			_maxdist = 0.8;
+			_maxdist = 0.85;
 		} else {
-			_maxdist = 0.5; //( 0.65 * ( moonIntensity ) ) max .1;
+			_maxdist = 0.65; //( 0.65 * ( moonIntensity ) ) max .1;
 		};
 	};
 	
@@ -1304,7 +1418,7 @@ bcombat_fnc_stance_set = {
 	{
 		switch ( true ) do
 		{
-			case ( _time > _timeout_mid && _speed >= 3.6 ): {  // sprint
+			case ( _time > _timeout_mid && _speed >= 3.8 ): {  // sprint
 				_st = "Up";
 			};
 			
@@ -1513,9 +1627,9 @@ bcombat_fnc_cqb =
 		&& { _unit distance player < bcombat_degradation_distance } 
 	} do {
 	
-		if( !(isNull _nenemy) && { _unit distance _nenemy < bcombat_cqb_radar_max_distance } ) then
+		if( !(isNull _nenemy) && { _unit distance _nenemy < bcombat_cqb_radar_max_distance * 1.1 } ) then
 		{
-			_t = time + 30;
+			_t = time + 60;
 			_sl = (_timeout select 0);
 		}
 		else
@@ -1531,14 +1645,16 @@ bcombat_fnc_cqb =
 			_targets = [_unit, _maxdist, _params] call bcombat_fnc_targets;
 			//_targets = [_targets] call bcombat_fnc_array_invert;
 			
-			_target = objNull;/*
-			if( count _targets > 0) then 
+			_target = objNull;
+			_targetDist = 0;
+			
+			/*if( count _targets > 0) then 
 			{
 				_target = _targets select 0;
 			};*/
 			
 			{
-				if(  _unit distance _x < ( 200 * ( [_unit] call bcombat_fnc_visibility_multiplier ) ) ) then
+				if( _unit distance _x < ( 150 * ( [_unit] call bcombat_fnc_visibility_multiplier ) ) ) then
 				{
 					if( [_unit, _x] call bcombat_fnc_is_visible 
 						&& {  [_unit, _x] call bcombat_fnc_relativeDirTo < 104 } 
@@ -1549,8 +1665,31 @@ bcombat_fnc_cqb =
 						
 						if( isNull (assignedTarget _unit)
 							&& { !([_unit] call bcombat_fnc_has_task) }
+							&& { _unit distance _x < _targetDist || _targetDist == 0 } 
+						) then {
+							_target = _x;
+						};
+						
+					}
+					else
+					{
+						_unit reveal [_x, _unit knowsabout _x];
+					};
+					
+					/*
+					if( [_unit, _x] call bcombat_fnc_is_visible 
+						&& {  [_unit, _x] call bcombat_fnc_relativeDirTo < 104 } 
+						&& { !([_unit] call bcombat_fnc_has_task) }
+					) then {
+					
+						_unit reveal [_x, 4];
+						_unit glanceAt _x;
+						
+						if( isNull (assignedTarget _unit)
+							
 							// && { _x == _targets select 0 }	
-							&& isNull _target
+							&& { isNull _target || _unit distance _x < 	_targetDist || _targetDist == 0 }
+							
 						) then {
 							_target = _x;
 							_unit dowatch _x;
@@ -1560,10 +1699,14 @@ bcombat_fnc_cqb =
 					{
 						_unit reveal [_x, _unit knowsabout _x];
 						_unit glanceAt _x;
-					};
+					};*/
 				};
 				
 			} foreach _targets;
+			
+			if( !(isNull _target) ) then {
+				_unit dowatch _target;
+			};
 			
 			if( combatMode _unit in ["RED", "YELLOW"]
 				&& { _unit distance _target < 100 }

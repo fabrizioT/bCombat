@@ -239,7 +239,7 @@ class FSM
     {
       name = "recover";
       init = /*%FSM<STATEINIT""">*/"//_l = round(  bcombat_penalty_recovery * ( _unit getVariable ""bcombat_skill"" ) *  ( 1 - damage _unit / 2 ) ) max 1;" \n
-       "_l = round(  bcombat_penalty_recovery * (100 - _level) / 100 * ( _unit getVariable ""bcombat_skill"" ) *  ( 1 - damage _unit / 2 ) ) max 1;" \n
+       "_l = round(  bcombat_penalty_recovery * (100 - _level) / 100 * ( _unit getVariable [""bcombat_skill"", 0] ) *  ( 1 - damage _unit / 2 ) ) max 1;" \n
        "" \n
        "_unit setVariable [""bcombat_suppression_level"",   ( _level -  _l ) max 0];" \n
        "" \n

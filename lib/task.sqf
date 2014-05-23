@@ -168,6 +168,7 @@ bcombat_fnc_task_fire =
 				if( bcombat_allow_targeting 
 					&& { _dist < (bcombat_targeting_max_distance select 0) || ( combatMode _unit == "RED" && _dist < (bcombat_targeting_max_distance select 1) ) } 
 					&& { !(isPlayer (leader _unit)) } 
+					&& { damage _unit < 0.2 } 
 				    && { _unit getVariable ["bcombat_suppression_level", 0] <= 25  } 
 					&& { random 100 > _unit getVariable ["bcombat_suppression_level", 0] } 
 				) then {
@@ -323,6 +324,8 @@ bcombat_fnc_task_move_to_cover =
 		{
 			_unit disableAI "target";
 			_unit disableAI "autotarget";
+		_unit disableAI "FSM";
+			sleep .01;
 			_unit doWatch objNull;
 			
 			// add to blacklist
@@ -337,10 +340,10 @@ bcombat_fnc_task_move_to_cover =
 			
 			_unit forcespeed 10;
 			
-			
 			sleep .01;
 			_unit domove _pos;
 			_unit setDestination [ _pos , "LEADER PLANNED", true];
+sleep .1;
 
 			while { alive _unit 
 				&& { !(unitready _unit) }
@@ -355,7 +358,6 @@ bcombat_fnc_task_move_to_cover =
 				{ 
 					if( [ _unit ] call bcombat_fnc_speed == 0 ) then 
 					{
-						
 						_unit domove _pos;
 						_unit setDestination [ _pos , "LEADER PLANNED", false];
 					};
@@ -364,6 +366,7 @@ bcombat_fnc_task_move_to_cover =
 			
 			_unit enableAI "autotarget";
 			_unit enableAI "target";
+_unit enableAI "FSM";
 			_unit forcespeed -1;
 			
 			if( _type == 1

@@ -145,7 +145,7 @@ class FSM
        "				&& { !(fleeing _this) && !(captive _this) }" \n
        "				&& { combatmode _this in [""RED"", ""YELLOW""] }" \n
        "				&& { random 100 > _this getVariable [""bcombat_suppression_level"", 0] || _dist  < 25}" \n
-       "				//&& { _dist  < [_this] call bcombat_weapon_max_range  }" \n
+       "				&& { _dist  < [_this] call bcombat_weapon_max_range  }" \n
        "				&& " \n
        "				{ ( " \n
        "					!( currentCommand _this in [""MOVE"", ""HEAL"", ""SUPPORT"", ""REARM"", ""HIDE"", ""REPAIR""]  )" \n

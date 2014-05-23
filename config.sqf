@@ -70,19 +70,19 @@ bcombat_penalty_explosion = 2;						// (Percent) %
 // Triggered: when a dead unit from same group is discovered
 // Effect: up to 15% skill penalty
 
-bcombat_penalty_casualty = 15; 						// (Percent) %
+bcombat_penalty_casualty = 20; 						// (Percent) %
 
 // Description: wounds  penalty
 // Triggered: when a unit gets wounded
 // Effect: up to 10% skill penalty
 
-bcombat_penalty_wounded = 10; 						// (Percent) %
+bcombat_penalty_wounded = 15; 						// (Percent) %
 
 // Description: penalty for SAFE / CARELESS mode
 // Triggered: if unit is in SAFE or CARELESS mode
 // Effect: sudden and massive loss of morale when being fired upon
 
-bcombat_penalty_safe_mode = 50; 					// (Percent) %
+bcombat_penalty_safe_mode = 70; 					// (Percent) %
 
 // Description: penalty recovery rate
 // Triggered: once per second, if no penalty raising events have been triggered
@@ -146,8 +146,8 @@ bcombat_allow_fire_back = true; 					// (Boolean) Toggle feature on / off
 // Effect: return fire on shooter. Unit may blind fire as long as bcombat_allow_suppressive_fire = true
 
 bcombat_allow_fire_back_group = true; 				// (Boolean) Toggle feature on / off
-bcombat_fire_back_group_max_enemy_distance = 250; 	// (Number) Maximum distance (meters) of the threatening enemy
-bcombat_fire_back_group_max_friend_distance = 250; 	// (Number) Maximum distance (meters) of the friendly unit being threatened
+bcombat_fire_back_group_max_enemy_distance = 300; 	// (Number) Maximum distance (meters) of the threatening enemy
+bcombat_fire_back_group_max_friend_distance = 300; 	// (Number) Maximum distance (meters) of the friendly unit being threatened
 
 // Description: suppressive fire / blind fire
 // Triggered: when unit has no clean line of sight on known enemy.
@@ -174,7 +174,7 @@ bcombat_allow_hearing_grenade_distance = 150;		// (Meters) Max. distance for gre
 // Known issues: possible frendly fire issues
 
 bcombat_allow_grenades = true;						// (Boolean) Toggle feature on / off
-bcombat_grenades_additional_number = 0; 			// (Number) number of additional grenades to be automatically ADDED to unit loadout
+bcombat_grenades_additional_number = 1; 			// (Number) number of additional grenades to be automatically ADDED to unit loadout
 bcombat_grenades_distance = [6,45,6]; 				// (Array) [ minimum distance, maximum distance, min. distance from target for friendly units] 
 bcombat_grenades_timeout = [15, 10];					// (Array) [ unit timeout, group timeout ]
 bcombat_grenades_no_los_only = true; 				// (Boolean) Whether enemy should be out of line-of-sight, for a unit to throw grenade
@@ -194,7 +194,7 @@ bcombat_smoke_grenades_timeout = [15, 10];				// (Array) [ unit timeout, group t
 // Note: needs bcombat_allow_hearing = true
 
 bcombat_allow_investigate = true;					// (Boolean) Toggle feature on / off
-bcombat_investigate_max_distance = 200;				// (Number) maximum distance from unit, for position to be investigated
+bcombat_investigate_max_distance = 150;				// (Number) maximum distance from unit, for position to be investigated
 	
 // Description: allow fatigue
 // Effect: allows for vanilla fatigue effects
@@ -215,7 +215,7 @@ bcombat_cover_radius = [15,0]; 						// (Array) [ maximum distance from object, 
 // Effect: unit locks enemy as target moves towards its position
 
 bcombat_allow_targeting = true;						// (Boolean) Toggle feature on / off
-bcombat_targeting_max_distance = [50, 150];			// (Array) [ maximum distance, maximum distance if combatMode is "RED"] 
+bcombat_targeting_max_distance = [50, 150];		// (Array) [ maximum distance, maximum distance if combatMode is "RED"] 
 
 // Description: tighten formation
 // Triggered: whenever some in-formation unit falls behind
@@ -238,7 +238,7 @@ bcombat_friendly_fire_max_damage = 0.8;				// (0-1) damage cap ( 0 = allow no da
 
 bcombat_stop_overwatch = true;    					// (Boolean) Toggle feature on / off
 bcombat_stop_overwatch_mode = 0;    				// (0,1) 0 = apply only to machinegunners, 1 = apply to all units 
-bcombat_stop_overwatch_max_distance	= [100, 200];	// (Array) [max distance from leader to begin overwatch, max distance from leader to (force) end overwatch] 
+bcombat_stop_overwatch_max_distance	= [75, 150];	// (Array) [max distance from leader to begin overwatch, max distance from leader to (force) end overwatch] 
 
 // Description: CQB awareness improvements
 // Triggered: on short distance
@@ -247,7 +247,7 @@ bcombat_stop_overwatch_max_distance	= [100, 200];	// (Array) [max distance from 
 
 bcombat_cqb_radar = true;    						// (Boolean) Toggle feature on / off
 bcombat_cqb_radar_clock = [0.5, 2];    				// (Seconds) internal feaures clocking. Never use values below 0.1 ( = 10 times / second).
-bcombat_cqb_radar_max_distance = 100;    			// (Meters) Features are activated under this distance
+bcombat_cqb_radar_max_distance = 75;    			// (Meters) Features are activated under this distance
 bcombat_cqb_radar_params = [104, 5, 0, 5];			// (Array) [max. angle, min. precision, min. knowsabout, max enemy .speed] - Don't edit this.
 
 // Description: misc animations as a tribute to "tonyRanger"
@@ -269,8 +269,8 @@ bcombat_remove_nvgoggles = false;
 
 if ( bcombat_dev_mode ) then
 {
-	[] spawn bcombat_fnc_debug_text; // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
-	//call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debug balloons (as alternative to bcombat_fnc_debug_text or bcombat_fnc_fps)
+	//[] spawn bcombat_fnc_debug_text; // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
+	call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debug balloons (as alternative to bcombat_fnc_debug_text or bcombat_fnc_fps)
 
 	call bdetect_fnc_benchmark; // Uncomment this line to activate bDetect live stats panel (as alternative to bcombat_fnc_fps)
 	//[] spawn bcombat_fnc_fps; // Uncomment this line to activate FPS stats panel (as alternative to bdetect_fnc_benchmark;)
