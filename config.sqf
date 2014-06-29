@@ -24,8 +24,8 @@ bcombat_dev_mode = true;							// (Boolean) Toggle feature on / off
 // Please be careful tweaking bcombat_incoming_bullet_timeout. 
 // Lowering it can cause CPU overhead as well as excessive suppression-related penalties.
 
-bcombat_incoming_bullet_timeout = 0.1;				// (Seconds) minimum timeout between suppressing bullets
-bcombat_danger_fsm_timeout = 0.1;					// (Seconds) 
+bcombat_incoming_bullet_timeout = 0.2;				// (Seconds) minimum timeout between suppressing bullets
+bcombat_danger_fsm_timeout = 0.2;					// (Seconds) 
 bcombat_danger_distance = 250; 						// (Meters) Minimum distance from shooter, for groups to automatically switch to "combat" behaviour
 bcombat_features_clock = 3;							// (Seconds) Additional features clocking 
 bcombat_damage_multiplier = 1.0;					// (0-1) Damage multiplier. Zero makes units invulnerable.

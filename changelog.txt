@@ -2,7 +2,7 @@ v0.17 DEV
 ---------
 
 * Tweaked: AI units made more aware of being fired upon
-* Tweaked: reworked probbaility of returning fire vs. moving to cover. Unsuppressed / lightly suppressed units more likely to return fire aggressively.
+* Tweaked: reworked probability of returning fire vs. moving to cover. Unsuppressed / lightly suppressed units more likely to return fire aggressively.
 * Changed: Removed variable "bcombat_skill_multiplier"
 
 
@@ -15,29 +15,14 @@ Core features:
 	* Tweaked: Minor code optimizations
 	* Tweaked: Slightly higher firing accuracy
 	* Tweaked: Units more likely to open fire on nearby threats in CQB
-
-
-v0.16 RC2
----------
-
-Core features:
-
 	* Fixed: Reduction of "idling" overhead for high AI count (200+ units).
 	* New: variable "bcombat_degradation_distance", distance ( unit to player ) over which some bCombat features get cut in order to achieve better performance in crowded battles ( many hundreds of units ).
 	* New: variable "bcombat_skill_multiplier"
 	* Tweaked: AI units being hit more likely to prioritize shooting on threat.
-	
-	
-v0.16 RC
---------
-
-Core features:
-
 	* Fixed: HandleDamage EH related issue, possibly breaking respawn scripts. (Thanks LSD_Timewarp82).
 	* Fixed: bug somewhat reducing responsiveness of suppressed units.
 	* Fixed: bug in grenade handling (thanks Torndeco).
 	* Fixed: AI units not scared by campfires anymore.
-	
 	* New: Added 1 second post-spawn delay for unit initialization. Done in order to allow custom / third party scripts to be executed in the meantime.
 	* New: a few configuration variables within config.sqf.
 	* Tweaked: sensibly reduced spotting ability (about -50%) at night, for AI units wearing no night vision devices. 

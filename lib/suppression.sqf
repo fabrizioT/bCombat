@@ -1,6 +1,6 @@
 bcombat_fnc_bullet_incoming = 
 {
-	private [ "_unit", "_shooter", "_bullet",  "_bpos", "_pos", "_time", "_proximity", "_grp", "_visible", "_dist", "_penalty", "_speed", "_ang", "_x", "_hdiff", "_dt" ];
+	private [ "_unit", "_shooter", "_bullet",  "_bpos", "_pos", "_time", "_proximity", "_grp", "_visible", "_dist", "_penalty", "_speed", "_ang", "_x", "_hdiff", "_dt", "_cover" ];
 	private ["_move_to_cover", "_nenemy"];
 	
 	_unit = _this select 0;		// unit being under fire
@@ -142,21 +142,25 @@ bcombat_fnc_bullet_incoming =
 									&& { _unit getVariable ["bcombat_suppression_level", 0] > 5 || count(_unit nearroads 6) > 0 || random 50 < (_unit getVariable ["bcombat_suppression_level", 0]) }
 									&& { ( _speed < 3 ) }
 									&& { (_unit == leader _unit || bcombat_cover_mode == 1) }
-							
-							
 									//&& { !([_unit] call bcombat_fnc_has_task) }
 									// && { [_unit, _shooter] call bcombat_fnc_is_visible_head }
 									//&& ( count(_unit nearroads 10) > 0 ) 
-								) then { //&& [_unit] call bcombat_fnc_speed == 0 // !(isHidden _unit) ||
+								) then { 
 									_move_to_cover = true;
-									//[_unit, "bcombat_fnc_task_move_to_cover", 100, [bcombat_cover_radius, objNull]] call bcombat_fnc_task_set;  
 								};
 							};
 						
+							// find cover object
+							_cover = nil;
 							if( _move_to_cover ) then
 							{
-								//player globalchat format["---> %1 MOVE TO COVER (distance = %2 - kn = %3)", _unit, _unit distance _shooter, _shooter knowsabout _unit];
-								[_unit, "bcombat_fnc_task_move_to_cover", 100, [bcombat_cover_radius, objNull]] call bcombat_fnc_task_set; 
+								_cover = [_unit, _shooter, bcombat_cover_radius] call bcombat_fnc_find_cover_pos;
+							};
+							
+							if( !(isNil "_cover") ) then
+							{
+								player globalchat format["---> %1 MOVE TO COVER (distance = %2 - kn = %3)", _unit, _unit distance _shooter, _shooter knowsabout _unit];
+								[_unit, "bcombat_fnc_task_move_to_cover", 100, [_cover]] call bcombat_fnc_task_set; 
 							}
 							else
 							{

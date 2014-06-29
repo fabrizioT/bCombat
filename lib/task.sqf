@@ -278,23 +278,22 @@ bcombat_fnc_task_fire =
 
 bcombat_fnc_task_move_to_cover =
 {
-	private ["_unit", "_task", "_priority", "_args", "_radius", "_enemy", "_grp", "_blacklist",  "_cover",  "_msg"];
+	private ["_unit", "_task", "_priority", "_args", "_cover", "_grp", "_blacklist",  "_cover",  "_msg", "_pos", "_type", "_dist", "_timeout1", "_timeout2"];
 
 	_unit = _this select 0;
 	_task = _this select 1; 
 	_priority = _this select 2; 
 	_args  = _this select 3;
-	_radius = _args select 0;
-	_enemy = _args select 1;
+	//_radius = _args select 0;
+	_cover = _args select 0;
+	//_enemy = _args select 1;
 	_grp = group _unit;
 	
 	sleep random .1;
 	
-	_cover = [_unit, _enemy, _radius] call bcombat_fnc_find_cover_pos;
-	
-	if( !(isNil "_cover") ) then 
-	{
-		private ["_pos", "_type", "_dist", "_timeout1", "_timeout2"];
+	//if( !(isNil "_cover") ) then 
+	//{
+		private [];
 		
 		_pos = _cover select 0;
 		_type = _cover select 2;
@@ -370,7 +369,7 @@ sleep .1;
 				[_unit, _timeout2, _timeout2, 5, _dist] call bcombat_fnc_stop;
 			};
 		};
-	};
+	//};
 	
 	_unit setVariable ["bcombat_task", nil];
 	if (true) exitWith {};
