@@ -32,15 +32,63 @@ bcombat_fnc_bullet_incoming =
 
 			if( _dt > bcombat_incoming_bullet_timeout ) then 
 			{
+
+				if( _visible ) then 
+				{
+					_penalty = bcombat_penalty_bullet;
+					
+					if( time - (_unit getVariable ["bcombat_suppression_time", -999 ]) > 300 && _unit getVariable ["bcombat_suppression_level", 0] == 0) then
+					{
+						_penalty  = _penalty + bcombat_penalty_enemy_contact;
+					};
+					
+					/*
+					if( behaviour _unit in ["SAFE"] && _unit getVariable ["bcombat_suppression_level", 0] == 0) then
+					{
+						_penalty  = _penalty + bcombat_penalty_safe_mode;
+					};*/
+
+					_penalty = _penalty + ( ( _ang / 180) * bcombat_penalty_flanking );
+				
+					if( [_unit, _shooter] call bcombat_fnc_knprec > 10 ) then { // isNull ( _unit findNearestEnemy _unit ) || 
+						_penalty = _penalty + bcombat_penalty_enemy_unknown; 
+					};
+					
+					if( bcombat_allow_lowerground_penalty ) then 
+					{
+						//player globalchat format["%1 %2 [%3 %4] [%5]", _unit, 1 + (( _hdiff / _dist ) min 1), _hdiff, _dist, _penalty ];
+						_penalty = _penalty * ( 1 + ((( _hdiff / _dist ) min 1 ) max -0.5) );
+					};
+				};
+
+				_penalty  = (round( _penalty * ( 1 - ( _unit getVariable "bcombat_skill") ) ) min 100) max 1;
+				// player globalchat format["---> %1 --- %2 --- %3", _penalty, _unit, _unit knowsabout _shooter];		
+				
+				if( (_dist > bcombat_danger_distance ) 
+					&& _unit getVariable ["bcombat_suppression_level", 0] < 10 ) then
+				{
+					if( _speed > 3.5 ) then
+					{
+						[ _unit, 1, _penalty, time, time + 10 + random 10, time + 15 + random 15, _shooter ] call bcombat_fnc_fsm_trigger;
+					}
+					else
+					{
+						[ _unit, 1, _penalty, time + 5, time + 10 + random 10, time + 15 + random 15, _shooter ] call bcombat_fnc_fsm_trigger;
+					};
+				}
+				else
+				{
+					[ _unit, 1, _penalty, time + 5 + random 5, time + 10 + random 5, time + 15 + random 15, _shooter ] call bcombat_fnc_fsm_trigger;
+				};
+				
+				// _unit reveal [_shooter, 1];
 				_unit setVariable ["bcombat_suppression_time", time ];
 				
 				if( !(isPlayer _unit ) ) then 
 				{
 					if( _dt > 1 && { !(isPlayer (leader _unit)) }  ) then
 					{
-						
-						
-						
+
 						// SAFE mode penalty
 						if( behaviour _unit in ["SAFE", "CARELESS"] ) then 
 						{
@@ -73,9 +121,7 @@ bcombat_fnc_bullet_incoming =
 		
 						if( !(fleeing _unit) ) then
 						{
-
 							// MOVE TO COVER
-							
 							_nenemy = _unit findnearestEnemy _unit;
 				
 							// Unknown enemy, go to cover
@@ -93,10 +139,11 @@ bcombat_fnc_bullet_incoming =
 									&& { _dist > 30 }
 									&& { _visible }
 									&& { !(isHidden _unit) } 
-									&& { _unit getVariable ["bcombat_suppression_level", 0] > 10 }
-									&& { ( _speed < 3 || count(_unit nearroads 6) > 0 ) }
+									&& { _unit getVariable ["bcombat_suppression_level", 0] > 5 || count(_unit nearroads 6) > 0 || random 50 < (_unit getVariable ["bcombat_suppression_level", 0]) }
+									&& { ( _speed < 3 ) }
 									&& { (_unit == leader _unit || bcombat_cover_mode == 1) }
-									&& { random 50 < (_unit getVariable ["bcombat_suppression_level", 0]) }
+							
+							
 									//&& { !([_unit] call bcombat_fnc_has_task) }
 									// && { [_unit, _shooter] call bcombat_fnc_is_visible_head }
 									//&& ( count(_unit nearroads 10) > 0 ) 
@@ -108,7 +155,7 @@ bcombat_fnc_bullet_incoming =
 						
 							if( _move_to_cover ) then
 							{
-
+								//player globalchat format["---> %1 MOVE TO COVER (distance = %2 - kn = %3)", _unit, _unit distance _shooter, _shooter knowsabout _unit];
 								[_unit, "bcombat_fnc_task_move_to_cover", 100, [bcombat_cover_radius, objNull]] call bcombat_fnc_task_set; 
 							}
 							else
@@ -133,53 +180,15 @@ bcombat_fnc_bullet_incoming =
 							
 						}; // end if fleeing
 					};
-		
-		
+
 					if( !(fleeing _unit) ) then
 					{
 						[_unit] call bcombat_fnc_allow_fire;
 						[_unit, _shooter] call bcombat_fnc_reveal;
 					};
-				
-					if( _visible ) then 
-					{
-						_penalty = bcombat_penalty_bullet;
-						
-						_penalty = _penalty + ( ( _ang / 180) * bcombat_penalty_flanking );
-					
-						if( [_unit, _shooter] call bcombat_fnc_knprec > 10 ) then { // isNull ( _unit findNearestEnemy _unit ) || 
-							_penalty = _penalty + bcombat_penalty_enemy_unknown; 
-						};
-						
-						if( bcombat_allow_lowerground_penalty ) then 
-						{
-							//player globalchat format["%1 %2 [%3 %4] [%5]", _unit, 1 + (( _hdiff / _dist ) min 1), _hdiff, _dist, _penalty ];
-							_penalty = _penalty * ( 1 + ((( _hdiff / _dist ) min 1 ) max -0.5) );
-						};
-					};
-					
-					_penalty  = (round( _penalty * ( 1 - ( _unit getVariable "bcombat_skill" ) ) ) min 100) max 1;
-					
-					if( (_dist > bcombat_danger_distance ) 
-						&& _unit getVariable ["bcombat_suppression_level", 0] < 10 ) then
-					{
-						if( _speed > 3.5 ) then
-						{
-							[ _unit, 1, _penalty, time, time + 10 + random 10, time + 15 + random 15, _shooter ] call bcombat_fnc_fsm_trigger;
-						}
-						else
-						{
-							[ _unit, 1, _penalty, time + 5, time + 10 + random 10, time + 15 + random 15, _shooter ] call bcombat_fnc_fsm_trigger;
-						};
-					}
-					else
-					{
-						[ _unit, 1, _penalty, time + 5 + random 5, time + 10 + random 5, time + 15 + random 15, _shooter ] call bcombat_fnc_fsm_trigger;
-					};
-					
+
 					if(	bcombat_allow_fire_back && { !(fleeing _unit) } && { !(_move_to_cover) } ) then
 					{
-
 						// RETURN FIRE
 						if ( 
 							( random 1 <= (_unit skill "general" ) || isPlayer ( leader _unit ) )
@@ -195,7 +204,7 @@ bcombat_fnc_bullet_incoming =
 				
 						) then { 
 						
-// player globalchat format["%1 RETURN FIRE", _unit];
+							// player globalchat format["%1 RETURN FIRE", _unit];
 							[_unit, "bcombat_fnc_task_fire", 10, [_shooter, 2] ] call bcombat_fnc_task_set;
 		
 							if( bcombat_debug_enable) then {
@@ -238,7 +247,7 @@ bcombat_fnc_bullet_incoming =
 						if(!isPlayer _x 
 							&& { _x != _unit } 
 							&& { _x != _shooter }
-							&& { vehicle _x  == _x }
+
 							&& { !(captive _x) }
 							&& { !(fleeing _x) }
 							&& { canFire _x  }
@@ -261,7 +270,7 @@ bcombat_fnc_bullet_incoming =
 						) then {
 
 							[_x, "bcombat_fnc_task_fire", 2 ,[_shooter, 1] ] call bcombat_fnc_task_set;
-//player globalchat format["%1 support %2", _x, _unit];
+							//player globalchat format["%1 support %2", _x, _unit];
 							if( bcombat_debug_enable ) then {
 								_msg = format["bcombat_fnc_bullet_incoming() - HELP: helper unit=%1, suppressed unit=%2, enemy=%3, distance=%4, angle=%5", _x, _unit, _shooter, _x distance _shooter, [_x, _shooter] call bcombat_fnc_relativeDirTo ];
 								[ _msg, 8 ] call bcombat_fnc_debug;
@@ -325,10 +334,6 @@ bcombat_fnc_suppression =
 			_msg = format["bcombat_fnc_suppression() - Unit=%1, suppression=%2, aimingAccuracy=[%3/%4], fleeing=%5", _unit, _level, ( _unit Skill "aimingAccuracy"), _unit getVariable "bcombat_skill_ac", fleeing _unit   ];
 			[ _msg, 9 ] call bcombat_fnc_debug;
 		};
-		
-		
-
-	
 
 	};
 };
@@ -373,6 +378,7 @@ bcombat_surrender =
 				_h addmagazinecargo [_x,1];
 			} foreach magazines _unit;
 			*/
+			
 			removeallweapons _unit;
 		};
 		/*

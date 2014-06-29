@@ -106,6 +106,8 @@ bcombat_fnc_process_danger_queue =
 	 // 0, 1, 2, 3, 4, 5, 6, 7, 8
 	_priors = [20, 4, 8, 3, 5, 12, 1, 0, 15];
 		
+		
+		
 	{
 		_cause = _x select 0;
 		_dangerPos = _x select 1;
@@ -114,9 +116,9 @@ bcombat_fnc_process_danger_queue =
 		
 		_hash = format["%1-%2", _enemy, _cause ];
 		_p = 0;
-		
+
 		// Filter out non-suppressing / problematic events such as "fired near" and "dead enemy"
-		// those are causing problems within campaign intro
+		// which are causing problems within campaign intro
 		// Filtering events of type "enemy detected" having null enemy
 		if(  !(_cause in [1,6]) 
 			&& { vehicle _unit != vehicle _enemy }
@@ -129,6 +131,8 @@ bcombat_fnc_process_danger_queue =
 			_c = _dictionary select _cause;
 			
 			_p = _c select 0;
+			
+			// player globalchat format["%1 - cause: %2 - penalty: %3", _unit, _cause, _p];
 			
 			if( _cause in [4] )	then // explosives
 			{
@@ -155,7 +159,7 @@ bcombat_fnc_process_danger_queue =
 			};
 
 	
-			if( _cause in [0,3,8]) Then
+			if( _cause in [0,3,8] && !(isNull _enemy) ) Then
 			{
 				[_unit, _enemy] call bcombat_fnc_reveal;
 			};

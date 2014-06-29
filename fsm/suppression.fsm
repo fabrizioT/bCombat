@@ -58,7 +58,7 @@ class FSM
           priority = 1.000000;
           to="END";
           precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
-          condition=/*%FSM<CONDITION""">*/"isNull _unit || !(alive _unit) ||  isNil ""bcombat_init_done"" ||  !(bcombat_enable) || !(_unit isKindOf ""CAManBase"") ||  _unit != vehicle _unit  || !([_unit] call bcombat_fnc_is_active)"/*%FSM</CONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"isNull _unit || !(alive _unit) ||  isNil ""bcombat_init_done"" ||  !(bcombat_enable) || !(_unit isKindOf ""CAManBase"") ||  !([_unit] call bcombat_is_on_foot)  || !([_unit] call bcombat_fnc_is_active)"/*%FSM</CONDITION""">*/;
           action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
         };
         /*%FSM</LINK>*/
@@ -107,7 +107,7 @@ class FSM
        "_unit setVariable [""bcombat_suppression_event"", 0 ];" \n
        "_unit setVariable [""bcombat_suppression_enemy"", objNull  ];" \n
        "" \n
-       "if( _unit isKindOf ""CAManBase"" && _unit == vehicle _unit ) then " \n
+       "if( [_unit] call bcombat_is_on_foot ) then " \n
        "{" \n
        "	_st = [ _unit,  _timeout_min, _timeout_mid, _timeout_max ] call bcombat_fnc_stance_set;   " \n
        "	_visible= [_unit, _enemy] call bcombat_fnc_is_visible_head;" \n
@@ -180,7 +180,7 @@ class FSM
           priority = 20.000000;
           to="END";
           precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
-          condition=/*%FSM<CONDITION""">*/"isNull _unit || !(alive _unit) ||  isNil ""bcombat_init_done"" ||  !(bcombat_enable) || !(_unit isKindOf ""CAManBase"") ||  _unit != vehicle _unit  || !([_unit] call bcombat_fnc_is_active) || ( _level == 0 &&  time > _timeout_max) " \n
+          condition=/*%FSM<CONDITION""">*/"isNull _unit || !(alive _unit) ||  isNil ""bcombat_init_done"" ||  !(bcombat_enable) || !(_unit isKindOf ""CAManBase"") ||  !([_unit] call bcombat_is_on_foot)  || !([_unit] call bcombat_fnc_is_active) || ( _level == 0 &&  time > _timeout_max) " \n
            ""/*%FSM</CONDITION""">*/;
           action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
         };

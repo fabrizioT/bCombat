@@ -20,7 +20,7 @@ bcombat_debug_chat = true;
 
 bcombat_name 		= "bcombat AI Infantry mod"; 
 bcombat_short_name 	= "bcombat"; 
-bcombat_version 	= "0.16";
+bcombat_version 	= "0.17 DEV";
 
 // -----------------------------
 // files preload
@@ -50,9 +50,6 @@ if(isNil "bcombat_allowed_units") then { bcombat_allowed_units = []; };									
 
 // Features degradation threshold distance
 if(isNil "bcombat_degradation_distance") then { bcombat_degradation_distance = 1250; }; 
-
-// Skill multiplier
-if(isNil "bcombat_skill_multiplier") then { bcombat_skill_multiplier = 1; }; 
 
 // Lower ground penalty
 if(isNil "bcombat_allow_lowerground_penalty") then { bcombat_allow_lowerground_penalty = true; }; 	
@@ -88,7 +85,11 @@ if(isNil "bcombat_allow_fast_rotate") then { bcombat_allow_fast_rotate = false; 
 if(isNil "bcombat_allow_fleeing") then { bcombat_allow_fleeing = true; }; 	
 
 // Minimum timeout between incoming bullets
-if(isNil "bcombat_incoming_bullet_timeout") then { bcombat_incoming_bullet_timeout = 0.2; }; 		
+if(isNil "bcombat_incoming_bullet_timeout") then { bcombat_incoming_bullet_timeout = 0.2; }; 	
+
+// Minimum timeout for danger.fsm looping
+if(isNil "bcombat_danger_fsm_timeout") then { bcombat_danger_fsm_timeout = 0.1; }; 
+	
 
 // Suppression-related params
 if(isNil "bcombat_penalty_bullet") then { bcombat_penalty_bullet = 4; }; 		
@@ -163,6 +164,9 @@ if(isNil "bcombat_fancy_moves_frequency") then { bcombat_fancy_moves_frequency =
 // Remove all night googles
 if(isNil "bcombat_remove_nvgoggles") then { bcombat_remove_nvgoggles = false; }; 
 
+// AI minimum skill if in player's group
+if(isNil "bcombat_min_player_group_skill") then { bcombat_min_player_group_skill = 0; }; 
+
 // -----------------------------
 // Libs loading
 // -----------------------------
@@ -210,3 +214,13 @@ _nil = [] spawn
 };
 
 _nul = [] execVM "\@bcombat\loop.sqf";
+
+/*
+a= [] spawn {
+	sleep 5;
+	[player] join alpha;
+
+	sleep 5;
+	[player] join grpNull;
+};*/
+

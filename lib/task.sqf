@@ -101,6 +101,8 @@ bcombat_fnc_task_clear =
 		
 		if( !( isNil "_task" ) ) then
 		{
+			_unit enableAI "autotarget";
+			
 			_handle = _task select 0;
 			
 			if ( !(scriptDone _handle) ) then { terminate _handle; };
@@ -156,7 +158,8 @@ bcombat_fnc_task_fire =
 			[ _msg, 6 ] call bcombat_fnc_debug;
 		};
 
-		if( [_unit, _enemy] call bcombat_fnc_knprec <= 2 || _dist < 150 ) then
+		//if( [_unit, _enemy] call bcombat_fnc_knprec <= 2 || _dist < 150 ) then
+		if( true ) then
 		{		
 			//_unit reveal [_enemy, 4];
 			_unit glanceAt _enemy; 
@@ -173,11 +176,12 @@ bcombat_fnc_task_fire =
 					&& { random 100 > _unit getVariable ["bcombat_suppression_level", 0] } 
 				) then {
 					_unit doTarget _enemy;
-					_unit domove getPosAtl _enemy;
+					
+					if(!_visible) then {
+						_unit domove getPosAtl _enemy;
+					};
 				};
-				
 
-				
 				if( _mode == 2 ) then
 				{
 					if( 
@@ -227,19 +231,8 @@ bcombat_fnc_task_fire =
 
 				if( _visible ) then 
 				{
-					//_unit lookAt _enemy;
-
-					/*
-					if( _dist < 50) then
-					{
-						_unit doTarget _enemy;
-					};*/
-					
-					//[_unit, _enemy, 0, false] call bcombat_fnc_lookat;
-					
 					_unit suppressFor 0;
 					_unit dofire _enemy;
-					
 				}
 				else
 				{
@@ -324,7 +317,7 @@ bcombat_fnc_task_move_to_cover =
 		{
 			_unit disableAI "target";
 			_unit disableAI "autotarget";
-		_unit disableAI "FSM";
+		//_unit disableAI "FSM";
 			sleep .01;
 			_unit doWatch objNull;
 			
@@ -366,7 +359,7 @@ sleep .1;
 			
 			_unit enableAI "autotarget";
 			_unit enableAI "target";
-_unit enableAI "FSM";
+//_unit enableAI "FSM";
 			_unit forcespeed -1;
 			
 			if( _type == 1

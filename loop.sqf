@@ -1,3 +1,5 @@
+sleep 1;
+
 while { true } do 
 {
 	_t1 = time;
@@ -7,11 +9,10 @@ while { true } do
 	{
 		_unit = _x;
 		
-		if( bcombat_enable && { !(isPlayer _unit) } && { [_unit] call bcombat_fnc_is_alive } )  then
+		if( bcombat_enable && { [_unit] call bcombat_fnc_is_alive } )  then
 		{
 			if( isNil { _unit getvariable ["bcombat_init_done", nil ] } ) then 
 			{
-			
 				// player globalchat format["Initializing %1 ...", _unit];
 				// diag_log format["unit:%1 - side:%2 - vehicle:%3 - skill:%4 - skillFinal:%5", _unit, side _unit, vehicle _unit, _unit skill "general", _unit skillfinal "general"];
 	
@@ -32,9 +33,8 @@ while { true } do
 					_unit enableFatigue false;
 				};
 				
-				[_unit] call bcombat_fnc_unit_skill_set;
-				//diag_log format["%1", _unit];
-				
+				[_unit, skill _unit] call bcombat_fnc_unit_skill_set;
+
 				if( isNil { _unit getvariable ["bcombat_eh_fired", nil ] } ) then {
 					_e = _unit addEventHandler ["Fired", bcombat_fnc_eh_fired];
 					_unit setvariable ["bcombat_eh_fired", _e ];
@@ -76,14 +76,31 @@ while { true } do
 				};
 			};
 			
-			if( _unit distance player < bcombat_degradation_distance ) then
-			{
-				_unit setskill [ "SpotDistance", ( _unit getVariable [ "bcombat_skill_sd", 0] ) * 2 * ( [_unit] call bcombat_fnc_visibility_multiplier ) ];
-				
-				//hintc format["%1 (%2)", _unit skillfinal "spotDistance", ( _unit getVariable [ "bcombat_skill_sd", 0] )];
-				//player globalchat format[" ---->%1 %2 %3 [%4]", _unit, (_unit skill "SpotDistance"), _unit getVariable [ "bcombat_skill_sd", 0], _unit distance player];
-				//diag_log format[" ---->%1 %2 %3 [%4]", _unit, (_unit skill "SpotDistance"), _unit getVariable [ "bcombat_skill_sd", 0], _unit distance player];
 			
+			if( bcombat_min_player_group_skill > 0 ) then
+			{
+				if ( player in (units group _unit)
+					&& { bcombat_min_player_group_skill > _unit getVariable [ "bcombat_skill", skill _unit ] }
+				) then {
+				
+					[_unit, bcombat_min_player_group_skill ] call bcombat_fnc_unit_skill_set;
+					//player globalchat format ["%1 is given %2 skill", _unit, bcombat_min_player_group_skill];
+				}
+				else
+				{
+					if ( !( player in (units group _unit) )
+						&& { _unit getVariable [ "bcombat_skill_orig", skill _unit ] < _unit getVariable [ "bcombat_skill", skill _unit ] }
+					) then {
+						[_unit, _unit getVariable [ "bcombat_skill_orig", skill _unit ] ] call bcombat_fnc_unit_skill_set;
+						//player globalchat format ["%1 has skill reset to %2", _unit, _unit getVariable [ "bcombat_skill_orig", skill _unit ]];
+					};
+				};
+			};
+			
+			if( _unit distance player < bcombat_degradation_distance  && { !(isPlayer _unit) } ) then
+			{
+				_unit setskill [ "SpotDistance", ( _unit getVariable [ "bcombat_skill_sd", 0] )  * ( [_unit] call bcombat_fnc_visibility_multiplier ) ];
+
 				_enemy = _unit findnearestEnemy _unit;
 				
 				/*
@@ -97,15 +114,14 @@ while { true } do
 				if( !(isNull _enemy) 
 					&& { !(fleeing _unit) } 
 					&& { !(captive _unit) } 
-					&& { _unit distance _enemy < bcombat_cqb_radar_max_distance }  	
-					&& { random 1 <= (_unit skill "general" ) }) then
+					&& { _unit distance _enemy < bcombat_cqb_radar_max_distance * 1.1}  	
+					&& { random 1 <= (_unit skill "general" ) }
+					&& { isNil { _unit getVariable ["bcombat_cqb_lock", nil] } }
+					) then
 				{
-					if( isNil { _unit getVariable ["bcombat_cqb_lock", nil] } ) then
-					{
-						_unit setVariable ["bcombat_cqb_lock", true];
-						//player globalchat format["%1 CQB activated", _unit];
-						[_unit, bcombat_cqb_radar_clock, bcombat_cqb_radar_max_distance, bcombat_cqb_radar_params] spawn bcombat_fnc_cqb;
-					};
+					_unit setVariable ["bcombat_cqb_lock", true];
+					//player globalchat format["%1 CQB activated", _unit];
+					[_unit, bcombat_cqb_radar_clock, bcombat_cqb_radar_max_distance, bcombat_cqb_radar_params] spawn bcombat_fnc_cqb;
 				};
 				
 				if( _unit == leader _unit) then
@@ -201,9 +217,6 @@ while { true } do
 		if( _i mod 10 == 0) then { sleep 0.01; };
 		
 	} foreach allUnits;
-	
-	// player globalchat format["----->%1 / %2 / %3", count allunits, count allgroups , time - _t1];
-	//diag_log format["----->%1 / %2 / %3", count allunits, count allgroups ,_t2 - _t1];
-	//sleep ( (bcombat_features_clock select 0) + random ( (bcombat_features_clock select 1) - (bcombat_features_clock select 0) ) );
+
 	sleep bcombat_features_clock;
 };

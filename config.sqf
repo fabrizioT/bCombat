@@ -1,4 +1,13 @@
 // -----------------------
+// CORE bDetect FEATURES
+// -----------------------
+
+bdetect_bullet_max_distance = 500;  				// (Meters) Maximum travelled distance for a bullet (to cause suppression)
+bdetect_bullet_max_lifespan = 2; 					// (Seconds) Maximum lifespan for bullet
+bdetect_bullet_max_proximity = 7.5; 				// (Meters) Maximum distance from unit for bullet (to cause suppression)
+bdetect_bullet_max_height =  6.5;  					// (Meters) Maximum height on ground for bullet (to cause suppression)
+
+// -----------------------
 // CORE bCombat FEATURES
 // -----------------------
 
@@ -15,21 +24,12 @@ bcombat_dev_mode = true;							// (Boolean) Toggle feature on / off
 // Please be careful tweaking bcombat_incoming_bullet_timeout. 
 // Lowering it can cause CPU overhead as well as excessive suppression-related penalties.
 
-bcombat_incoming_bullet_timeout = 0.2;				// (Seconds) minimum timeout between bullets
+bcombat_incoming_bullet_timeout = 0.1;				// (Seconds) minimum timeout between suppressing bullets
+bcombat_danger_fsm_timeout = 0.1;					// (Seconds) 
 bcombat_danger_distance = 250; 						// (Meters) Minimum distance from shooter, for groups to automatically switch to "combat" behaviour
 bcombat_features_clock = 3;							// (Seconds) Additional features clocking 
 bcombat_damage_multiplier = 1.0;					// (0-1) Damage multiplier. Zero makes units invulnerable.
 bcombat_degradation_distance = 1500;				// (Meters) some bCombat features are cut when some unit is farther than this from player
-bcombat_skill_multiplier = 1;						// 
-
-// -----------------------
-// CORE bDetect FEATURES
-// -----------------------
-
-bdetect_bullet_max_distance = 750;  				// (Meters) Maximum travelled distance for a bullet (to cause suppression)
-bdetect_bullet_max_lifespan = 2; 					// (Seconds) Maximum lifespan for bullet
-bdetect_bullet_max_proximity = 7.5; 				// (Meters) Maximum distance from unit for bullet (to cause suppression)
-bdetect_bullet_max_height =  6.5;  					// (Meters) Maximum height on ground for bullet (to cause suppression)
 
 // -----------------------------------------------------------------------------------------------------
 // bCombat SUPPRESSION CONFIGURATION
@@ -70,7 +70,7 @@ bcombat_penalty_explosion = 2;						// (Percent) %
 // Triggered: when a dead unit from same group is discovered
 // Effect: up to 15% skill penalty
 
-bcombat_penalty_casualty = 20; 						// (Percent) %
+bcombat_penalty_casualty = 25; 						// (Percent) %
 
 // Description: wounds  penalty
 // Triggered: when a unit gets wounded
@@ -82,7 +82,7 @@ bcombat_penalty_wounded = 15; 						// (Percent) %
 // Triggered: if unit is in SAFE or CARELESS mode
 // Effect: sudden and massive loss of morale when being fired upon
 
-bcombat_penalty_safe_mode = 70; 					// (Percent) %
+bcombat_penalty_safe_mode = 50; 					// (Percent) %
 
 // Description: penalty recovery rate
 // Triggered: once per second, if no penalty raising events have been triggered
@@ -262,6 +262,12 @@ bcombat_fancy_moves_frequency = 0.04;    			// (0-1) Probability of occurring. 0
 // Effect: any night vision device is removed from unit
 
 bcombat_remove_nvgoggles = false;
+
+// Description: give units in player group minimum this skill value
+// Triggered: iteratively
+// Effect: AI unit skill is adjusted
+
+bcombat_min_player_group_skill = 0.75;
 
 // -----------------------------------------------------------------------------------------------------
 // bCombat MISC CALLS
