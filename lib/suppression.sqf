@@ -159,7 +159,7 @@ bcombat_fnc_bullet_incoming =
 							
 							if( !(isNil "_cover") ) then
 							{
-								player globalchat format["---> %1 MOVE TO COVER (distance = %2 - kn = %3)", _unit, _unit distance _shooter, _shooter knowsabout _unit];
+								//player globalchat format["---> %1 MOVE TO COVER (distance = %2 - kn = %3)", _unit, _unit distance _shooter, _shooter knowsabout _unit];
 								[_unit, "bcombat_fnc_task_move_to_cover", 100, [_cover]] call bcombat_fnc_task_set; 
 							}
 							else
