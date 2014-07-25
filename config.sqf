@@ -1,3 +1,4 @@
+//><
 // -----------------------
 // CORE bCombat FEATURES
 // -----------------------
@@ -22,6 +23,7 @@ bcombat_damage_multiplier = 1.0;					// (0-1) Damage multiplier. Zero makes unit
 bcombat_degradation_distance = 1500;				// (Meters) some bCombat features are cut when some unit is farther than this from player
 bcombat_skill_multiplier = 1;						// 
 
+//><
 // -----------------------
 // CORE bDetect FEATURES
 // -----------------------
@@ -31,6 +33,7 @@ bdetect_bullet_max_lifespan = 2; 					// (Seconds) Maximum lifespan for bullet
 bdetect_bullet_max_proximity = 6.5; 				// (Meters) Maximum distance from unit for bullet (to cause suppression)
 bdetect_bullet_max_height =  6.5;  					// (Meters) Maximum height on ground for bullet (to cause suppression)
 
+//><
 // -----------------------------------------------------------------------------------------------------
 // bCombat SUPPRESSION CONFIGURATION
 // -----------------------------------------------------------------------------------------------------
@@ -90,6 +93,7 @@ bcombat_penalty_safe_mode = 35; 					// (Percent) %
 
 bcombat_penalty_recovery = 2; 						// (Percent) %
 
+//><
 // -----------------------------------------------------------------------------------------------------
 // bCombat OPTIONAL FEATURES CONFIGURATION
 // -----------------------------------------------------------------------------------------------------
@@ -263,6 +267,7 @@ bcombat_fancy_moves_frequency = 0.04;    			// (0-1) Probability of occurring. 0
 
 bcombat_remove_nvgoggles = false;
 
+//><
 // -----------------------------------------------------------------------------------------------------
 // bCombat MISC CALLS
 // -----------------------------------------------------------------------------------------------------
@@ -280,3 +285,4 @@ if ( bcombat_dev_mode ) then
 
 // bdetect_startup_hint = false;
 // bcombat_startup_hint = false;
+//><
