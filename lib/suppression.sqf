@@ -90,7 +90,7 @@ bcombat_fnc_bullet_incoming =
 					{
 
 						// SAFE mode penalty
-						if( behaviour _unit in ["SAFE", "CARELESS"] ) then 
+						if( behaviour (leader _unit) in ["SAFE", "CARELESS"] ) then 
 						{
 							{
 								_x setBehaviour "COMBAT";
@@ -125,7 +125,7 @@ bcombat_fnc_bullet_incoming =
 							_nenemy = _unit findnearestEnemy _unit;
 				
 							// Unknown enemy, go to cover
-							if(  ( isNull(_nenemy) || [_unit, _nenemy] call bcombat_fnc_knprec > 10 )
+							if(  ( isNull(_nenemy) || [_unit, _nenemy] call bcombat_fnc_knprec > 5 )
 								&& { !(isHidden _unit) } 
 								&& { _dist > 30 } ) then // && !([_unit] call bcombat_fnc_has_task)
 							{ 	
@@ -155,11 +155,14 @@ bcombat_fnc_bullet_incoming =
 							if( _move_to_cover ) then
 							{
 								_cover = [_unit, _shooter, bcombat_cover_radius] call bcombat_fnc_find_cover_pos;
+								
+								//player globalchat format["#1 ---> %1 MOVE TO COVER %2", _unit, _cover];
 							};
 							
 							if( !(isNil "_cover") ) then
 							{
-								//player globalchat format["---> %1 MOVE TO COVER (distance = %2 - kn = %3)", _unit, _unit distance _shooter, _shooter knowsabout _unit];
+							//hintc format["%1", _cover];
+								 //player globalchat format["#2 ---> %1 MOVE TO COVER (distance = %2 [%3] - kn = %4)", _unit, _unit distance _shooter, _unit distance (_cover select 0), _shooter knowsabout _unit];
 								[_unit, "bcombat_fnc_task_move_to_cover", 100, [_cover]] call bcombat_fnc_task_set; 
 							}
 							else
@@ -199,11 +202,12 @@ bcombat_fnc_bullet_incoming =
 							
 							&&  { _dist < [ _unit ] call bcombat_weapon_max_range } 
 							&&  { canFire _unit }  
+							&& { _unit ammo (currentWeapon _unit) > 0  }
 							&&  { !(combatMode _unit in ["BLUE"]) }  
 							&&  { [_unit, _shooter] call bcombat_fnc_knprec < 2 }  
 							&&  { ( isHidden _unit || _dist < 250 || _speed < 3 || [currentWeapon _unit] call bcombat_fnc_is_mgun) }  
 							&&  { _visible }
-							&&  { [_unit, _shooter] call bcombat_fnc_relativeDirTo < 85 }
+							&&  { [_unit, _shooter] call bcombat_fnc_relativeDirTo < 75 || _speed < 1 }
 							&&  { _dist < 30 || random 100 > _unit getVariable ["bcombat_suppression_level", 0]  } 
 				
 						) then { 
@@ -221,7 +225,7 @@ bcombat_fnc_bullet_incoming =
 							// SUPPRESSIVE FIRE 
 							if( bcombat_allow_suppressive_fire 
 								&& { !([_unit] call bcombat_fnc_has_task) }
-								&& { [_unit, _shooter] call bcombat_fnc_relativeDirTo < 60 } 
+								&& { [_unit, _shooter] call bcombat_fnc_relativeDirTo < 60 || _speed < 1 } 
 								&& { ( random 1 <= (_unit skill "general" ) || isPlayer ( leader _unit ) ) }
 								&& { [_unit, _shooter] call bcombat_fnc_knprec < 5 }  
 								&& { canFire _unit } 
@@ -269,8 +273,9 @@ bcombat_fnc_bullet_incoming =
 							//&& { random 1 <= ((leader _x) skill "general" ) } 
 							&& { random 100 > _x getVariable ["bcombat_suppression_level", 0] }
 							// && { ( !(isPlayer (leader _x)) || ( currentCommand _x != "MOVE" || speed _x < 1) ) }
-							&& { [_x, _shooter] call bcombat_fnc_relativeDirTo < 60 }
+							&& { [_x, _shooter] call bcombat_fnc_relativeDirTo < 60 || speed _x < 1}
 							&& { [_x, _shooter] call bcombat_fnc_is_visible }
+							&& { _x ammo (currentWeapon _x) > 0  }
 						) then {
 
 							[_x, "bcombat_fnc_task_fire", 2 ,[_shooter, 1] ] call bcombat_fnc_task_set;

@@ -1,10 +1,10 @@
 sleep 1;
+_i = 0;
 
 while { true } do 
 {
 	_t1 = time;
 	_count = count allUnits;
-	_i = 0;
 	
 	{
 		_unit = _x;
@@ -76,6 +76,15 @@ while { true } do
 				};
 			};
 			
+			/*
+			if(  _unit ammo (currentweapon _unit) ==0) then
+			{
+			hintc format["%1 ... %2 ... %3", _unit, (currentweapon _unit), _unit ammo (currentweapon _unit)];
+			};
+			
+			*/
+			
+			_unit setskill [ "SpotDistance", ( _unit getVariable [ "bcombat_skill_sd", 0] )  * ( [_unit] call bcombat_fnc_visibility_multiplier ) ];
 			
 			if( bcombat_min_player_group_skill > 0 ) then
 			{
@@ -97,9 +106,13 @@ while { true } do
 				};
 			};
 			
+			
+			
+		//	player globalchat format["%4 - %3 --> %1 / %2", _i, _i mod 3, _unit, time];
+			
 			if( _unit distance player < bcombat_degradation_distance  && { !(isPlayer _unit) } ) then
 			{
-				_unit setskill [ "SpotDistance", ( _unit getVariable [ "bcombat_skill_sd", 0] )  * ( [_unit] call bcombat_fnc_visibility_multiplier ) ];
+				
 
 				_enemy = _unit findnearestEnemy _unit;
 				
@@ -120,7 +133,7 @@ while { true } do
 					) then
 				{
 					_unit setVariable ["bcombat_cqb_lock", true];
-					//player globalchat format["%1 CQB activated", _unit];
+					//hintc format["%1 CQB activated", _unit]; sleep .5;
 					[_unit, bcombat_cqb_radar_clock, bcombat_cqb_radar_max_distance, bcombat_cqb_radar_params] spawn bcombat_fnc_cqb;
 				};
 				
@@ -181,16 +194,17 @@ while { true } do
 					&& { !(captive _unit) }
 				) then 
 				{
+				
 					if( bcombat_allow_grenades 
 						&& { combatmode _unit in ["RED", "YELLOW"] }
-						&& { _i mod 3 == 0}
+						&& { _i mod 2 == 0}
 						&& { !(isNull _enemy) } 
 						&& { _unit distance _enemy < ( bcombat_grenades_distance select 1 ) }
 						&& { "HandGrenade" in (magazines _unit) }
-						&& { random 1 <= (_unit skill "general" ) ^ 0.5}
+						//&& { random 1 <= (_unit skill "general" ) ^ 0.5}
 						&& { random 100 > (_unit getVariable ["bcombat_suppression_level", 0]) }
 					) then {
-						//player globalchat format["%1 - %2 %3", _unit distance _enemy, _uni, _enemy];
+						// player globalchat format["grenade check %1 - %2 %3", _unit distance _enemy, _unit, _enemy];
 						[_unit] call bcombat_fnc_handle_grenade;
 					}
 					else
@@ -212,11 +226,12 @@ while { true } do
 				};
 			};
 		};
-		
-		_i = _i +1;
-		if( _i mod 10 == 0) then { sleep 0.01; };
-		
+
 	} foreach allUnits;
 
+	_i = _i + 1;
+	//player globalchat format["*** %1 ***", _i];
+	// if( _i mod 10 == 0) then { sleep 0.01; };
+		
 	sleep bcombat_features_clock;
 };

@@ -101,7 +101,11 @@ bcombat_fnc_task_clear =
 		
 		if( !( isNil "_task" ) ) then
 		{
+
 			_unit enableAI "autotarget";
+			_unit enableAI "target";
+			_unit enableAI "MOVE";
+			//_unit enableAI "FSM";
 			
 			_handle = _task select 0;
 			
@@ -168,10 +172,11 @@ bcombat_fnc_task_fire =
 
 			if( combatMode (group _unit) in ["RED", "YELLOW"]  ) then
 			{
+			
 				if( bcombat_allow_targeting 
 					&& { _dist < (bcombat_targeting_max_distance select 0) || ( combatMode _unit == "RED" && _dist < (bcombat_targeting_max_distance select 1) ) } 
 					&& { !(isPlayer (leader _unit)) } 
-					&& { damage _unit < 0.2 } 
+					&& { damage _unit < 0.25 } 
 				    && { _unit getVariable ["bcombat_suppression_level", 0] <= 25  } 
 					&& { random 100 > _unit getVariable ["bcombat_suppression_level", 0] } 
 				) then {
@@ -182,55 +187,66 @@ bcombat_fnc_task_fire =
 					};
 				};
 
-				if( _mode == 2 ) then
-				{
-					if( 
-						_speed < 3 ||
-						(assignedTarget _unit) == _enemy ||
-						_dist < 25 || 
-						isHidden _unit ||
-						{
-							_dist < 250 
-							&& [_unit, _enemy] call bcombat_fnc_relativeDirTo < 90
-							&& ( _speed < 3 || !([_unit] call bcombat_fnc_in_formation) || _unit distance (formationLeader _unit) < 50 ) 
-						}
-					) then
-					{
-						if( _mgun ) then {
-							[_unit, 10 + random 20, 30 + random 30, 5,_dist] call bcombat_fnc_stop;
-						}
-						else
-						{
-							[_unit, 3, 5 + random 5, 3, _dist] call bcombat_fnc_stop;
-						};
-					};
-				}
-				else
-				{
-					if(  
-						_speed < 3 ||
-						 (assignedTarget _unit) == _enemy ||
-						_dist < 25 || 
-						isHidden _unit ||
-						{
-							_dist < 250 
-							&& [_unit, _enemy] call bcombat_fnc_relativeDirTo < 60
-							&& ( _speed < 3 || !([_unit] call bcombat_fnc_in_formation) || _unit distance (formationLeader _unit) < 50 ) 
-						}
-					) then
-					{
-						if( _mgun ) then {
-							[_unit, 10 + random 20, 30 + random 30, 5, _dist] call bcombat_fnc_stop;
-						}
-						else
-						{
-							[_unit, 3, 5 + random 5, 3, _dist] call bcombat_fnc_stop;
-						};
-					};
-				};
-
 				if( _visible ) then 
 				{
+					
+					if( _mode == 2 ) then
+					{
+				
+						if( 
+							_speed < 3 ||
+							(assignedTarget _unit) == _enemy ||
+							_dist < 25 || 
+							isHidden _unit ||
+							{
+								_dist < 250 
+								&& [_unit, _enemy] call bcombat_fnc_relativeDirTo < 90
+								&& ( _speed < 3 || !([_unit] call bcombat_fnc_in_formation) || _unit distance (formationLeader _unit) < 50 ) 
+							}
+						) then
+						{
+							if( _mgun ) then {
+								[_unit, 10 + random 20, 30 + random 30, 5,_dist] call bcombat_fnc_stop;
+							}
+							else
+							{
+								[_unit, 3, 5 + random 5, 3, _dist] call bcombat_fnc_stop;
+							};
+						};
+						
+					}
+					else
+					{
+					
+					
+						if(  
+							_speed < 3 ||
+							 (assignedTarget _unit) == _enemy ||
+							_dist < 25 || 
+							isHidden _unit ||
+							{
+								_dist < 250 
+								&& [_unit, _enemy] call bcombat_fnc_relativeDirTo < 60
+								&& ( _speed < 3 || !([_unit] call bcombat_fnc_in_formation) || _unit distance (formationLeader _unit) < 50 ) 
+							}
+						) then
+						{
+							
+							if( _mgun ) then {
+							
+								[_unit, 10 + random 20, 30 + random 30, 5, _dist] call bcombat_fnc_stop;
+							}
+							else
+							{
+								[_unit, 3, 5 + random 5, 3, _dist] call bcombat_fnc_stop;
+							};
+						};
+					
+					};
+					
+	
+
+	
 					_unit suppressFor 0;
 					_unit dofire _enemy;
 				}
@@ -316,7 +332,7 @@ bcombat_fnc_task_move_to_cover =
 		{
 			_unit disableAI "target";
 			_unit disableAI "autotarget";
-		//_unit disableAI "FSM";
+			_unit disableAI "FSM";
 			sleep .01;
 			_unit doWatch objNull;
 			
@@ -335,7 +351,7 @@ bcombat_fnc_task_move_to_cover =
 			sleep .01;
 			_unit domove _pos;
 			_unit setDestination [ _pos , "LEADER PLANNED", true];
-sleep .1;
+
 
 			while { alive _unit 
 				&& { !(unitready _unit) }
@@ -358,7 +374,7 @@ sleep .1;
 			
 			_unit enableAI "autotarget";
 			_unit enableAI "target";
-//_unit enableAI "FSM";
+			_unit enableAI "FSM";
 			_unit forcespeed -1;
 			
 			if( _type == 1
@@ -443,7 +459,7 @@ bcombat_fnc_task_throw_smoke_grenade =
 	_h 	= ((getPosASL _unit) select 2) - ((getPosASL _enemy) select 2);
 
 	_unit forcespeed 0;
-	_unit disableAI "FSM";	
+	//_unit disableAI "FSM";	
 	_unit disableAI "MOVE";	
 	_unit disableAI "TARGET";
 	_unit disableAI "AUTOTARGET";
@@ -467,7 +483,7 @@ bcombat_fnc_task_throw_smoke_grenade =
 	_unit enableAI "MOVE";
 	_unit enableAI "TARGET";
 	_unit enableAI "AUTOTARGET";
-	_unit enableAI "FSM";
+	//_unit enableAI "FSM";
 	_unit forcespeed -1;
 	
 	_unit setVariable ["bcombat_task", nil];
