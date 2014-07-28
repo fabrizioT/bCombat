@@ -43,7 +43,7 @@ Please remove any existing bCombat installations:
 delete "@bcombat" folder as well as "userconfig\bcombat_config.hpp" configuration file.
 
 +   Extract the bCombat zip package anywhere.
-+  [ GitHub sources only ]: you have to rename the branch folder ("bCombat-master" or "bCombat-vX.XX") to "@bcombat"
++   You have to rename the branch folder ("bCombat-master" or "bCombat-vX.XX") to "@bcombat"
 +   Move "@bcombat" folder from extraction location to your ArmA 3 main folder ( usually: <Your Steam Path>\steamapps\common\Arma 3\ )
 +   Move "userconfig" folder from "@bcombat" folder to your ArmA 3 main folder.
 
