@@ -67,6 +67,7 @@ bcombat_fnc_bullet_incoming =
 				if( (_dist > bcombat_danger_distance ) 
 					&& _unit getVariable ["bcombat_suppression_level", 0] < 10 ) then
 				{
+				
 					if( _speed > 3.5 ) then
 					{
 						[ _unit, 1, _penalty, time, time + 10 + random 10, time + 15 + random 15, _shooter ] call bcombat_fnc_fsm_trigger;
@@ -75,6 +76,7 @@ bcombat_fnc_bullet_incoming =
 					{
 						[ _unit, 1, _penalty, time + 5, time + 10 + random 10, time + 15 + random 15, _shooter ] call bcombat_fnc_fsm_trigger;
 					};
+					
 				}
 				else
 				{

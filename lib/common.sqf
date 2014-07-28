@@ -610,7 +610,7 @@ bcombat_fnc_eh_fired = {
 			};
 		};
 		
-		if( bcombat_allow_hearing && { time - (_unit getVariable ["bcombat_fire_time", 0 ]) > 1 } ) then 
+		if( bcombat_allow_hearing && { time - (_unit getVariable ["bcombat_fire_time", 0 ]) > 3 } ) then 
 		{
 			if( typeof _bullet == "GrenadeHand" 
 				//&& { isNil { _unit getVariable ["bcombat_smoke_grenade_lock", nil ] } } 
@@ -747,13 +747,13 @@ bcombat_fnc_unit_skill_set =
 	
 	_k = _skill ^ .5 ;
 	_unit setskill [ "Commanding", _k];
-	_unit setskill [ "Endurance", _k];
+	//_unit setskill [ "Endurance", _k];
 	_unit setSkill [ "courage", _k min 0.8];
 	_unit setSkill [ "AimingSpeed", _k];
 	// _unit setSkill [ "aimingShake", _k];
 	//_unit setSkill [ "SpotTime", _k];
 	
-	_unit setSkill [ "aimingAccuracy", (_skill - .05 )^ 1.3 + .05];
+	//_unit setSkill [ "aimingAccuracy", (_skill - .05 )^ 2.0 + .05];
 
 	/* if( !([currentWeapon _unit] call bcombat_fnc_is_mgun) ) then {
 		_unit setSkill [ "aimingAccuracy", (_unit skill "aimingAccuracy") ^ 1.25];
