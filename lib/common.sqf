@@ -1140,7 +1140,9 @@ bcombat_fnc_soundalert = {
 				if( ( isNull _nenemy || _nenemy == _unit ) 
 					&& { [_x] call bcombat_fnc_in_formation || (formLeader _x) == _x } 
 					&& { _d1 < 100 || _d1 > 1000000 } 
-					&& { _d2 < 100 || _d2 > 1000000 } ) then {
+					&& { _d2 < 100 || _d2 > 1000000 } 
+					&& { WaypointType [group _x, currentWaypoint (group _x)] in ["MOVE", "SAD", "DESTROY", "GUARD"] }
+					) then {
 					//player globalchat format["--> %5: %1 %2 -- %3 %4", _x, _nenemy, _unit, _d1, _d2];
 					[_x, _ppos] call bcombat_fnc_investigate;
 					//hintc("Test");
@@ -1157,7 +1159,7 @@ bcombat_fnc_visibility_multiplier  = {
 	_unit = _this select 0;
 	_maxdist = 1;
 	_items = assignedItems _unit;
-	
+
 	if( sunOrMoon == 0 ) then
 	{ 
 		if( "NVGoggles" in _items
@@ -1435,7 +1437,7 @@ bcombat_fnc_cqb =
 					}
 					else
 					{
-						_unit reveal [_x, _unit knowsabout _x];
+						_unit reveal [_x, (_unit knowsabout _x) * 1.01];
 						/*
 						if( ( isNull (assignedTarget _unit) || _x == (assignedTarget _unit) || !([_unit, (assignedTarget _unit)] call bcombat_fnc_is_visible) )
 							&& { _unit distance _x < _targetDistLow } 
@@ -1459,11 +1461,13 @@ bcombat_fnc_cqb =
 				_unit dowatch _target;
 			};
 			
-			if( isNull _target && !(isNull _targetLow)) then { _target = _targetLow; };
+			//if( isNull _target && !(isNull _targetLow)) then { _target = _targetLow; };
 			
 			if( combatMode _unit in ["RED", "YELLOW"]
 				// && { _unit distance _target < bcombat_cqb_radar_max_distance }
+				
 				&& { !(isNull _target) }
+				&& { [_unit, _target] call bcombat_fnc_is_visible  }
 				&& { canfire _unit  }
 				&& { _unit ammo (currentWeapon _unit) > 0  }
 				&& { alive _target } 

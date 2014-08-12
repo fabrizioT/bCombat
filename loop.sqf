@@ -9,7 +9,7 @@ while { true } do
 	{
 		_unit = _x;
 		
-		if( bcombat_enable && { [_unit] call bcombat_fnc_is_alive } )  then
+		if( bcombat_enable && { [_unit] call bcombat_fnc_is_active } )  then //&& { [_unit] call bcombat_fnc_is_alive }
 		{
 			if( isNil { _unit getvariable ["bcombat_init_done", nil ] } ) then 
 			{
@@ -32,6 +32,17 @@ while { true } do
 				{
 					_unit enableFatigue false;
 				};
+				
+				/*
+				if( !(bcombat_allow_fatigue) && !isPlayer(_unit)) then
+				{
+					_unit enableFatigue false;
+				}
+				else
+				{
+					_unit enableFatigue true;
+				};
+				*/
 				
 				[_unit, skill _unit] call bcombat_fnc_unit_skill_set;
 
@@ -125,6 +136,7 @@ while { true } do
 				
 				// CQB
 				if( !(isNull _enemy) 
+					&& { bcombat_cqb_radar }
 					&& { !(fleeing _unit) } 
 					&& { !(captive _unit) } 
 					&& { _unit distance _enemy < bcombat_cqb_radar_max_distance * 1.1}  	
@@ -163,6 +175,7 @@ while { true } do
 							if (_unit distance _enemy <= 250) then
 							{
 								_unit enableAttack true;
+								//_unit enableAttack false;
 							}
 							else
 							{
@@ -197,11 +210,11 @@ while { true } do
 				
 					if( bcombat_allow_grenades 
 						&& { combatmode _unit in ["RED", "YELLOW"] }
-						&& { _i mod 2 == 0}
+						//&& { _i mod 2 == 0}
 						&& { !(isNull _enemy) } 
 						&& { _unit distance _enemy < ( bcombat_grenades_distance select 1 ) }
 						&& { "HandGrenade" in (magazines _unit) }
-						//&& { random 1 <= (_unit skill "general" ) ^ 0.5}
+						&& { random 1 <= (_unit skill "general" ) ^ 0.5}
 						&& { random 100 > (_unit getVariable ["bcombat_suppression_level", 0]) }
 					) then {
 						// player globalchat format["grenade check %1 - %2 %3", _unit distance _enemy, _unit, _enemy];

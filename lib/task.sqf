@@ -194,14 +194,14 @@ bcombat_fnc_task_fire =
 					{
 				
 						if( 
-							_speed < 3 ||
+							//_speed < 3 ||
 							(assignedTarget _unit) == _enemy ||
 							_dist < 25 || 
+							[_unit, _enemy] call bcombat_fnc_relativeDirTo < 75 ||
 							isHidden _unit ||
 							{
 								_dist < 250 
-								&& [_unit, _enemy] call bcombat_fnc_relativeDirTo < 90
-								&& ( _speed < 3 || !([_unit] call bcombat_fnc_in_formation) || _unit distance (formationLeader _unit) < 50 ) 
+								&& ( !([_unit] call bcombat_fnc_in_formation) || _unit distance (formationLeader _unit) < 50 ) 
 							}
 						) then
 						{
@@ -220,14 +220,14 @@ bcombat_fnc_task_fire =
 					
 					
 						if(  
-							_speed < 3 ||
+							// _speed < 3.5 ||
 							 (assignedTarget _unit) == _enemy ||
 							_dist < 25 || 
 							isHidden _unit ||
+							[_unit, _enemy] call bcombat_fnc_relativeDirTo < 75 ||
 							{
 								_dist < 250 
-								&& [_unit, _enemy] call bcombat_fnc_relativeDirTo < 60
-								&& ( _speed < 3 || !([_unit] call bcombat_fnc_in_formation) || _unit distance (formationLeader _unit) < 50 ) 
+								&& ( !([_unit] call bcombat_fnc_in_formation) || _unit distance (formationLeader _unit) < 50 ) 
 							}
 						) then
 						{
@@ -243,9 +243,6 @@ bcombat_fnc_task_fire =
 						};
 					
 					};
-					
-	
-
 	
 					_unit suppressFor 0;
 					_unit dofire _enemy;

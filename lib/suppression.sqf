@@ -30,6 +30,8 @@ bcombat_fnc_bullet_incoming =
 			_dt = time - (_unit getVariable ["bcombat_suppression_time", 1 ]);
 			_move_to_cover = false;
 
+			_grp setSpeedMode "FULL";
+			
 			if( _dt > bcombat_incoming_bullet_timeout ) then 
 			{
 
@@ -67,7 +69,6 @@ bcombat_fnc_bullet_incoming =
 				if( (_dist > bcombat_danger_distance ) 
 					&& _unit getVariable ["bcombat_suppression_level", 0] < 10 ) then
 				{
-				
 					if( _speed > 3.5 ) then
 					{
 						[ _unit, 1, _penalty, time, time + 10 + random 10, time + 15 + random 15, _shooter ] call bcombat_fnc_fsm_trigger;
@@ -76,21 +77,18 @@ bcombat_fnc_bullet_incoming =
 					{
 						[ _unit, 1, _penalty, time + 5, time + 10 + random 10, time + 15 + random 15, _shooter ] call bcombat_fnc_fsm_trigger;
 					};
-					
 				}
 				else
 				{
 					[ _unit, 1, _penalty, time + 5 + random 5, time + 10 + random 5, time + 15 + random 15, _shooter ] call bcombat_fnc_fsm_trigger;
 				};
 				
-				// _unit reveal [_shooter, 1];
 				_unit setVariable ["bcombat_suppression_time", time ];
 				
 				if( !(isPlayer _unit ) ) then 
 				{
 					if( _dt > 1 && { !(isPlayer (leader _unit)) }  ) then
 					{
-
 						// SAFE mode penalty
 						if( behaviour (leader _unit) in ["SAFE", "CARELESS"] ) then 
 						{
@@ -201,14 +199,15 @@ bcombat_fnc_bullet_incoming =
 						// RETURN FIRE
 						if ( 
 							( random 1 <= (_unit skill "general" ) || isPlayer ( leader _unit ) )
-							
+							&&  { _visible }
+							&& {  _speed < 3 || _dist < 50 }
 							&&  { _dist < [ _unit ] call bcombat_weapon_max_range } 
 							&&  { canFire _unit }  
 							&& { _unit ammo (currentWeapon _unit) > 0  }
 							&&  { !(combatMode _unit in ["BLUE"]) }  
 							&&  { [_unit, _shooter] call bcombat_fnc_knprec < 2 }  
-							&&  { ( isHidden _unit || _dist < 250 || _speed < 3 || [currentWeapon _unit] call bcombat_fnc_is_mgun) }  
-							&&  { _visible }
+							&&  { ( isHidden _unit || _dist < 250 || [currentWeapon _unit] call bcombat_fnc_is_mgun) }  
+							
 							&&  { [_unit, _shooter] call bcombat_fnc_relativeDirTo < 75 || _speed < 1 }
 							&&  { _dist < 30 || random 100 > _unit getVariable ["bcombat_suppression_level", 0]  } 
 				

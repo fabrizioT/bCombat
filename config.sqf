@@ -212,7 +212,7 @@ bcombat_allow_fatigue = false;						// (Boolean) Toggle feature on / off
 
 bcombat_allow_cover = true;							// (Boolean) Toggle feature on / off
 bcombat_cover_mode = 1;								// (0,1) 0 = apply only to leader, 1 = apply to all units
-bcombat_cover_radius = [15, 15]; 						// (Array) [ maximum distance from object, maximum distance from building] 
+bcombat_cover_radius = [15, 0]; 						// (Array) [ maximum distance from object, maximum distance from building] 
 
 // Description: "target and chase" behaviour
 // Triggered: whenever unit has no target and it's close to a enemy
@@ -251,7 +251,7 @@ bcombat_stop_overwatch_max_distance	= [75, 150];	// (Array) [max distance from l
 
 bcombat_cqb_radar = true;    						// (Boolean) Toggle feature on / off
 bcombat_cqb_radar_clock = [0.5, 2];    				// (Seconds) internal feaures clocking. Never use values below 0.1 ( = 10 times / second).
-bcombat_cqb_radar_max_distance = 100;    			// (Meters) Features are activated under this distance
+bcombat_cqb_radar_max_distance = 75;    			// (Meters) Features are activated under this distance
 bcombat_cqb_radar_params = [104, 5, 0, 5];			// (Array) [max. angle, min. precision, min. knowsabout, max enemy .speed] - Don't edit this.
 
 // Description: misc animations as a tribute to "tonyRanger"
@@ -271,7 +271,7 @@ bcombat_remove_nvgoggles = false;
 // Triggered: iteratively
 // Effect: AI unit skill is adjusted
 
-bcombat_min_player_group_skill = 0.75;
+bcombat_min_player_group_skill = 0.5;
 
 //><
 // -----------------------------------------------------------------------------------------------------

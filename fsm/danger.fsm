@@ -154,22 +154,22 @@ class FSM
        "			_dist = _this distance _dangerCausedBy;" \n
        "" \n
        "			if( canfire _this " \n
-       "				&& ( _dist < 50 || _visible )" \n
+       "				&& ( _visible )" \n
        "				&& { !(fleeing _this) && !(captive _this) }" \n
        "				&& { combatmode _this in [""RED"", ""YELLOW""] }" \n
-       "				&& { random 100 > _this getVariable [""bcombat_suppression_level"", 0] || _dist  < 25}" \n
+       "				&& { random 100 > _this getVariable [""bcombat_suppression_level"", 0] || _dist  < 50}" \n
        "				&& { _dist  < [_this] call bcombat_weapon_max_range  }" \n
        "				&& " \n
        "				{ ( " \n
        "					!( currentCommand _this in [""MOVE"", ""HEAL"", ""SUPPORT"", ""REARM"", ""HIDE"", ""REPAIR""]  )" \n
-       "					|| _dist < 150 " \n
+       "					|| ( _dist < 150 )" \n
        "					|| combatMode _this in [""RED""]" \n
-       "					|| (isHidden _this )" \n
-       "					|| ([currentWeapon _this] call bcombat_fnc_is_mgun  && ((isHidden _this ) || [ _this ] call bcombat_fnc_speed == 0) )" \n
+       "					|| (isHidden _this && speed _this < 3.5 )" \n
+       "					|| ([currentWeapon _this] call bcombat_fnc_is_mgun && ((isHidden _this ) || [ _this ] call bcombat_fnc_speed == 0) )" \n
        "					|| (assignedTarget _this) == _dangerCausedBy" \n
-       "					|| (bcombat_slow_leaders  && _this == formleader _this )" \n
+       "					|| (bcombat_slow_leaders && _this == formleader _this )" \n
        "					|| ( " \n
-       "						[_this, _dangerCausedBy] call bcombat_fnc_relativeDirTo < 60 && _dist  < 250 &&" \n
+       "						[_this, _dangerCausedBy] call bcombat_fnc_relativeDirTo < 60 && _dist < 250 &&" \n
        "						(" \n
        "							(waypointPosition [group _this, currentWaypoint (group _this) ]) distance _dangerCausedBy < 100 " \n
        "							 || ((expecteddestination _this) select 0) distance _dangerCausedBy < 100" \n
@@ -203,7 +203,8 @@ class FSM
        "					&&  { ( isNull _nenemy || _nenemy == _dangerCausedBy ) } " \n
        "					&& { [_this] call bcombat_fnc_in_formation || (formLeader _this) == _this } " \n
        "					&& { _d1 < 100 || _d1 > 1000000 } " \n
-       "					&& { _d2 < 100 || _d2 > 1000000 }) then {" \n
+       "					&& { _d2 < 100 || _d2 > 1000000 }" \n
+	   "					&& { WaypointType [group _this, currentWaypoint (group _this)] in [""MOVE"", ""SAD"", ""DESTROY"", ""GUARD""] }) then {" \n
        "" \n
        "					[_this, _ppos] call bcombat_fnc_investigate;" \n
        "				};" \n
