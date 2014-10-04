@@ -1,7 +1,0 @@
-@bcombat
-======<HEADER>=======
-prefix=@bcombat
-Mikero=DePbo.dll
-Pbo Type is: Arma Addon
-Sha: '0217F1DFD72FE60BDA0B4F1D207A41C752039DEB'
-======</HEADER>============
