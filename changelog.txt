@@ -1,10 +1,15 @@
-v0.17 DEV
+v0.17 RC
 ---------
 
-* Tweaked: AI units made more aware of being fired upon
-* Tweaked: reworked probability of returning fire vs. moving to cover. Unsuppressed / lightly suppressed units more likely to return fire aggressively.
-* Changed: Removed variable "bcombat_skill_multiplier"
-
+* New: variable "bcombat_skill_min_player_group": forcing come minimum skill level (default: 0.5) for any player's group units.
+* New: variable "bcombat_stance_prone_min_distance": minimum distance to nearest enemy for allowing prone stance after any suppression events.
+* Tweaked: AI prioritizing special commands (healing, supporting, self-healing, get-in, get-out, hide, rearm, refuel) against low-priority move / fire commands.
+* Tweaked: grenade throwing accuracy depending on skill. Misses more likely for untrained soldiers.
+* Tweaked: enhanced movement to cover ( low-level command moveTo used instead of doMove).
+* Tweaked: rebalanced probability of returning fire vs. movement to cover. Unsuppressed / lightly suppressed units now more likely to return fire aggressively.
+* Removed: broken variable "bcombat_skill_multiplier"
+* Fixed: smoke throwing should not happen anymore at night (interim fix via sunOrMoon command)
+* Fixed: minor bugfix
 
 v0.16 (FINAL)
 -------------

@@ -126,8 +126,7 @@ VIDEOS
 +   http://www.youtube.com/watch?v=vGKy2fEPwD8
 +   http://www.youtube.com/watch?v=GZ3PC-mrGE4
 +   http://www.youtube.com/watch?v=8u8bUqCppG4
-
-+	http://www.youtube.com/user/MrFabrizioT
++   http://www.youtube.com/user/MrFabrizioT
 
 
 CREDITS
@@ -161,12 +160,12 @@ A final thanks to talented modders who over time inspired this work:
 +   Kronzky
 +   Monsada
 +   Solus
-+	keycat
++   keycat
 +   SNKMAN
 +   Rg7621
 +   Protegimus 
 +   Sickboy
-+	zGuba
++   zGuba
 
 
 FEEDBACK

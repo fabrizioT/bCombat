@@ -3,7 +3,7 @@
 // CORE bDetect FEATURES
 // -----------------------
 
-bdetect_bullet_max_distance = 500;  				// (Meters) Maximum travelled distance for a bullet (to cause suppression)
+bdetect_bullet_max_distance = 600;  				// (Meters) Maximum travelled distance for a bullet (to cause suppression)
 bdetect_bullet_max_lifespan = 2; 					// (Seconds) Maximum lifespan for bullet
 bdetect_bullet_max_proximity = 7.5; 				// (Meters) Maximum distance from unit for bullet (to cause suppression)
 bdetect_bullet_max_height =  6.5;  					// (Meters) Maximum height on ground for bullet (to cause suppression)
@@ -26,8 +26,8 @@ bcombat_dev_mode = true;							// (Boolean) Toggle feature on / off
 // Please be careful tweaking bcombat_incoming_bullet_timeout. 
 // Lowering it can cause CPU overhead as well as excessive suppression-related penalties.
 
-bcombat_incoming_bullet_timeout = 0.2;				// (Seconds) minimum timeout between suppressing bullets
-bcombat_danger_fsm_timeout = 0.2;					// (Seconds) 
+bcombat_incoming_bullet_timeout = 0.1;				// (Seconds) minimum timeout between suppressing bullets
+bcombat_danger_fsm_timeout = 0.1;					// (Seconds) 
 bcombat_danger_distance = 250; 						// (Meters) Minimum distance from shooter, for groups to automatically switch to "combat" behaviour
 bcombat_features_clock = 3;							// (Seconds) Additional features clocking 
 bcombat_damage_multiplier = 1.0;					// (0-1) Damage multiplier. Zero makes units invulnerable.
@@ -109,7 +109,7 @@ bcombat_allow_lowerground_penalty = true;			// (Boolean) Toggle feature on / off
 // Effect: formation is breaked, units move individually towards destination picking different routes and using cover
 // Known issues: units may sometimes bunch at destination
 
-bcombat_allow_fast_move = true;					// (Boolean) Toggle feature on / off
+bcombat_allow_fast_move = false;					// (Boolean) Toggle feature on / off
 
 // Description: fast rotation
 // Triggered: if a known target is on flank / back
@@ -150,8 +150,8 @@ bcombat_allow_fire_back = true; 					// (Boolean) Toggle feature on / off
 // Effect: return fire on shooter. Unit may blind fire as long as bcombat_allow_suppressive_fire = true
 
 bcombat_allow_fire_back_group = true; 				// (Boolean) Toggle feature on / off
-bcombat_fire_back_group_max_enemy_distance = 300; 	// (Number) Maximum distance (meters) of the threatening enemy
-bcombat_fire_back_group_max_friend_distance = 300; 	// (Number) Maximum distance (meters) of the friendly unit being threatened
+bcombat_fire_back_group_max_enemy_distance = 500; 	// (Number) Maximum distance (meters) of the threatening enemy
+bcombat_fire_back_group_max_friend_distance = 250; 	// (Number) Maximum distance (meters) of the friendly unit being threatened
 
 // Description: suppressive fire / blind fire
 // Triggered: when unit has no clean line of sight on known enemy.
@@ -161,7 +161,7 @@ bcombat_fire_back_group_max_friend_distance = 300; 	// (Number) Maximum distance
 // * unit may fire through thick objects
 
 bcombat_allow_suppressive_fire = true;				// (Boolean) Toggle feature on / off
-bcombat_suppressive_fire_duration = [0.1, 0.2]; 	// (Array) [seconds of suppressive fire for common unit, seconds of suppressive fire for for autorifleman/machinegunner]
+bcombat_suppressive_fire_duration = [0.1, 0.1]; 	// (Array) [seconds of suppressive fire for common unit, seconds of suppressive fire for for autorifleman/machinegunner]
 bcombat_suppressive_fire_distance = [50, 150]; 		// (Array) [minimum distance from target, maximum distance from target]
 
 // Description: enhanced hearing
@@ -169,8 +169,8 @@ bcombat_suppressive_fire_distance = [50, 150]; 		// (Array) [minimum distance fr
 // Effect: unit is hinted about the shooter, depending on criteria such as visibility and distance. 
 
 bcombat_allow_hearing = true;						// (Boolean) Toggle feature on / off
-bcombat_allow_hearing_coef = 3;						// (Number) Bullet speed / bcombat_allow_hearing_coef = max. hearing distance (e.g. 900 meters/sec : 3 = max. hearing distance 300m.)
-bcombat_allow_hearing_grenade_distance = 150;		// (Meters) Max. distance for grenade hearing
+bcombat_allow_hearing_coef = 2.5;						// (Number) Bullet speed / bcombat_allow_hearing_coef = max. hearing distance (e.g. 900 meters/sec : 3 = max. hearing distance 300m.)
+bcombat_allow_hearing_grenade_distance = 250;		// (Meters) Max. distance for grenade hearing
 
 // Description: CQB hand grenade throwing
 // Triggered: whenever unit has a hand grenade + enemy is known and near
@@ -180,7 +180,7 @@ bcombat_allow_hearing_grenade_distance = 150;		// (Meters) Max. distance for gre
 bcombat_allow_grenades = true;						// (Boolean) Toggle feature on / off
 bcombat_grenades_additional_number = 1; 			// (Number) number of additional grenades to be automatically ADDED to unit loadout
 bcombat_grenades_distance = [6,45,6]; 				// (Array) [ minimum distance, maximum distance, min. distance from target for friendly units] 
-bcombat_grenades_timeout = [15, 10];					// (Array) [ unit timeout, group timeout ]
+bcombat_grenades_timeout = [15, 10];				// (Array) [ unit timeout, group timeout ]
 bcombat_grenades_no_los_only = true; 				// (Boolean) Whether enemy should be out of line-of-sight, for a unit to throw grenade
 
 // Description: smoke grenade throwing
@@ -190,7 +190,7 @@ bcombat_grenades_no_los_only = true; 				// (Boolean) Whether enemy should be ou
 bcombat_allow_smoke_grenades = true;					// (Boolean) Toggle feature on / off
 bcombat_smoke_grenades_additional_number = 0; 			// (Number) number of additional smoke grenades to be automatically ADDED to unit loadout
 bcombat_smoke_grenades_distance = [75,250,0]; 			// (Array) [ minimum distance, maximum distance, min. distance from target for friendly units] 
-bcombat_smoke_grenades_timeout = [15, 15];				// (Array) [ unit timeout, group timeout ]
+bcombat_smoke_grenades_timeout = [39, 10];				// (Array) [ unit timeout, group timeout ]
 
 // Description: investigation behavoiur
 // Triggered: if no enemy is known and some explosion / gunshot is heard, or another unit from same group gets killed
@@ -198,7 +198,7 @@ bcombat_smoke_grenades_timeout = [15, 15];				// (Array) [ unit timeout, group t
 // Note: needs bcombat_allow_hearing = true
 
 bcombat_allow_investigate = true;					// (Boolean) Toggle feature on / off
-bcombat_investigate_max_distance = 150;				// (Number) maximum distance from unit, for position to be investigated
+bcombat_investigate_max_distance = 250;				// (Number) maximum distance from unit, for position to be investigated
 	
 // Description: allow fatigue
 // Effect: allows for vanilla fatigue effects
@@ -212,22 +212,22 @@ bcombat_allow_fatigue = false;						// (Boolean) Toggle feature on / off
 
 bcombat_allow_cover = true;							// (Boolean) Toggle feature on / off
 bcombat_cover_mode = 1;								// (0,1) 0 = apply only to leader, 1 = apply to all units
-bcombat_cover_radius = [15, 0]; 						// (Array) [ maximum distance from object, maximum distance from building] 
+bcombat_cover_radius = [12, 0]; 					// (Array) [ maximum distance from object, maximum distance from building] 
 
 // Description: "target and chase" behaviour
 // Triggered: whenever unit has no target and it's close to a enemy
 // Effect: unit locks enemy as target moves towards its position
 
 bcombat_allow_targeting = true;						// (Boolean) Toggle feature on / off
-bcombat_targeting_max_distance = [50, 150];		// (Array) [ maximum distance, maximum distance if combatMode is "RED"] 
+bcombat_targeting_max_distance = [100, 250];		// (Array) [ maximum distance, maximum distance if combatMode is "RED"] 
 
 // Description: tighten formation
 // Triggered: whenever some in-formation unit falls behind
 // Effect: unit is automatically ordered to fall back into formation
 // Known issues: for player led groups thightened formation is breaking the ADVANCE command
 
-bcombat_allow_tightened_formation = true;			// (Boolean) Toggle feature on / off
-bcombat_tightened_formation_max_distance = 55;		// (Meters) Maximum distance a unit can go off formation before being ordered to fall back
+bcombat_allow_tightened_formation = false;			// (Boolean) Toggle feature on / off
+bcombat_tightened_formation_max_distance = 50;		// (Meters) Maximum distance a unit can go off formation before being ordered to fall back
 
 // Description: friendly fire damage cap
 // Triggered: whenever unit is hit by a friendly unit (player excluded)
@@ -259,19 +259,32 @@ bcombat_cqb_radar_params = [104, 5, 0, 5];			// (Array) [max. angle, min. precis
 // Effect: a prone rolling animation is played to evade enemy fire
 
 bcombat_fancy_moves = true;     					// (Boolean) Toggle feature on / off
-bcombat_fancy_moves_frequency = 0.03;    			// (0-1) Probability of occurring. 0=never (0%), 1=all the time (100%). 
+bcombat_fancy_moves_frequency = 0.025;    			// (0-1) Probability of occurring. 0=never (0%), 1=all the time (100%). 
 
 // Description: remove night vision devices from any created / spawned units
 // Triggered: on unit creation / spawn
 // Effect: any night vision device is removed from unit
 
-bcombat_remove_nvgoggles = false;
+bcombat_remove_nvgoggles = true;					// (Boolean)
 
-// Description: give units in player group minimum this skill value
-// Triggered: iteratively
-// Effect: AI unit skill is adjusted
+// Description: Stance handling options
+// Triggered: when any events occur (suppression, enemy detected, ...)
+// Effect: control on unit stance
 
-bcombat_min_player_group_skill = 0.5;
+bcombat_stance_prone_min_distance = 50;    			// (Meters) 
+
+// Description: Skill modifiers
+// Triggered:
+// Effect: 
+
+bcombat_skill_multiplier = 1;    					// (0-1) Unit skill is multiplied by this value. It affects accuracy as well. Allowed range is 0 to 1
+bcombat_skill_linearity = 1.5;    					// (0-1) linearity of skill: 2 means quadratic
+bcombat_skill_min_player_group = 0.5;				// (0-1) enforce minimum skill for units in player group 
+
+// Description: Toggles startup hint
+// Triggered: at mission start
+// Effect: show / hides bCombat startup hint
+bcombat_startup_hint = true;
 
 //><
 // -----------------------------------------------------------------------------------------------------
@@ -280,15 +293,14 @@ bcombat_min_player_group_skill = 0.5;
 
 if ( bcombat_dev_mode ) then
 {
-	//[] spawn bcombat_fnc_debug_text; // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
+	// [] spawn bcombat_fnc_debug_text; // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
 	call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debug balloons (as alternative to bcombat_fnc_debug_text or bcombat_fnc_fps)
 
-	call bdetect_fnc_benchmark; // Uncomment this line to activate bDetect live stats panel (as alternative to bcombat_fnc_fps)
+	 call bdetect_fnc_benchmark; // Uncomment this line to activate bDetect live stats panel (as alternative to bcombat_fnc_fps)
 	//[] spawn bcombat_fnc_fps; // Uncomment this line to activate FPS stats panel (as alternative to bdetect_fnc_benchmark;)
-
+	// call bcombat_fnc_stats;
+	
 	OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
 };
 
-// bdetect_startup_hint = false;
-// bcombat_startup_hint = false;
 //><
