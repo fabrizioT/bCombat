@@ -1,4 +1,4 @@
-bCombat v0.17 DEV [SP]
+bCombat v0.17 RC [SP]
 =========================================
 
 COMPATIBILITY
@@ -47,9 +47,9 @@ delete "@bcombat" folder as well as "userconfig\bcombat_config.hpp" configuratio
 +   Move "@bcombat" folder from extraction location to your ArmA 3 main folder ( usually: <Your Steam Path>\steamapps\common\Arma 3\ )
 +   Launch ArmA 3 and activate bCombat from "Configure / Expansions" menu.
 
-NOTES:
-+   Current bCombat version (v0.17 RC) does allow support external .hpp userconfig.
-+   In order to be able to override default settings via config.sqf, please AVOID launching ArmA3 with -noFilePatching startup parameter
+__NOTES__
++   Current bCombat version (v0.17 RC) __does allow support external .hpp userconfig__.
++   In order to be able to override default settings via config.sqf, please __AVOID__ launching ArmA3 with __-noFilePatching__ startup parameter
 
 DESCRIPTION
 -----------------------------------------
