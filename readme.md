@@ -111,7 +111,7 @@ FORUM THREAD
 +   http://forums.bistudio.com/showthread.php?171436-OPEN-BETA-SP-bCombat-infantry-AI-Mod
 
 
-SCREENHOTS
+SCREENSHOTS
 -----------------------------------------
 
 +   https://dl-web.dropbox.com/get/Public/careful.jpg?w=AADzxJyXlsdJbmRb2Db3jdUdobPcPgBlMXDR07sf3HY1Yg
