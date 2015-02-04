@@ -799,7 +799,7 @@ bcombat_fnc_unit_skill_set =
 	_k = _skill ^ .5 ;
 	
 	_unit setskill [ "Commanding", _k];
-	_unit setSkill [ "courage", _k min 0.5];
+	_unit setSkill [ "courage", _k min 0.9];
 	_unit setSkill [ "AimingSpeed", _k];
 	// _unit setSkill [ "aimingShake", _k];
 	//_unit setSkill [ "SpotTime", _k];
