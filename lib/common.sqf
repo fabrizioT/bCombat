@@ -1441,7 +1441,7 @@ bcombat_fnc_soundalert = {
 					&& { [_x, _pos] call bcombat_fnc_unit_can_inspect_pos } 
 				) then
 				{
-				hintc("OK");
+			
 					_nenemy = _x findNearestEnemy _x;
 					
 					if(  isNull _nenemy  ||  _nenemy == _unit  ) then 
