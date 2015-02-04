@@ -1403,7 +1403,7 @@ bcombat_fnc_soundalert = {
 			};
 		
 			// player setVariable ["bcombat_stats_hear_raw", (player getVariable ["bcombat_stats_hear_raw", 0]) + 1];
-		 player globalchat format["%1 [%2/%4] HEARD -> %3", _unit, _maxdist, _x, _unit distance _x];
+			// player globalchat format["%1 [%2/%4] HEARD -> %3", _unit, _maxdist, _x, _unit distance _x];
 			// diag_log format["%1 [%2] HEARD -> %3", _unit, _maxdist, _x];
 			
 			[_x, _unit] call bcombat_fnc_reveal;
