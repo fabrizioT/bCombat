@@ -1,5 +1,5 @@
-v0.17 RC
----------
+v0.17
+-----
 
 * New: variable "bcombat_skill_min_player_group": forcing come minimum skill level (default: 0.5) for any player's group units.
 * New: variable "bcombat_stance_prone_min_distance": minimum distance to nearest enemy for allowing prone stance after any suppression events.

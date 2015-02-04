@@ -1,5 +1,14 @@
-bCombat v0.17 RC [SP]
+bCombat v0.18 BETA [SP]
 =========================================
+
+	
+
+INTRODUCTION
+-----------------------------------------
+
+bCombat is an ArmA 3 infantry AI enhancement mod in form of addon.
+It's currently Single Player. CBA is this only requirement.
+
 
 COMPATIBILITY
 -------------
@@ -17,23 +26,17 @@ bCombat is designed to cope with campaign, just set the following parameters wit
 	bcombat_allow_surrender = false;
 	
 __Running crowded missions:__ 
-if you're running missions involving hundreds of units please consider deactivating CQB routines into _config.sqf_, as they're resource intensive.
+if you're running missions involving hundreds of units please consider deactivating enhanced hearing and CQB routines into _config.sqf_, as they're resource intensive.
 This is achieved by setting:
 
 	bcombat_cqb_radar = false;
-	
-
-INTRODUCTION
------------------------------------------
-
-bCombat is an ArmA 3 infantry AI enhancement mod in form of addon, still under development.
-It's currently Single Player. CBA is this only requirement.
+	bcombat_allow_hearing = false;
 
 
 REQUIREMENTS
 -----------------------------------------
 
-+   Download and install latest CBA distribution, get it from here: http://dev-heaven.net/projects/cca/files
++   Download and install latest CBA distribution, get it from here: http://www.armaholic.com/page.php?id=18768
 
 
 INSTALLATION
@@ -48,7 +51,7 @@ delete "@bcombat" folder as well as "userconfig\bcombat_config.hpp" configuratio
 +   Launch ArmA 3 and activate bCombat from "Configure / Expansions" menu.
 
 __NOTES__
-+   Current bCombat version (v0.17 RC) __does allow support external .hpp userconfig__.
++   Current bCombat version (v0.17) __does allow support external .hpp userconfig__.
 +   In order to be able to override default settings via config.sqf, please __AVOID__ launching ArmA3 with __-noFilePatching__ startup parameter
 
 DESCRIPTION

@@ -4,9 +4,9 @@
 // -----------------------
 
 bdetect_bullet_max_distance = 600;  				// (Meters) Maximum travelled distance for a bullet (to cause suppression)
-bdetect_bullet_max_lifespan = 2; 					// (Seconds) Maximum lifespan for bullet
+bdetect_bullet_max_lifespan = 2.5; 					// (Seconds) Maximum lifespan for bullet
 bdetect_bullet_max_proximity = 7.5; 				// (Meters) Maximum distance from unit for bullet (to cause suppression)
-bdetect_bullet_max_height =  6.5;  					// (Meters) Maximum height on ground for bullet (to cause suppression)
+bdetect_bullet_max_height =  7.5;  					// (Meters) Maximum height on ground for bullet (to cause suppression)
 
 //><
 // -----------------------
@@ -19,7 +19,7 @@ bcombat_enable = true;								// (Boolean) Toggle feature on / off
 
 // Description: toggle debugging information on (true) or off (false)
 
-bcombat_dev_mode = false;							// (Boolean) Toggle feature on / off
+bcombat_dev_mode = true;							// (Boolean) Toggle feature on / off
 
 // Description: minimum timeout since last incoming bullet, for the current one to cause suppression.
 // As default no more than 5 ( = 1 / 0.2 ) bullets / second would cause suppression on a single AI unit.
@@ -30,7 +30,7 @@ bcombat_incoming_bullet_timeout = 0.1;				// (Seconds) minimum timeout between s
 bcombat_danger_fsm_timeout = 0.1;					// (Seconds) 
 bcombat_danger_distance = 250; 						// (Meters) Minimum distance from shooter, for groups to automatically switch to "combat" behaviour
 bcombat_features_clock = 3;							// (Seconds) Additional features clocking 
-bcombat_damage_multiplier = 1.0;					// (0-1) Damage multiplier. Zero makes units invulnerable.
+bcombat_damage_multiplier = 1.0;					// (0-1) Damage multiplier. Received damage is multiplied by this value. Only infantrymen are affected. Zero makes units invulnerable.
 bcombat_degradation_distance = 1500;				// (Meters) some bCombat features are cut when some unit is farther than this from player
 
 //><
@@ -189,8 +189,8 @@ bcombat_grenades_no_los_only = true; 				// (Boolean) Whether enemy should be ou
 
 bcombat_allow_smoke_grenades = true;					// (Boolean) Toggle feature on / off
 bcombat_smoke_grenades_additional_number = 0; 			// (Number) number of additional smoke grenades to be automatically ADDED to unit loadout
-bcombat_smoke_grenades_distance = [75,250,0]; 			// (Array) [ minimum distance, maximum distance, min. distance from target for friendly units] 
-bcombat_smoke_grenades_timeout = [39, 10];				// (Array) [ unit timeout, group timeout ]
+bcombat_smoke_grenades_distance = [75, 250, 0]; 		// (Array) [ minimum distance, maximum distance, min. distance from target for friendly units] 
+bcombat_smoke_grenades_timeout = [30, 10];				// (Array) [ unit timeout, group timeout ]
 
 // Description: investigation behavoiur
 // Triggered: if no enemy is known and some explosion / gunshot is heard, or another unit from same group gets killed
@@ -212,7 +212,7 @@ bcombat_allow_fatigue = false;						// (Boolean) Toggle feature on / off
 
 bcombat_allow_cover = true;							// (Boolean) Toggle feature on / off
 bcombat_cover_mode = 1;								// (0,1) 0 = apply only to leader, 1 = apply to all units
-bcombat_cover_radius = [12, 0]; 					// (Array) [ maximum distance from object, maximum distance from building] 
+bcombat_cover_radius = [20, 0]; 					// (Array) [ maximum distance from object, maximum distance from building] 
 
 // Description: "target and chase" behaviour
 // Triggered: whenever unit has no target and it's close to a enemy
@@ -265,7 +265,7 @@ bcombat_fancy_moves_frequency = 0.025;    			// (0-1) Probability of occurring. 
 // Triggered: on unit creation / spawn
 // Effect: any night vision device is removed from unit
 
-bcombat_remove_nvgoggles = true;					// (Boolean)
+bcombat_remove_nvgoggles = false;					// (Boolean)
 
 // Description: Stance handling options
 // Triggered: when any events occur (suppression, enemy detected, ...)
@@ -278,13 +278,15 @@ bcombat_stance_prone_min_distance = 50;    			// (Meters)
 // Effect: 
 
 bcombat_skill_multiplier = 1;    					// (0-1) Unit skill is multiplied by this value. It affects accuracy as well. Allowed range is 0 to 1
-bcombat_skill_linearity = 1.5;    					// (0-1) linearity of skill: 2 means quadratic
+bcombat_skill_linearity = 1.25;    					// (0-1) linearity of skill: 2 means quadratic
 bcombat_skill_min_player_group = 0.5;				// (0-1) enforce minimum skill for units in player group 
 
 // Description: Toggles startup hint
 // Triggered: at mission start
 // Effect: show / hides bCombat startup hint
+
 bcombat_startup_hint = true;
+bdetect_startup_hint = false;
 
 //><
 // -----------------------------------------------------------------------------------------------------
@@ -293,6 +295,7 @@ bcombat_startup_hint = true;
 
 if ( bcombat_dev_mode ) then
 {
+
 	// [] spawn bcombat_fnc_debug_text; // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
 	call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debug balloons (as alternative to bcombat_fnc_debug_text or bcombat_fnc_fps)
 
