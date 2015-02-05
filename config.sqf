@@ -296,8 +296,8 @@ bdetect_startup_hint = false;
 if ( bcombat_dev_mode ) then
 {
 
-	// [] spawn bcombat_fnc_debug_text; // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
-	call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debug balloons (as alternative to bcombat_fnc_debug_text or bcombat_fnc_fps)
+	 [] spawn bcombat_fnc_debug_text; // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
+	//call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debug balloons (as alternative to bcombat_fnc_debug_text or bcombat_fnc_fps)
 
 	 call bdetect_fnc_benchmark; // Uncomment this line to activate bDetect live stats panel (as alternative to bcombat_fnc_fps)
 	//[] spawn bcombat_fnc_fps; // Uncomment this line to activate FPS stats panel (as alternative to bdetect_fnc_benchmark;)

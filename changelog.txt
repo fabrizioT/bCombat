@@ -1,3 +1,10 @@
+v0.18 BETA
+----------
+
+* Tweaked: investigation behaviour reworked
+* Fixed: excessive morale hit introduced by AI changes in ArmA3 v1.3X builds
+* Fixed: minor bugfix
+
 v0.17
 -----
 
@@ -11,8 +18,8 @@ v0.17
 * Fixed: smoke throwing should not happen anymore at night (interim fix via sunOrMoon command)
 * Fixed: minor bugfix
 
-v0.16 (FINAL)
--------------
+v0.16
+-----
 
 Core features:
 
