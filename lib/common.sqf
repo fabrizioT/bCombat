@@ -717,7 +717,7 @@ bcombat_fnc_eh_hit = {
 			&& { _unit ammo (currentWeapon _unit) > 0  }
 			&& { canfire _unit }
 			//&& { [_unit, _shooter] call bcombat_fnc_relativeDirTo < 75 }
-			&& { _unit getVariable ["bcombat_suppression_level", 0] < 35 }
+			&& { _unit getVariable ["bcombat_suppression_level", 0] < 50 }
 		) then {
 			[_unit, "bcombat_fnc_task_fire", 11, [_enemy, 2] ] call bcombat_fnc_task_set;
 			// player globalchat format["%1 RETURN FIRE ON by %2", _unit, _enemy];
@@ -805,10 +805,9 @@ bcombat_fnc_unit_skill_set =
 	//_unit setSkill [ "SpotTime", _k];
 	//_unit setskill [ "Endurance", _k];
 	
-	/*
 	if( [currentWeapon _unit] call bcombat_fnc_is_mgun ) then {
-		_unit setSkill [ "aimingAccuracy", ((_skill ^ 1.25) min 0.9) max 0.02];
-	};*/
+		_unit setSkill [ "aimingAccuracy", (_skill ^ 0.75) ];
+	};
 
 	_unit setVariable [ "bcombat_skill", _skill ];
 	_unit setVariable [ "bcombat_skill_sh", _skill];
@@ -1209,7 +1208,7 @@ bcombat_fnc_stop =
 				&& { leader _unit distance _unit < (bcombat_stop_overwatch_max_distance select 0) }
 				&& { random 100 > _unit getVariable ["bcombat_suppression_level", 0] }
 			) then {
-				
+		
 				_stopow = true;
 				_unit setVariable["bcombat_stop_overwatch", true];
 				dostop _unit;
@@ -1242,7 +1241,7 @@ bcombat_fnc_stop =
 					
 					_unit enableAI "target";
 					
-					_unit domove (position (leader _unit));
+					_unit domove (position (formationLeader _unit));
 					
 					if( formationLeader _unit != _unit) then 
 					{
@@ -1887,10 +1886,11 @@ bcombat_fnc_investigate = {
 	_prec = _this select 2;
 	_group = group _leader ;
 	//_rand = 0.9;
+	
 	_cnt = floor (random ((count units _group) / 2));
 	
-	if( count units _group == 1 ) then { _rand = 0.45; };
-	if( _pos distance _leader > 50 )  then { _rand = _rand / 2; };
+	//if( count units _group == 1 ) then { _rand = 0.45; };
+	//if( _pos distance _leader > 50 )  then { _rand = _rand / 2; };
 	
 	_unitsByDistance = [ units _group,[],{_pos distance _x},"ASCEND"] call BIS_fnc_sortBy;
 	

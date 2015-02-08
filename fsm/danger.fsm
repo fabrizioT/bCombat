@@ -557,7 +557,7 @@ class FSM
        "		_visible = [_this, _dangerCausedBy] call bcombat_fnc_is_visible;" \n
        "		_ang = [_this, _dangerCausedBy] call bcombat_fnc_relativeDirTo;" \n
        "" \n
-       "		if(  ( _dangerCause == 8 && _ang < 104 ) || (  _dangerCause in [0,3]  && [_this,  _dangerCausedBy] call bcombat_fnc_knprec < 2 && _ang < 75) ) then" \n
+       "		if(  ( _dangerCause == 8 && _ang < 104 ) || (  _dangerCause in [0,3]  && [_this, _dangerCausedBy] call bcombat_fnc_knprec < 2 && _ang < 75) ) then" \n
        "		{ 	" \n
        "			_dist = _this distance _dangerCausedBy;" \n
        "			_speed = [ _this ] call bcombat_fnc_speed;" \n
@@ -567,8 +567,9 @@ class FSM
        "				&& { !(fleeing _this) }" \n
        "				&& { !(captive _this) }" \n
        "				&& { canFire _this }" \n
-       "				&& { _speed <= 3.5 || _dist  < 50}" \n
+       "				&& { _speed <= 3.5 || _dist  < 50 || (assignedTarget _this) == _dangerCausedBy }" \n
        "				&& { combatmode _this in [""RED"", ""YELLOW""] }" \n
+	   "				&& { [_this, _dangerCausedBy] call bcombat_fnc_knprec < 2 }" \n
        "				&& { random 100 > _this getVariable [""bcombat_suppression_level"", 0] || _dist  < 50}" \n
        "				&& { _dist  < [_this] call bcombat_weapon_max_range  }" \n
        "				&& { !( currentCommand _this in [""HIDE"", ""MOVE"", ""HEAL"", ""HEAL SELF"",  ""REPAIR"", ""REFUEL"", ""REARM"", ""SUPPORT"", ""GET IN"", ""GET OUT""]) || _dist  < 50 }" \n
@@ -577,13 +578,12 @@ class FSM
        "					" \n
        "					 ( _dist < 150)" \n
        "					|| combatMode _this in [""RED""]" \n
-       "					|| ( isHidden _this && _speed == 0 )" \n
        "					|| ( _speed < 3.5 )" \n
        "					|| ( [currentWeapon _this] call bcombat_fnc_is_mgun )" \n
        "					|| (assignedTarget _this) == _dangerCausedBy" \n
        "					|| (bcombat_slow_leaders && _this == formleader _this )" \n
        "					|| ( " \n
-       "						_ang < 60 && _dist < 250 &&" \n
+       "						_ang < 60 &&" \n
        "						(" \n
        "							(waypointPosition [group _this, currentWaypoint (group _this) ]) distance _dangerCausedBy < 150 " \n
        "							 || ((expecteddestination _this) select 0) distance _dangerCausedBy < 150" \n

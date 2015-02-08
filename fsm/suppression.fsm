@@ -127,7 +127,7 @@ class FSM
        "				" \n
        "			};	" \n
        "" \n
-       "			_unit setunitpos _st; " \n
+       "			_unit setunitposweak _st; " \n
        "			_unit setVariable [""bcombat_stance"", _st]; // debug only" \n
        "			_timeout_stance_wait = time + 3;" \n
        "		};" \n

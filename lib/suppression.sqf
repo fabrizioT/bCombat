@@ -300,8 +300,9 @@ player setVariable ["bcombat_stats_incoming_bullets3", (player getVariable ["bco
 							&& {  _speed < 3.5 || _dist < 50 }
 							&& { [_unit, _shooter] call bcombat_fnc_knprec < 2 }  
 							&& { ( isHidden _unit || [currentWeapon _unit] call bcombat_fnc_is_mgun) }  
-							&& { [_unit, _shooter] call bcombat_fnc_relativeDirTo < 75 || _speed == 0 }
+							&& { [_unit, _shooter] call bcombat_fnc_relativeDirTo < 104 || _speed == 0 }
 							&& { random 100 > _unit getVariable ["bcombat_suppression_level", 0] } 
+							&& { !( currentCommand _unit in ["HIDE", "HEAL", "HEAL SELF",  "REPAIR", "REFUEL", "REARM", "SUPPORT", "GET IN", "GET OUT"]) }
 						) then { 
 						
 						
@@ -327,6 +328,7 @@ player setVariable ["bcombat_stats_return_fire", (player getVariable ["bcombat_s
 								&& { ( _unit getVariable ["bcombat_suppression_level", 0] <= 50 ) } 
 								&& { _dist >  (bcombat_suppressive_fire_distance select 0) }
 								&& { _dist <  (bcombat_suppressive_fire_distance select 1) }
+								&& { !( currentCommand _unit in ["HIDE", "HEAL", "HEAL SELF",  "REPAIR", "REFUEL", "REARM", "SUPPORT", "GET IN", "GET OUT"])  }
 
 							)  then {
 						
@@ -369,7 +371,7 @@ player setVariable ["bcombat_stats_suppress", (player getVariable ["bcombat_stat
 							&& { !(combatMode _x in ["BLUE", "GREEN"]) }
 							&& { ( random 1 <= (_x skill "general" ) || isPlayer ( leader _x ) ) }
 							&& { [_x] call bcombat_fnc_is_active } 
-							&& { ( isHidden _x || _x distance _shooter < bcombat_fire_back_group_max_enemy_distance ) } 
+							&& { speed _x < 3.5 || isHidden _x } 
 							&& { _unit distance _x < bcombat_fire_back_group_max_friend_distance }
 							&& { _x distance _shooter < [_x] call bcombat_weapon_max_range }
 							&& { ( _x getVariable ["bcombat_suppression_level", 0] <= 50 ) }
@@ -386,9 +388,9 @@ player setVariable ["bcombat_stats_suppress", (player getVariable ["bcombat_stat
 						) then {
 
 player setVariable ["bcombat_stats_watch_six", (player getVariable ["bcombat_stats_watch_six", 0]) + 1];
-
+ 
 							[_x, "bcombat_fnc_task_fire", 2 ,[_shooter, 1] ] call bcombat_fnc_task_set;
-							//player globalchat format["%1 support %2", _x, _unit];
+// player globalchat format["----> %1 support %2", _x, _unit];
 							if( bcombat_debug_enable ) then {
 								_msg = format["bcombat_fnc_bullet_incoming() - HELP: helper unit=%1, suppressed unit=%2, enemy=%3, distance=%4, angle=%5", _x, _unit, _shooter, _x distance _shooter, [_x, _shooter] call bcombat_fnc_relativeDirTo ];
 								[ _msg, 8 ] call bcombat_fnc_debug;

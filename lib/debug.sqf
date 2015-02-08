@@ -355,11 +355,12 @@ bcombat_fnc_debug_balloons =
 						
 					if( _so ) then
 					{
-						if( isNull _ball_so ) then {
 					
+						if( isNull _ball_so ) then {
+
 							_ball_so = "Sign_Sphere25cm_F" createvehicle getposATL _x;  
 							_ball_so hideobject false;  
-							_ball_so setObjectTexture [0,"#(argb,8,8,3)color(0.1,0.1,0.1,0.99,ca)"]; //red  
+							_ball_so setObjectTexture [0,"#(argb,8,8,3)color(1,1,1,1)"];  // white
 							_ball_so attachTo [_x,[0,0,2.7]];  
 							_x setVariable ["bcombat_debug_ball_so", _ball_so ];
 						};

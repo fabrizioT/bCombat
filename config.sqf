@@ -259,7 +259,7 @@ bcombat_cqb_radar_params = [104, 5, 0, 5];			// (Array) [max. angle, min. precis
 // Effect: a prone rolling animation is played to evade enemy fire
 
 bcombat_fancy_moves = true;     					// (Boolean) Toggle feature on / off
-bcombat_fancy_moves_frequency = 0.025;    			// (0-1) Probability of occurring. 0=never (0%), 1=all the time (100%). 
+bcombat_fancy_moves_frequency = 0.03;    			// (0-1) Probability of occurring. 0=never (0%), 1=all the time (100%). 
 
 // Description: remove night vision devices from any created / spawned units
 // Triggered: on unit creation / spawn
@@ -296,7 +296,7 @@ bdetect_startup_hint = false;
 if ( bcombat_dev_mode ) then
 {
 
-	 [] spawn bcombat_fnc_debug_text; // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
+	[] spawn bcombat_fnc_debug_text; // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
 	//call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debug balloons (as alternative to bcombat_fnc_debug_text or bcombat_fnc_fps)
 
 	 call bdetect_fnc_benchmark; // Uncomment this line to activate bDetect live stats panel (as alternative to bcombat_fnc_fps)

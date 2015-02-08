@@ -172,7 +172,6 @@ bcombat_fnc_task_fire =
 
 			if( combatMode (group _unit) in ["RED", "YELLOW"]  ) then
 			{
-			
 				if( bcombat_allow_targeting 
 					&& { _dist < (bcombat_targeting_max_distance select 0) || ( combatMode _unit == "RED" && _dist < (bcombat_targeting_max_distance select 1) ) } 
 					&& { !(isPlayer (leader _unit)) } 
@@ -182,16 +181,14 @@ bcombat_fnc_task_fire =
 				) then {
 					_unit doWatch _enemy;
 					_unit doTarget _enemy;
-
 				};
 
 				if( _visible ) then 
 				{
 					if( _mode == 2 ) then
 					{
-				
 						if( 
-							_speed < 3 ||
+							_speed < 3.5 ||
 							(assignedTarget _unit) == _enemy ||
 							_dist < 25 || 
 							[_unit, _enemy] call bcombat_fnc_relativeDirTo < 75 ||
@@ -246,7 +243,7 @@ bcombat_fnc_task_fire =
 					if( bcombat_allow_suppressive_fire 
 						&& { _mode == 1 } 
 						&& { currentWeapon _unit == primaryWeapon _unit }
-						&& { _unit ammo (currentWeapon _unit) > 20 }
+						&& { _unit ammo (currentWeapon _unit) > 10 }
 						&& { _dist < (bcombat_suppressive_fire_distance select 1) }
 						&& { _dist > (bcombat_suppressive_fire_distance select 0) }
 					) then { 
