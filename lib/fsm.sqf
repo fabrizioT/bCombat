@@ -103,7 +103,8 @@ bcombat_fnc_process_danger_queue =
 		[bcombat_penalty_casualty, 0, 15 + random 15, 60 + random 30],	//5 friendly dead
 		[0, 0, 0, 0],	//6 enemy dead
 		[bcombat_penalty_scream, 0, 0, 60 + random 30],	//7 being hit, screaming
-		[0, 0, 0, 0]	//8 fire upon enemy
+		[0, 0, 0, 0],	//8 fire upon enemy
+		[0, 0, 0, 0]	//9 close bullet detection
 	];
 
 	 // 0, 1, 2, 3, 4, 5, 6, 7, 8
@@ -117,7 +118,14 @@ bcombat_fnc_process_danger_queue =
 		
 		_hash = format["%1-%2", _enemy, _cause ];
 		_p = 0;
-
+		
+		if(
+			bcombat_ballistics_native_handler 
+			&& { _cause == 9 } ) then 
+		{
+			[_unit, _enemy, objNull, _dangerPos, getPos _enemy, time] spawn bcombat_fnc_bullet_incoming;
+		};
+		
 		// Filter out non-suppressing / problematic events such as "fired near" and "dead enemy"
 		// which are causing problems within campaign intro
 		// Filtering events of type "enemy detected" having null enemy
@@ -131,7 +139,7 @@ bcombat_fnc_process_danger_queue =
 
 			_processed set [count _processed, _hash];
 			_c = _dictionary select _cause;
-			
+
 			_p = _c select 0;
 			
 			// player globalchat format["%1 - cause: %2 - penalty: %3", _unit, _cause, _p];

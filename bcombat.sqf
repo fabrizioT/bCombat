@@ -15,9 +15,7 @@ bcombat = true; // avoid having multiple instances running
 
 if(isNil "bcombat_enable") then { bcombat_enable = true; }; 	
 
-bcombat_debug_enable = false;
-bcombat_debug_levels = [1];
-bcombat_debug_chat = true;
+
 
 bcombat_name 		= "bcombat AI Infantry mod"; 
 bcombat_short_name 	= "bcombat"; 
@@ -107,7 +105,7 @@ if(isNil "bcombat_penalty_recovery") then { bcombat_penalty_recovery = 2; };
 
 // Investigate
 if(isNil "bcombat_allow_investigate") then { bcombat_allow_investigate = false; }; 		
-if(isNil "bcombat_investigate_max_distance") then { bcombat_investigate_max_distance = 200; }; 		
+if(isNil "bcombat_investigate_max_distance") then { bcombat_investigate_max_distance = 250; }; 		
 
 // Move to cover
 if(isNil "bcombat_allow_cover") then { bcombat_allow_cover = false; }; 
@@ -177,17 +175,21 @@ if(isNil "bcombat_skill_multiplier") then { bcombat_skill_multiplier = 1; };
 // Skill linearity
 if(isNil "bcombat_skill_linearity") then { bcombat_skill_linearity = 1; }; 
 
+// Ballistics handler
+if(isNil "bcombat_ballistics_native_handler") then { bcombat_ballistics_native_handler  = false; }; 
 
 // -----------------------------
 // Libs loading
 // -----------------------------
 
 if( !(bcombat_enable) ) exitWith{};
-call compile preprocessFileLineNumbers "\@bcombat\bdetect.sqf"; 
+
 call compile preprocessFileLineNumbers "\@bcombat\lib\common.sqf";  
 call compile preprocessFileLineNumbers "\@bcombat\lib\suppression.sqf"; 
 call compile preprocessFileLineNumbers "\@bcombat\lib\fsm.sqf";  
 call compile preprocessFileLineNumbers "\@bcombat\lib\task.sqf";
+
+bdetect_enable = false;
 
 _nil = [] spawn 
 {
@@ -195,17 +197,45 @@ _nil = [] spawn
 	// bDetect init
 	// -----------------------------
 
-	bdetect_enable = true;
-	bdetect_debug_enable = false;
-	bdetect_debug_levels = [];		
-	bdetect_debug_chat = true;			
-	bdetect_mp_enable = false; 
-	bdetect_degradation_distance = bcombat_degradation_distance;
-	bdetect_callback = "bcombat_fnc_bullet_incoming";
+	if( bcombat_ballistics_native_handler ) then
+	{
+	}
+	else
+	{
+		bdetect_enable = true;
+		bdetect_debug_enable = false;
+		bdetect_debug_levels = [];		
+		bdetect_debug_chat = true;			
+		bdetect_mp_enable = false; 
+		bdetect_degradation_distance = bcombat_degradation_distance;
+		bdetect_callback = "bcombat_fnc_bullet_incoming";
+		bdetect_startup_hint = false;
+		
+		bdetect_bullet_max_distance = 600;  				// (Meters) Maximum travelled distance for a bullet (to cause suppression)
+		bdetect_bullet_max_lifespan = 2.5; 					// (Seconds) Maximum lifespan for bullet
+		bdetect_bullet_max_proximity = 7.5; 				// (Meters) Maximum distance from unit for bullet (to cause suppression)
+		bdetect_bullet_max_height =  7.5;  					// (Meters) Maximum height on ground for bullet (to cause suppression)
+		
+		if( bdetect_enable ) then {
+			call compile preprocessFileLineNumbers "\@bcombat\bdetect.sqf"; 
+			call bdetect_fnc_init;
+			waitUntil { !(isNil "bdetect_init_done") };
+		};
+	};
 	
-	call bdetect_fnc_init;
-	waitUntil { !(isNil "bdetect_init_done") };
+	if ( bcombat_dev_mode ) then
+	{
 	
+		//[] spawn bcombat_fnc_debug_text;  // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
+		call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debug balloons (as alternative to bcombat_fnc_debug_text or bcombat_fnc_fps)
+
+		if( bdetect_enable ) then { call bdetect_fnc_benchmark; }; // Uncomment this line to activate bDetect live stats panel (as alternative to bcombat_fnc_fps)
+		//[] spawn bcombat_fnc_fps; // Uncomment this line to activate FPS stats panel (as alternative to bdetect_fnc_benchmark;)
+		// call bcombat_fnc_stats;
+		
+		OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
+	};
+
 	// -----------------------------
 	// bCombat init
 	// -----------------------------
@@ -220,6 +250,7 @@ _nil = [] spawn
 		hintSilent _msg;
 	};
 };
+
 
 // -----------------------------
 // LOOP
@@ -261,10 +292,13 @@ _nil = [] spawn
 					};
 					
 					if( 
-						!(isPlayer _unit)  
+						[_unit] call bcombat_fnc_is_active
+						&& { !(isPlayer _unit) }
 						&& { !(isPlayer (leader  _unit)) }
 						&& { !(fleeing _unit) } 
 						&& { !(captive _unit) } 
+						&& { behaviour _unit == "COMBAT" } 
+						
 					//	&& { _unit distance player < bcombat_degradation_distance }
 					) then {
 						// unstuck unit
@@ -274,28 +308,77 @@ _nil = [] spawn
 							&& { !([_unit] call bcombat_fnc_is_stopped) }
 							&& { !([_unit] call bcombat_fnc_has_task) }
 							&& { _unit == formLeader _unit }
-							&& { leader _unit == _unit || _unit distance (leader _unit) > 50 }
-							&& { _unit distance ((expecteddestination _unit) select 0) < 5 && ((expecteddestination _unit) select 1) in  ["LEADER PLANNED", "DoNotPlan"] }
+							&& { ( _unit getVariable ["bcombat_suppression_level", 0] <= 25 ) } 
+							//&& { leader _unit == _unit || _unit distance (leader _unit) > 50 }
+							&& { !( currentCommand _unit in ["HIDE", "HEAL", "HEAL SELF",  "REPAIR", "REFUEL", "REARM", "SUPPORT", "GET IN", "GET OUT"])  }
+							//&& { random 1 > .5 }
 						) then {
 						
-						
-							// player globalchat format["%1 - UNSTUCK %2", time, _unit];
-							// _unit domove getPos _unit;
-							
-							if( _unit == leader _unit ) then
+							if( 
+								( isNull (assignedTarget _unit) || !([_unit, assignedTarget _unit] call bcombat_fnc_is_visible) ) 
+							) then
 							{
-								_unit dofollow _unit;
-							}
-							else
-							{
-								//_unit dofollow (leader _unit);
-								_unit dofollow _unit;
+								if( _unit distance ((expecteddestination _unit) select 0) > 25  && ((expecteddestination _unit) select 1) in  ["LEADER PLANNED", "DoNotPlan"] ) then  // && { leader _unit != _unit }
+								{
+									if( _unit distance ((expecteddestination _unit) select 0) < 100000) then
+									{
+
+										_stop = false;
+										_p1 = ((expecteddestination _unit) select 0);
+										_follow = objNull;
+										
+										Scopename "regroupLoop";
+										
+										{
+											if(_unit == _x) then { _stop = true; };
+											
+											if( ! _stop ) then
+											{
+												_p2 = ((expecteddestination _x) select 0);
+												
+												if ( _x distance _unit < 25 
+													//&& _p1 distance _p2 < 50 
+													&& (_x distance _p2) / (_unit distance _x) >= 3 
+													
+												) then
+												{
+													_follow = _x;
+													breakTo "regroupLoop";
+												};
+											};
+
+										} foreach units (group _unit);
+									
+										if(! isNull(_follow) ) then 
+										{
+											dostop _unit;
+											_unit dofollow _follow;
+// player globalchat format["---> %1 follow %2!!!!!!!", _unit, _follow];
+										}
+										else
+										{
+											_unit domove ((expecteddestination _unit) select 0);
+										};
+									}
+									else
+									{
+										_unit dofollow (formationLeader _unit);
+									};
+								}
+								else
+								{
+									if( ( unitready _unit || _unit distance ((expecteddestination _unit) select 0) < 5 ) && ((expecteddestination _unit) select 1) in  ["LEADER PLANNED", "DoNotPlan"] ) then 
+									{
+										_unit dofollow (formationLeader _unit);
+									};
+								};
 							};
 						};
 						
 						_enemy = _unit findnearestEnemy _unit;
 						
-						// If leader, pick nearest enemy as target
+						// If leader and alone, pick nearest enemy as target
+						/*
 						if( _unit == leader _unit) then
 						{
 							if( bcombat_allow_targeting 
@@ -310,7 +393,7 @@ _nil = [] spawn
 							) then {
 								_unit doTarget _enemy;
 							};
-						};
+						};*/
 						
 						// Chase actual target
 						if( bcombat_allow_targeting 
@@ -338,24 +421,11 @@ _nil = [] spawn
 								&& { [_unit, getPosATL _target] call bcombat_fnc_unit_can_inspect_pos }
 							) then {
 							
-								//if( _unit != leader _unit || _dist > 100 ) then
-								//{
-									// player globalchat format["### '%1' chase '%2'", _unit, _target];
-								
-									// _unit doWatch _target;
-									[_unit, getPosATL _target] call bcombat_fnc_move_team;
-								//};
-								
-								/*
-								if( _prec < 5 ) then {
-									_unit domove getPosATL _target;
-								} else {
-									_unit domove ([getPosATL _target, _prec] call bcombat_fnc_random_pos);
-								};*/
+								[_unit, getPosATL _target] call bcombat_fnc_move_team;
 							};
 						};
 						
-						// Avoid individually attacking in urban areas
+						// Avoid individually attacks in urban areas
 						if( _unit == leader _unit) then
 						{
 							_unit call bcombat_fnc_blacklist_purge;
@@ -364,8 +434,8 @@ _nil = [] spawn
 							{
 								if( !(isNull _enemy) 
 									
-									&& { _unit distance _enemy <= 250 } 
-									&& { count (nearestObjects [_unit, ["house"], 50]) < 5 } 
+									&& { _unit distance _enemy <= 500 } 
+									&& { count (nearestObjects [_unit, ["house"], 75]) < 4 } 
 								) then 
 								{
 									_unit enableAttack true;

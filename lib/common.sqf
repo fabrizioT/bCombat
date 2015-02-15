@@ -582,7 +582,7 @@ bcombat_fnc_random_pos = {
 	[ (_pos select 0) - _radius + random ( _radius * 2), (_pos select 1) - _radius + random ( _radius * 2), (_pos select 2)  ]
 };
 
-/*
+
 bcombat_fnc_set_firemode = {
 
 	private ["_unit", "_enemy ", "_dist", "_weapon", "_ammo"];
@@ -597,7 +597,7 @@ bcombat_fnc_set_firemode = {
 	_unit forceWeaponFire [_weapon, "Single"];//"FullAuto"
 	_unit setAmmo [_weapon, _ammo];
 };
-*/
+
 
 // ---------------------------------------
 // EVENT HANDLERS
@@ -1241,7 +1241,7 @@ bcombat_fnc_stop =
 					
 					_unit enableAI "target";
 					
-					_unit domove (position (formationLeader _unit));
+					// _unit domove (position (formationLeader _unit));
 					
 					if( formationLeader _unit != _unit) then 
 					{
@@ -1435,15 +1435,20 @@ bcombat_fnc_soundalert = {
 				
 				if ( _x distance _unit < bcombat_investigate_max_distance 
 					&& { _x distance _unit > 25 }
-					&& { [_x, _unit] call bcombat_fnc_knprec > 5}
-					&& { time - ( _x getVariable ["bcombat_investigate_time", -15])  > 15  }
+					// && { [_x, _unit] call bcombat_fnc_knprec > 5}
+					&& { !([_x, _unit] call bcombat_fnc_is_visible) }
+					&& { time - ( _x getVariable ["bcombat_investigate_time", -15]) > 15  }
 					&& { [_x, _pos] call bcombat_fnc_unit_can_inspect_pos } 
 				) then
 				{
-			
+				
+
+	
+//	player globalchat format["Sending %1 %2 meters away", _x, _x distance _unit];
+	
 					_nenemy = _x findNearestEnemy _x;
 					
-					if(  isNull _nenemy  ||  _nenemy == _unit  ) then 
+					if(  isNull _nenemy  || _nenemy == _unit  || assignedTarget _x == _unit ) then 
 					{
 						//_prec =  [_x, _unit] call bcombat_fnc_knprec;
 						//_ppos = [_pos, ((_pos distance _x) / 10) min _prec] call bcombat_fnc_random_pos; // perceived enemy position
@@ -1718,7 +1723,6 @@ bcombat_fnc_cqb =
 		// && { random 1 <= (_unit skill "general" ) } // ^ .5 
 	} do {
 	
-
 		_nenemy = _unit findnearestenemy _unit;
 	
 		if( !(isNull _nenemy) && { _unit distance _nenemy < bcombat_cqb_radar_max_distance * 1.1 } ) then
@@ -1765,8 +1769,8 @@ bcombat_fnc_cqb =
 					}
 					else
 					{
-						_unit reveal [_x, (_unit knowsabout _x) * 1.01];
-						_unit glanceAt _x;
+						_unit reveal [_x, (_unit knowsabout _x) * 1.001];
+						//_unit glanceAt _x;
 						/*
 						if( ( isNull (assignedTarget _unit) || _x == (assignedTarget _unit) || !([_unit, (assignedTarget _unit)] call bcombat_fnc_is_visible) )
 							&& { _unit distance _x < _targetDistLow } 
@@ -1911,7 +1915,7 @@ bcombat_fnc_investigate = {
 			
 		) then {
 		
-			// player globalchat format["----> %1 investigate %2 [d=%3]", _x, _pos, _pos distance _x];
+// player globalchat format["--------------> %1 investigate %2 [d=%3]", _x, _pos, _pos distance _x];
 			if( _prec > 5 ) then 
 			{
 				_nearpos = [_pos, (_prec min ((_leader distance _pos) / 2) ) max 5 ] call bcombat_fnc_random_pos;

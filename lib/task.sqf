@@ -235,6 +235,7 @@ bcombat_fnc_task_fire =
 					
 					};
 	
+					//if( skill _unit > 0.5) then { _unit doTarget _enemy; };
 					_unit suppressFor 0;
 					_unit dofire _enemy;
 				}
@@ -270,7 +271,7 @@ bcombat_fnc_task_fire =
 	{
 		_unit enableAI "autotarget";
 		_unit setVariable ["bcombat_task", nil];
-		
+		_unit dofollow (formationLeader _unit);
 		if( bcombat_debug_enable ) then {
 			_msg = format["bcombat_fnc_task_fire() - END, unit=%1, enemy=%2, distance=%3, mode=%4, vis=%5, firetime=%6", _unit, _enemy, _dist, _mode, [_unit, _enemy] call bcombat_fnc_is_visible, _unit getVariable ["bcombat_fire_time", 0]];
 			[ _msg, 6 ] call bcombat_fnc_debug;
@@ -282,7 +283,7 @@ bcombat_fnc_task_fire =
 
 bcombat_fnc_task_move_to_cover =
 {
-	private ["_unit", "_task", "_priority", "_args", "_cover", "_grp", "_blacklist",  "_cover",  "_msg", "_pos", "_type", "_dist", "_timeout1", "_timeout2"];
+	private ["_unit", "_task", "_priority", "_args", "_cover", "_grp", "_blacklist",  "_cover",  "_msg", "_pos", "_type", "_dist", "_timeout1", "_timeout2", "_flead"];
 
 	_unit = _this select 0;
 	_task = _this select 1; 
@@ -292,8 +293,6 @@ bcombat_fnc_task_move_to_cover =
 	_cover = _args select 0;
 	//_enemy = _args select 1;
 	_grp = group _unit;
-	
-	
 	
 	if( bcombat_debug_enable ) then {
 		_msg = format["bcombat_fnc_task_move_to_cover() - unit = %1, cover = %2", _unit, _cover];
@@ -325,6 +324,11 @@ bcombat_fnc_task_move_to_cover =
 	
 		if( _dist > 5 ) then
 		{
+			if( _unit != formationLeader _unit) then
+			{
+				_unit setvariable [ "bcombat_formleader", formationLeader _unit];
+			};
+	
 			_unit disableAI "target";
 			_unit disableAI "autotarget";
 			//_unit disableAI "FSM";
@@ -333,7 +337,6 @@ bcombat_fnc_task_move_to_cover =
 			dostop _unit;
 			sleep .05;
 			
-			//_unit domove _pos;
 			_unit moveTo _pos;
 			_unit forcespeed 20;
 			
@@ -351,52 +354,29 @@ bcombat_fnc_task_move_to_cover =
 				sleep .5;
 				
 				_unit doWatch objNull;
-	
 				_unit forcespeed 20;
 					
-				/*
-				//if( !(unitready _unit) )  then 
-				{ 
-					if( [ _unit ] call bcombat_fnc_speed < 1 ) then 
-					{
-							//_unit moveTo _pos;
-							
-						//_unit domove _pos;
-						//_unit setDestination [ _pos , "LEADER PLANNED", false];
-					};
-				};
-				*/
 			};
-			
-			
+
 			_unit enableAI "autotarget";
 			_unit enableAI "target";
 			//_unit enableAI "FSM";
 			_unit forcespeed -1;
 			
 			/*
-			if( 
-				(  (currentCommand _unit != "STOP" && _unit distance _pos < 2) || moveToCompleted _unit) // || (unitready _unit && _unit distance _pos < 2.5)
-			) then
-			{
-				
-				_timeout2  = 0;
-				
-				if( _type == 1 ) then  {
-				//hintc("OK1");
-					_timeout2 = time + 60 +random 30;
-				} else {
-					_timeout2 = time + 5 +random 10;
-				};
-				
-				waitUntil { time > _timeout2 };
-			};
+			_flead = _unit getVariable [ "bcombat_formleader", objNull];
 			
-			 _unit domove (getPosATL _unit);
-			 */
+			if( !( isNull(_flead) ) && alive _flead) then
+			{
+				_unit dofollow _flead;
+				player globalchat format["### %1 back following %2 !!!", _unit, _flead];
+			};*/
+
+			
 		};
 	//};
 	
+	_unit setvariable [ "bcombat_formleader", objNull];
 	_unit setVariable ["bcombat_task", nil];
 	if (true) exitWith {};
 };

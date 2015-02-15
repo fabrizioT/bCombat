@@ -64,15 +64,9 @@ bLibScriptBuildObject =
 	_ang = random 360;
 	_buildPos =  [ ((_pos select 0) + (2.5 * sin(_ang))) , ((_pos select 1) + (2.5 * cos(_ang))) ];
 	
-	
-	//dostop _unit;
-	//_unit domove _buildPos;
-
 	dostop _unit;
 	sleep .05;
 	_unit moveTo _buildPos;
-	
-
 	
 	sleep 1;
 
@@ -98,7 +92,6 @@ bLibScriptBuildObject =
 	};
 	
 	_obj setPos _pos;
-	//_unit domove getPos (formleader _unit);
 	
 	dostop _unit;
 	sleep .05;

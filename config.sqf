@@ -1,15 +1,5 @@
 //><
 // -----------------------
-// CORE bDetect FEATURES
-// -----------------------
-
-bdetect_bullet_max_distance = 600;  				// (Meters) Maximum travelled distance for a bullet (to cause suppression)
-bdetect_bullet_max_lifespan = 2.5; 					// (Seconds) Maximum lifespan for bullet
-bdetect_bullet_max_proximity = 7.5; 				// (Meters) Maximum distance from unit for bullet (to cause suppression)
-bdetect_bullet_max_height =  7.5;  					// (Meters) Maximum height on ground for bullet (to cause suppression)
-
-//><
-// -----------------------
 // CORE bCombat FEATURES
 // -----------------------
 
@@ -17,9 +7,15 @@ bdetect_bullet_max_height =  7.5;  					// (Meters) Maximum height on ground for
 
 bcombat_enable = true;								// (Boolean) Toggle feature on / off
 
+// Description: use BIS native close-cullet detection (true) or bDetect (false)
+
+bcombat_ballistics_native_handler = false;			// (Boolean) Toggle feature on / off
+
 // Description: toggle debugging information on (true) or off (false)
 
-bcombat_dev_mode = false;							// (Boolean) Toggle feature on / off
+bcombat_dev_mode = true;							// (Boolean) Toggle feature on / off
+bcombat_debug_levels = [];							// Debug levels
+bcombat_debug_chat = true;							// Debug in chat
 
 // Description: minimum timeout since last incoming bullet, for the current one to cause suppression.
 // As default no more than 5 ( = 1 / 0.2 ) bullets / second would cause suppression on a single AI unit.
@@ -31,7 +27,7 @@ bcombat_danger_fsm_timeout = 0.1;					// (Seconds)
 bcombat_danger_distance = 250; 						// (Meters) Minimum distance from shooter, for groups to automatically switch to "combat" behaviour
 bcombat_features_clock = 3;							// (Seconds) Additional features clocking 
 bcombat_damage_multiplier = 1.0;					// (0-1) Damage multiplier. Received damage is multiplied by this value. Only infantrymen are affected. Zero makes units invulnerable.
-bcombat_degradation_distance = 1500;				// (Meters) some bCombat features are cut when some unit is farther than this from player
+bcombat_degradation_distance = 1250;				// (Meters) some bCombat features are cut when some unit is farther than this from player
 
 //><
 // -----------------------------------------------------------------------------------------------------
@@ -40,7 +36,7 @@ bcombat_degradation_distance = 1500;				// (Meters) some bCombat features are cu
 
 // Description: Bullet penalty
 // Triggered: whenever under fire and a close bullet is intercepted
-// Effect: Up to 5% of skill penalty is applied
+// Effect: Up to 3% of skill penalty is applied
 
 bcombat_penalty_bullet = 3; 						// (Percent) %
 
@@ -48,12 +44,12 @@ bcombat_penalty_bullet = 3; 						// (Percent) %
 // Triggered: whenever under fire and shooter is firing from flank / back, 
 // Effect: Adds up to 5% further skill penalty 
 
-bcombat_penalty_flanking = 3; 						// (Percent) %
+bcombat_penalty_flanking = 5; 						// (Percent) %
 
 // Description: Enemy unknown penalty
 // Adds further penalty to bcombat_penalty_bullet
 // Triggered: whenever under fire, if shooter is unknown 
-// Effect: Adds up to 5% further skill penalty
+// Effect: Adds up to 2% further skill penalty
 
 bcombat_penalty_enemy_unknown = 2; 					// (Percent) %
 
@@ -65,7 +61,7 @@ bcombat_penalty_enemy_contact = 25; 				// (Percent) %
 
 // Description: Explosion / ricochet penalty
 // Triggered: on shell exploding nearby, or close ricochet
-// Effect: up to 5% skill penalty
+// Effect: up to 25% skill penalty
 
 bcombat_penalty_explosion = 2;						// (Percent) %
 
@@ -130,7 +126,7 @@ bcombat_allow_fleeing = true; 						// (Boolean) Toggle feature on / off
 // Effect: unit plays a surrender animation and gets locked there as captive
 // Note: needs bcombat_allow_fleeing = true
 
-bcombat_allow_surrender = true;						// (Boolean) Toggle feature on / off
+bcombat_allow_surrender = false;						// (Boolean) Toggle feature on / off
 
 // Description: slow down leader
 // Triggered: whenever a target of opportunity is spotted, or under fire
@@ -169,7 +165,7 @@ bcombat_suppressive_fire_distance = [50, 150]; 		// (Array) [minimum distance fr
 // Effect: unit is hinted about the shooter, depending on criteria such as visibility and distance. 
 
 bcombat_allow_hearing = true;						// (Boolean) Toggle feature on / off
-bcombat_allow_hearing_coef = 2.5;						// (Number) Bullet speed / bcombat_allow_hearing_coef = max. hearing distance (e.g. 900 meters/sec : 3 = max. hearing distance 300m.)
+bcombat_allow_hearing_coef = 2;					// (Number) Bullet speed / bcombat_allow_hearing_coef = max. hearing distance (e.g. 900 meters/sec : 3 = max. hearing distance 300m.)
 bcombat_allow_hearing_grenade_distance = 250;		// (Meters) Max. distance for grenade hearing
 
 // Description: CQB hand grenade throwing
@@ -212,7 +208,7 @@ bcombat_allow_fatigue = false;						// (Boolean) Toggle feature on / off
 
 bcombat_allow_cover = true;							// (Boolean) Toggle feature on / off
 bcombat_cover_mode = 1;								// (0,1) 0 = apply only to leader, 1 = apply to all units
-bcombat_cover_radius = [20, 0]; 					// (Array) [ maximum distance from object, maximum distance from building] 
+bcombat_cover_radius = [15, 0]; 					// (Array) [ maximum distance from object, maximum distance from building] 
 
 // Description: "target and chase" behaviour
 // Triggered: whenever unit has no target and it's close to a enemy
@@ -286,24 +282,6 @@ bcombat_skill_min_player_group = 0.5;				// (0-1) enforce minimum skill for unit
 // Effect: show / hides bCombat startup hint
 
 bcombat_startup_hint = true;
-bdetect_startup_hint = false;
 
-//><
-// -----------------------------------------------------------------------------------------------------
-// bCombat MISC CALLS
-// -----------------------------------------------------------------------------------------------------
-
-if ( bcombat_dev_mode ) then
-{
-
-	[] spawn bcombat_fnc_debug_text; // Uncomment this line to activare bCombat debug text overlays (as alternative to bcombat_fnc_debug_balloons or bcombat_fnc_fps)
-	//call bcombat_fnc_debug_balloons; // Uncomment this line to activare bCombat debug balloons (as alternative to bcombat_fnc_debug_text or bcombat_fnc_fps)
-
-	 call bdetect_fnc_benchmark; // Uncomment this line to activate bDetect live stats panel (as alternative to bcombat_fnc_fps)
-	//[] spawn bcombat_fnc_fps; // Uncomment this line to activate FPS stats panel (as alternative to bdetect_fnc_benchmark;)
-	// call bcombat_fnc_stats;
-	
-	OnMapSingleClick "player setpos _pos"; // Uncomment this line to make player able to instantly move to any position by single clicking the map
-};
 
 //><

@@ -7,7 +7,6 @@ bcombat_fnc_bullet_incoming =
 	_shooter = _this select 1;	// shooter
 	_penalty = 0;
 	
-	
 	if( [_unit] call bcombat_fnc_is_active 
 		&& { _unit distance player < bcombat_degradation_distance }  ) then
 	{
@@ -16,10 +15,8 @@ bcombat_fnc_bullet_incoming =
 			&& { !(captive _unit) }
 			&& { !(fleeing _unit) }
 			&& { [_unit, _shooter] call bcombat_fnc_is_enemy }
+	
 		) then {
-		
-		
-		
 		
 player setVariable ["bcombat_stats_incoming_bullets1", (player getVariable ["bcombat_stats_incoming_bullets1", 0]) + 1];
 
@@ -27,7 +24,7 @@ player setVariable ["bcombat_stats_incoming_bullets1", (player getVariable ["bco
 			_bpos = _this select 3;	// bullet position
 			_pos = _this select 4;	// starting position of bullet
 			_time = _this select 5; // starting time of bullet
-			_proximity = _bpos distance _unit;	// distance between _bullet and _unit
+			_proximity = _pos distance _unit;	// distance between _bullet and _unit
 			_grp = group _unit;
 			_visible = [_unit, _shooter] call bcombat_fnc_is_visible;
 			_dist = _unit distance _shooter;
@@ -42,7 +39,6 @@ player setVariable ["bcombat_stats_incoming_bullets1", (player getVariable ["bco
 			
 			_grp setSpeedMode "FULL";
 
-		
 			if( time - (_unit getVariable ["bcombat_suppression_time", 0 ]) > bcombat_incoming_bullet_timeout ) then 
 			{
 player setVariable ["bcombat_stats_incoming_bullets2", (player getVariable ["bcombat_stats_incoming_bullets2", 0]) + 1];
@@ -123,7 +119,8 @@ player setVariable ["bcombat_stats_incoming_bullets2", (player getVariable ["bco
 					// REVEAL
 					// ------------------------
 						
-					if( !(fleeing _unit) && { !(captive _unit) } ) then
+					if( !(fleeing _unit) && { !(captive _unit) } 
+						&& { !([_shooter, currentWeapon _shooter] call bcombat_fnc_weapon_is_silenced) } ) then
 					{
 						// [_unit] call bcombat_fnc_allow_fire;
 						[_unit, _shooter] call bcombat_fnc_reveal;
@@ -207,8 +204,6 @@ player setVariable ["bcombat_stats_incoming_bullets2", (player getVariable ["bco
 									_move_to_cover = true;
 								};
 							};
-						
-						
 
 							// find cover object
 							_cover = nil;
@@ -216,8 +211,6 @@ player setVariable ["bcombat_stats_incoming_bullets2", (player getVariable ["bco
 							if( _move_to_cover ) then
 							{
 								_cover = [_unit, _shooter, bcombat_cover_radius] call bcombat_fnc_find_cover_pos;
-								
-
 							};
 							
 							if( !(isNil "_cover") ) then
@@ -279,6 +272,7 @@ player setVariable ["bcombat_stats_surrender", (player getVariable ["bcombat_sta
 					// ------------------------	
 
 					if(	bcombat_allow_fire_back 
+						&& { !([_shooter, currentWeapon _shooter] call bcombat_fnc_weapon_is_silenced) } 
 						&& { random 1 <= (_unit skill "general" ) }
 						&& { !(fleeing _unit) } 
 						&& { !(captive _unit) }
@@ -356,7 +350,7 @@ player setVariable ["bcombat_stats_suppress", (player getVariable ["bcombat_stat
 				// WATCH-MY-SIX LOGIC
 				// ------------------------	
 				
-				if(	bcombat_allow_fire_back_group ) then
+				if(	bcombat_allow_fire_back_group && { !([_shooter, currentWeapon _shooter] call bcombat_fnc_weapon_is_silenced) } ) then
 				{
 					// Cover other units
 					{
@@ -385,6 +379,7 @@ player setVariable ["bcombat_stats_suppress", (player getVariable ["bcombat_stat
 							&& { [_x, _shooter] call bcombat_fnc_relativeDirTo < 60 || speed _x < 1}
 							&& { [_x, _shooter] call bcombat_fnc_is_visible }
 							&& { _x ammo (currentWeapon _x) > 0  }
+							&& { !( currentCommand _x in ["HIDE", "HEAL", "HEAL SELF",  "REPAIR", "REFUEL", "REARM", "SUPPORT", "GET IN", "GET OUT"])  }
 						) then {
 
 player setVariable ["bcombat_stats_watch_six", (player getVariable ["bcombat_stats_watch_six", 0]) + 1];
@@ -425,7 +420,7 @@ bcombat_fnc_suppression =
 		_k = (( 100 - _level ) / 100) ^ 1.33; 
 
 		_unit setSkill ["aimingAccuracy", ( (( _unit getVariable "bcombat_skill_ac" ) - 0.0 ) * _k ) max 0.1 ];
-		_unit setSkill ["aimingShake", ( (( _unit getVariable "bcombat_skill_sh" ) - 0.0 ) * _k  ) max 0.1 ];
+		//_unit setSkill ["aimingShake", ( (( _unit getVariable "bcombat_skill_sh" ) - 0.0 ) * _k  ) max 0.1 ];
 		_unit setSkill ["spotDistance", ( (( _unit getVariable "bcombat_skill_sd" ) - 0.0 ) * _k  ) max 0.1 ];
 		
 		_courage = (_unit getVariable ["bcombat_skill_cr", 0] ) * (_k ^ .5) * ( 1 - damage _unit / 2) ;
