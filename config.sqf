@@ -13,7 +13,7 @@ bcombat_ballistics_native_handler = false;			// (Boolean) Toggle feature on / of
 
 // Description: toggle debugging information on (true) or off (false)
 
-bcombat_dev_mode = true;							// (Boolean) Toggle feature on / off
+bcombat_dev_mode = false;							// (Boolean) Toggle feature on / off
 bcombat_debug_levels = [];							// Debug levels
 bcombat_debug_chat = true;							// Debug in chat
 

@@ -19,7 +19,7 @@ if(isNil "bcombat_enable") then { bcombat_enable = true; };
 
 bcombat_name 		= "bcombat AI Infantry mod"; 
 bcombat_short_name 	= "bcombat"; 
-bcombat_version 	= "0.18 BETA";
+bcombat_version 	= "0.18";
 
 // -----------------------------
 // files preload
@@ -241,12 +241,12 @@ _nil = [] spawn
 	// -----------------------------
 
 	if( bcombat_debug_enable ) then {
-		_msg = format["%1 v%2 has started", bcombat_short_name, bcombat_version];
+		_msg = format["%1 v%2 started", bcombat_short_name, bcombat_version];
 		[ _msg, 0 ] call bcombat_fnc_debug;
 	};
 	
 	if( bcombat_startup_hint ) then {
-		_msg = format["%1 v%2 has started", bcombat_short_name, bcombat_version];
+		_msg = format["%1 v%2 started", bcombat_short_name, bcombat_version];
 		hintSilent _msg;
 	};
 };
