@@ -1925,7 +1925,7 @@ bcombat_fnc_investigate = {
 			}
 			else
 			{
-				_x domove _rpos;
+				_x domove _pos;
 				//player setpos _pos;
 				//hintc("EXACT");
 			};
