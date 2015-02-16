@@ -342,11 +342,11 @@ bcombat_fnc_weapon_is_silenced = {
 	_weapon  = _this select 1; 
 	_ret = false;
 
-	if (_weapon == primaryWeapon _unit) then
+	if ( _weapon == primaryWeapon _unit ) then
 	{
 		_items = primaryWeaponItems _unit;
 		
-		if ( !isNil "_items" && count _items > 0 ) then
+		if ( !isNil "_items" ) then
 		{
 			if ("muzzle_snds_H" in _items || 
 				"muzzle_snds_L" in _items || 
