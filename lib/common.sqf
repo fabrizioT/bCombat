@@ -346,10 +346,13 @@ bcombat_fnc_weapon_is_silenced = {
 	{
 		_items = primaryWeaponItems _unit;
 		
-		if ("muzzle_snds_H" in _items || 
-			"muzzle_snds_L" in _items || 
-			"muzzle_snds_acp" in _items
-		) then { _ret = true; };
+		if ( !isNil "_items" && count _items > 0 ) then
+		{
+			if ("muzzle_snds_H" in _items || 
+				"muzzle_snds_L" in _items || 
+				"muzzle_snds_acp" in _items
+			) then { _ret = true; };
+		};
 	}
 	else
 	{
