@@ -419,13 +419,16 @@ bcombat_fnc_suppression =
 	
 		_k = (( 100 - _level ) / 100) ^ 1.33; 
 
-		_unit setSkill ["aimingAccuracy", ( (( _unit getVariable "bcombat_skill_ac" ) - 0.0 ) * _k ) max 0.1 ];
-		//_unit setSkill ["aimingShake", ( (( _unit getVariable "bcombat_skill_sh" ) - 0.0 ) * _k  ) max 0.1 ];
-		_unit setSkill ["spotDistance", ( (( _unit getVariable "bcombat_skill_sd" ) - 0.0 ) * _k  ) max 0.1 ];
+		// diag_log format["%1 - %2 - %3 %4 - %5", time, _unit, _k, ( ( _unit getVariable "bcombat_skill_ac" ) * _k ) max 0.1, vehicle _unit ];
+		
+		_unit setSkill ["aimingAccuracy", ( ( _unit getVariable "bcombat_skill_ac" ) * _k ) max 0.1 ];
+		//_unit setSkill ["aimingShake", ( ( _unit getVariable "bcombat_skill_sh" ) * _k  ) max 0.1 ];
+		_unit setSkill ["spotDistance", ( ( _unit getVariable "bcombat_skill_sd" ) * _k  ) max 0.1 ];
 		
 		_courage = (_unit getVariable ["bcombat_skill_cr", 0] ) * (_k ^ .5) * ( 1 - damage _unit / 2) ;
 		_lcourage = (leader _unit) skill "courage";
 		
+		/*
 		if(	!(fleeing _unit) 
 			&& { _dist < 100 }
 			&& { _unit ammo (primaryWeapon _unit) == 0 }
@@ -433,6 +436,7 @@ bcombat_fnc_suppression =
 		) then {
 			_courage = .05;
 		};
+		*/
 		
 		_courage = _courage max 0.05;
 		_unit setSkill ["courage", 	_courage ];

@@ -272,13 +272,13 @@ _nil = [] spawn
 			{
 				_unit = _x;
 				
+				if( isNil { _unit getvariable ["bcombat_init_done", nil ] } ) then 
+				{
+					_unit call bcombat_fnc_unit_initialize;
+				};
+					
 				if(  [_unit] call bcombat_fnc_is_active ) then 
 				{
-					if( isNil { _unit getvariable ["bcombat_init_done", nil ] } ) then 
-					{
-						_unit call bcombat_fnc_unit_initialize;
-					};
-					
 					/*	if(  _unit ammo (currentweapon _unit) ==0) then { hintc format["%1 ... %2 ... %3", _unit, (currentweapon _unit), _unit ammo (currentweapon _unit)]; }; */
 					
 					_unit setskill [ "SpotDistance", ( _unit getVariable [ "bcombat_skill_sd", 0] )  * ( _unit call bcombat_fnc_visibility_multiplier ) ];

@@ -56,7 +56,7 @@ bcombat_fnc_is_active = {	// bCombat is on, unit is man, alive, activated and on
 	
 	if( bcombat_enable 
 		&& !(isNil "bcombat_init_done")
-		// && 	{ _unit getVariable ["bcombat_init_done", false ] }
+		&& { _unit getVariable ["bcombat_init_done", false ] }
 		&& { alive _unit }
 		&& { local _unit }
 		&& { simulationEnabled _unit }
