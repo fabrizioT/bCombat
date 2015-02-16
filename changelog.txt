@@ -1,9 +1,13 @@
-v0.18 BETA
-----------
+v0.18
+-----
 
+* New: "bcombat_ballistics_native_handler" variable allowing usage of bDetect (false) or BIS native close-bullet detection (true). The latter is working only for ArmA 3 BETA build 1.39.129316 +
+* Tweaked: AI units better fulfilling tasks
+* Tweaked: AI units are now able to dynamically merge / split teams
 * Tweaked: investigation behaviour reworked
-* Fixed: excessive morale hit introduced by AI changes in ArmA3 v1.3X builds
+* Fixed: excessive morale hit introduced by AI changes in ArmA3 BETA 1.3X builds
 * Fixed: minor bugfix
+
 
 v0.17
 -----
@@ -17,6 +21,7 @@ v0.17
 * Removed: broken variable "bcombat_skill_multiplier"
 * Fixed: smoke throwing should not happen anymore at night (interim fix via sunOrMoon command)
 * Fixed: minor bugfix
+
 
 v0.16
 -----
