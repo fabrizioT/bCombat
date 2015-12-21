@@ -52,9 +52,8 @@ delete "@bcombat" folder as well as "userconfig\bcombat_config.hpp" configuratio
 +   Launch ArmA 3 and check bCombat is active within "Configure / Expansions" menu.
 
 __NOTES__
-+   Mod -should- be installed into a folder named "@bcombat" within your main Arma3 directory, e.g. "Arma3/@bcombat".
++   Mod __should be installed__ into a folder named "@bcombat" within your main Arma3 directory, e.g. "Arma3/@bcombat".
 +   Current bCombat version  __does allow support external .hpp userconfig__.
-+   In order to be able to override default settings via config.sqf, please __AVOID__ launching ArmA3 with __-noFilePatching__ startup parameter
 
 DESCRIPTION
 -----------------------------------------
