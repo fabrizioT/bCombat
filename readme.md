@@ -48,9 +48,11 @@ delete "@bcombat" folder as well as "userconfig\bcombat_config.hpp" configuratio
 +   Extract the bCombat zip package anywhere.
 +   You have to rename the branch folder ("bCombat-master" or "bCombat-vX.XX") to "@bcombat"
 +   Move "@bcombat" folder from extraction location to your ArmA 3 main folder ( usually: <Your Steam Path>\steamapps\common\Arma 3\ )
-+   Launch ArmA 3 and activate bCombat from "Configure / Expansions" menu.
++   Edit ArmA 3 shortcut and add the "-filepatching" startup parameter (https://community.bistudio.com/wiki/Arma_3_Startup_Parameters).
++   Launch ArmA 3 and check bCombat is active within "Configure / Expansions" menu.
 
 __NOTES__
++   Mod -should- be installed into a folder named "@bcombat" within your main Arma3 directory, e.g. "Arma3/@bcombat".
 +   Current bCombat version  __does allow support external .hpp userconfig__.
 +   In order to be able to override default settings via config.sqf, please __AVOID__ launching ArmA3 with __-noFilePatching__ startup parameter
 
